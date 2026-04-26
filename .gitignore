@@ -29,3 +29,4 @@ coverage/
 .phpunit.cache/
 playwright-report/
 test-results/
+.staging-agents/
