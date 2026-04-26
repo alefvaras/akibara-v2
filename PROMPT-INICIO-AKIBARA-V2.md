@@ -935,25 +935,33 @@ audit/raw/              outputs find del audit
 |------|--------|
 | **0** Sync remoto + audit + cleanup | ✅ Completado. -900 MB recuperados en server. Reporte en `audit/cleanup-report-2026-04-26.md`. |
 | **1** Verificar setup base | ✅ Completado parcialmente (tools verificadas). Workspace 3.1 GB (incluye snapshots). |
-| **2** git init + .gitignore | 🟡 `.gitignore` ya creado. Falta `git init`. |
+| **2** git init + .gitignore | ✅ Completado. Branch `main` local, sin remote. Primer commit `51a3f02`. |
 | **3** Mesa técnica auditoría exhaustiva | ⏸ Pendiente. ~85 unidades a auditar via 14 agentes × 2 iteraciones. |
 | **4** Scripts del workflow | ⏸ Pendiente (`scripts/quality-gate.sh`, `scripts/smoke-prod.sh`, etc.) |
 | **5** CLAUDE.md mínimo | ⏸ Pendiente |
 | **6** Smoke E2E producto 24261 | ⏸ Pendiente — se hace contra prod, NO contra WP local |
 | **7** Renombrar repo viejo | ⏸ Pendiente |
 
-### 10.8 Pendientes específicos antes de smoke E2E
+### 10.8 Productos test: estado actual ✅
 
-**Producto 24262 (Preventa)** — falta meta:
-```sql
--- via bin/mysql-prod (DOBLE OK requerido para escribir)
-INSERT INTO wp_postmeta (post_id, meta_key, meta_value) VALUES
-  (24262, '_akb_reserva', 'yes'),
-  (24262, '_akb_reserva_tipo', 'preventa');
+**Producto 24262 (Preventa)** — ✅ FIXEADO 2026-04-26
+- `_akb_reserva = yes`
+- `_akb_reserva_tipo = preventa`
+- Stock 999 instock, precio 14990. URL https://akibara.cl/test-e2e-producto-preventa-no-comprar/ devuelve 200.
+
+**Producto 24263 (Agotado)** — ✅ FIXEADO 2026-04-26
+- `_sale_price` ya estaba limpio (no requería fix)
+- Categorías: `Preventas` removida → solo queda `Uncategorized` (term_id 15)
+- Stock 0 outofstock, precio 11990. URL https://akibara.cl/test-e2e-producto-agotado-no-comprar/ devuelve 200.
+
+Aplicados via `bin/wp-ssh post meta update` y `bin/wp-ssh post term set --by=slug`. Cache flushed + 2456 transients borrados después.
+
+**Comando de re-verificación rápida:**
+```bash
+ssh akibara 'cd /home/u888022333/domains/akibara.cl/public_html && \
+  wp post meta list 24262 --keys=_akb_reserva,_akb_reserva_tipo --format=table && \
+  wp post term list 24263 product_cat --fields=slug,name'
 ```
-O via Royal MCP `wp_update_post_meta` cuando esté wired.
-
-**Producto 24263 (Agotado)** — limpiar `sale_price` y categoría a Uncategorized. Usar Royal MCP `wc_update_product` o SQL directo.
 
 ### 10.9 Items que NO se restaurarán
 
