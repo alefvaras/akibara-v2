@@ -1,0 +1,100 @@
+name: akibara
+
+# All services keep their data inside the project (./data/*) and read-only mounts
+# of ./server-snapshot/ for auditing the prod mirror without mutating it.
+#
+# - mariadb: persistent local DB. Dumps in .private/ are mounted at /dumps:ro for import.
+# - wp: a fresh WP install for local dev/testing. NOT prod data — start empty.
+# - wpcli, composer, php, node: one-shot CLI containers, profile=cli (won't auto-start).
+# - mysql-client: convenience shell into the DB.
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: akibara-mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+      - ./.private:/dumps:ro
+    ports:
+      - "${MARIADB_PORT}:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wp:
+    image: wordpress:php8.3-apache
+    container_name: akibara-wp
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: ${MARIADB_USER}
+      WORDPRESS_DB_PASSWORD: ${MARIADB_PASSWORD}
+      WORDPRESS_DB_NAME: ${MARIADB_DATABASE}
+      WORDPRESS_TABLE_PREFIX: ${WP_TABLE_PREFIX}
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      - ./data/wp:/var/www/html
+      - ./server-snapshot/public_html:/srv/prod-mirror:ro
+    ports:
+      - "${WP_HTTP_PORT}:80"
+
+  wpcli:
+    image: wordpress:cli-php8.3
+    container_name: akibara-wpcli
+    profiles: ["cli"]
+    user: "33:33"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: ${MARIADB_USER}
+      WORDPRESS_DB_PASSWORD: ${MARIADB_PASSWORD}
+      WORDPRESS_DB_NAME: ${MARIADB_DATABASE}
+      WORDPRESS_TABLE_PREFIX: ${WP_TABLE_PREFIX}
+    volumes:
+      - ./data/wp:/var/www/html
+      - ./server-snapshot/public_html:/srv/prod-mirror:ro
+
+  composer:
+    image: composer:2
+    container_name: akibara-composer
+    profiles: ["cli"]
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - composer_cache:/tmp/cache
+    environment:
+      COMPOSER_CACHE_DIR: /tmp/cache
+
+  php:
+    image: php:8.3-cli
+    container_name: akibara-php
+    profiles: ["cli"]
+    working_dir: /app
+    volumes:
+      - ./:/app
+
+  node:
+    image: node:22-alpine
+    container_name: akibara-node
+    profiles: ["cli"]
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - npm_cache:/root/.npm
+
+volumes:
+  composer_cache:
+  npm_cache:

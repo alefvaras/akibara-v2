@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Connect to PROD MariaDB via SSH tunnel.
+# Auto-starts the tunnel if not up. Read-only by convention — write queries need DOUBLE OK.
+# Usage:
+#   bin/mysql-prod                   # interactive shell
+#   bin/mysql-prod -e "SELECT ..."   # one-shot query
+#   bin/mysql-prod < script.sql      # pipe script
+
+set -e
+PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+ENV_FILE="$PROJECT_DIR/.env"
+[ -f "$ENV_FILE" ] && set -a && . "$ENV_FILE" && set +a
+
+PORT="${PROD_DB_TUNNEL_PORT:-3308}"
+TARGET_HOST="${PROD_DB_HOST:-127.0.0.1}"
+
+if ! pgrep -f "ssh.*-L ${PORT}:${TARGET_HOST}:3306 akibara" >/dev/null; then
+  echo "(tunnel not up — starting it)" >&2
+  "$PROJECT_DIR/bin/db-tunnel" up >&2
+fi
+
+# Use the docker mariadb client over the host tunnel — no system mysql client needed.
+exec docker run --rm -i --network host \
+  mariadb:11 mariadb \
+  -h127.0.0.1 -P"$PORT" \
+  -u"$PROD_DB_USER" \
+  -p"$PROD_DB_PASSWORD" \
+  "$PROD_DB_NAME" "$@"

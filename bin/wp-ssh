@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Run wp-cli AGAINST PROD via SSH (read-only by default; pass commands carefully).
+# Uses the akibara host alias from ~/.ssh/config.
+exec ssh akibara "cd /home/u888022333/domains/akibara.cl/public_html && wp $*"

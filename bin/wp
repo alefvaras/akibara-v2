@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# WP-CLI inside container — needs the wp + db services up.
+exec docker compose -f "$(dirname "$0")/../docker-compose.yml" run --rm wpcli "$@"

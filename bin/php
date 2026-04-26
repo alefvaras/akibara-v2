@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Run PHP CLI inside container, mounted at /app == project root.
+exec docker compose -f "$(dirname "$0")/../docker-compose.yml" run --rm php php "$@"

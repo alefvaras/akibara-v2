@@ -1,0 +1,31 @@
+# Local data + secrets
+.env
+.private/
+data/
+
+# MCP config holds Royal API key in headers — never commit
+.mcp.json
+
+# Snapshots and audit raw output (heavy)
+snapshots/
+audit/raw/
+
+# Mirror is fetched, not committed
+server-snapshot/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Local Claude Code overrides
+.claude/settings.local.json
+
+# Common build artifacts
+node_modules/
+vendor/
+*.log
+coverage/
+.phpunit.cache/
+playwright-report/
+test-results/

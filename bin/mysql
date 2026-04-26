@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Connect to local MariaDB container as akibara user.
+exec docker compose -f "$(dirname "$0")/../docker-compose.yml" exec -T mariadb \
+  mariadb -u"${MARIADB_USER:-akibara}" -p"${MARIADB_PASSWORD:-akibara_local}" "${MARIADB_DATABASE:-akibara_local}" "$@"
