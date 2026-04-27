@@ -1,0 +1,621 @@
+<!--
+  Item 10 — Trust Badges Treatment
+  Spec: audit/sprint-3/cell-h/UI-SPECS-marketing.md#item-10
+  Date: 2026-04-27
+  Consumer: Cell B — wp-content/plugins/akibara-marketing/
+  4 badges: shipping / payment / quality / support
+  3 layout variants: hero (homepage 4-col) / sidebar (product 1-col) / checkout (inline)
+  Decision: emoji MVP per audit O-13-102 + memoria. SVG custom Phase 2.
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 10 — Trust Badges | Akibara Cell H Mockup</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback inline tokens ── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.prototype-header, .prototype-annotations {
+  background: var(--aki-surface);
+  padding: var(--space-6);
+  margin: 0 auto var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 1280px;
+}
+.prototype-header { border-left: 4px solid var(--aki-red); }
+.prototype-annotations { border: 1px solid var(--aki-border); }
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  max-width: 1280px;
+  margin: 0 auto var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+.state-label {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT — .aki-trust-badge
+   ══════════════════════════════════════════════════════ */
+
+/* Base trust-badge */
+.aki-trust-badge {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: left;
+  transition: border-color var(--transition-base), background var(--transition-base);
+}
+.aki-trust-badge:hover {
+  border-color: var(--aki-border-aa);
+}
+
+.aki-trust-badge__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  line-height: 1;
+}
+.aki-trust-badge__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.aki-trust-badge__label {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-sm);
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  line-height: 1.2;
+}
+.aki-trust-badge__sub {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  line-height: 1.4;
+}
+
+/* Color-tinted variants */
+.aki-trust-badge--shipping {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.aki-trust-badge--shipping:hover { border-color: var(--aki-info); }
+.aki-trust-badge--shipping .aki-trust-badge__icon { color: var(--aki-info); }
+
+.aki-trust-badge--payment {
+  background: rgba(0, 200, 83, 0.08);
+  border-color: rgba(0, 200, 83, 0.25);
+}
+.aki-trust-badge--payment:hover { border-color: var(--aki-success); }
+.aki-trust-badge--payment .aki-trust-badge__icon { color: var(--aki-success); }
+
+.aki-trust-badge--quality {
+  background: rgba(217, 0, 16, 0.08);
+  border-color: rgba(217, 0, 16, 0.25);
+}
+.aki-trust-badge--quality:hover { border-color: var(--aki-red); }
+.aki-trust-badge--quality .aki-trust-badge__icon { color: var(--aki-red); }
+
+.aki-trust-badge--support {
+  background: rgba(0, 200, 83, 0.08);
+  border-color: rgba(0, 200, 83, 0.25);
+}
+.aki-trust-badge--support:hover { border-color: var(--aki-success); }
+.aki-trust-badge--support .aki-trust-badge__icon { color: var(--aki-success); }
+
+/* ── Layout variant 1: Hero (homepage 4-col) ── */
+.aki-trust-badges--hero {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+.aki-trust-badges--hero .aki-trust-badge {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6);
+  gap: var(--space-3);
+  min-height: 180px;
+  justify-content: center;
+}
+.aki-trust-badges--hero .aki-trust-badge__icon { font-size: 56px; }
+.aki-trust-badges--hero .aki-trust-badge__label { font-size: var(--text-base); }
+@media (max-width: 767px) {
+  .aki-trust-badges--hero { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+  .aki-trust-badges--hero .aki-trust-badge__icon { font-size: 48px; }
+}
+
+/* ── Layout variant 2: Sidebar (product page 1-col vertical stack) ── */
+.aki-trust-badges--sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 320px;
+}
+.aki-trust-badges--sidebar .aki-trust-badge__icon { font-size: 40px; }
+
+/* ── Layout variant 3: Checkout (inline horizontal compact) ── */
+.aki-trust-badges--checkout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+.aki-trust-badges--checkout .aki-trust-badge {
+  flex: 1 1 200px;
+  padding: var(--space-3);
+  gap: var(--space-2);
+}
+.aki-trust-badges--checkout .aki-trust-badge__icon { font-size: 24px; }
+.aki-trust-badges--checkout .aki-trust-badge__label { font-size: var(--text-xs); }
+.aki-trust-badges--checkout .aki-trust-badge__sub { display: none; }
+@media (max-width: 480px) {
+  .aki-trust-badges--checkout .aki-trust-badge { flex: 1 1 calc(50% - var(--space-3)); }
+}
+
+/* Annotations */
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+.prototype-annotations table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-2);
+}
+.prototype-annotations th, .prototype-annotations td {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+  font-size: var(--text-sm);
+  color: var(--aki-gray-200);
+}
+.prototype-annotations th {
+  color: var(--aki-text-muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 10 — Trust Badges</h1>
+  <p>
+    Spec: <code>UI-SPECS-marketing.md#item-10</code> · Consumer: Cell B
+    (<code>wp-content/plugins/akibara-marketing/</code>) · Fecha: 2026-04-27<br>
+    4 badges (shipping/payment/quality/support) × 3 layout variants
+    (hero/sidebar/checkout). Decision MVP: emoji native (audit O-13-102, audit O-13-105).
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══════════════════════════════════════
+       LAYOUT 1: HERO (homepage 4-col)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Layout 1 · Hero (Homepage 4-col)</h2>
+    <span class="state-label">@ ≥768px → 4col · @ &lt;768px → 2col · icon 56→48px</span>
+
+    <div class="aki-trust-badges--hero" role="list">
+      <article class="aki-trust-badge aki-trust-badge--shipping" role="listitem"
+               aria-label="Envío asegurado a todo Chile">
+        <span class="aki-trust-badge__icon" aria-hidden="true">🚚</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Envío Chile</strong>
+          <span class="aki-trust-badge__sub">A todo el país, asegurado</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--payment" role="listitem"
+               aria-label="Compra en 3 cuotas sin interés">
+        <span class="aki-trust-badge__icon" aria-hidden="true">💳</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">3 Cuotas</strong>
+          <span class="aki-trust-badge__sub">Sin interés con WebPay</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--quality" role="listitem"
+               aria-label="Manga 100% original">
+        <span class="aki-trust-badge__icon" aria-hidden="true">✓</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">100% Original</strong>
+          <span class="aki-trust-badge__sub">Distribución oficial</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--support" role="listitem"
+               aria-label="Soporte por WhatsApp">
+        <span class="aki-trust-badge__icon" aria-hidden="true">💬</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Soporte WhatsApp</strong>
+          <span class="aki-trust-badge__sub">Lun–Sáb 10:00–19:00</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       LAYOUT 2: SIDEBAR (product page 1-col)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Layout 2 · Sidebar (Product page vertical stack)</h2>
+    <span class="state-label">max-width 320px · icon 40px · stacked</span>
+
+    <div class="aki-trust-badges--sidebar" role="list">
+      <article class="aki-trust-badge aki-trust-badge--shipping" role="listitem">
+        <span class="aki-trust-badge__icon" aria-hidden="true">🚚</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Envío Chile</strong>
+          <span class="aki-trust-badge__sub">2–5 días hábiles</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--payment" role="listitem">
+        <span class="aki-trust-badge__icon" aria-hidden="true">💳</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">3 Cuotas sin interés</strong>
+          <span class="aki-trust-badge__sub">Compra desde $30.000</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--quality" role="listitem">
+        <span class="aki-trust-badge__icon" aria-hidden="true">✓</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">100% Original</strong>
+          <span class="aki-trust-badge__sub">Garantía de autenticidad</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--support" role="listitem">
+        <span class="aki-trust-badge__icon" aria-hidden="true">💬</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Soporte rápido</strong>
+          <span class="aki-trust-badge__sub">WhatsApp · Email · Web</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       LAYOUT 3: CHECKOUT (inline compact)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Layout 3 · Checkout (inline horizontal compact)</h2>
+    <span class="state-label">flex-wrap · sub hidden · icon 24px · &lt;480 → 2col</span>
+
+    <div class="aki-trust-badges--checkout" role="list">
+      <article class="aki-trust-badge aki-trust-badge--shipping" role="listitem"
+               aria-label="Envío seguro">
+        <span class="aki-trust-badge__icon" aria-hidden="true">🚚</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Envío seguro</strong>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--payment" role="listitem"
+               aria-label="Pago seguro WebPay">
+        <span class="aki-trust-badge__icon" aria-hidden="true">🔒</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Pago seguro</strong>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--quality" role="listitem"
+               aria-label="Producto original">
+        <span class="aki-trust-badge__icon" aria-hidden="true">✓</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">100% Original</strong>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--support" role="listitem"
+               aria-label="Soporte WhatsApp">
+        <span class="aki-trust-badge__icon" aria-hidden="true">💬</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Soporte</strong>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       INTERACTIONS — hover state
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Estado: Hover (border-color illuminated)</h2>
+    <span class="state-label">border-color → tint color (info/success/red)</span>
+
+    <div class="aki-trust-badges--hero" role="list">
+      <article class="aki-trust-badge aki-trust-badge--shipping" role="listitem"
+               style="border-color: var(--aki-info);">
+        <span class="aki-trust-badge__icon" aria-hidden="true">🚚</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Hover (sim)</strong>
+          <span class="aki-trust-badge__sub">--aki-info border</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--payment" role="listitem"
+               style="border-color: var(--aki-success);">
+        <span class="aki-trust-badge__icon" aria-hidden="true">💳</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Hover (sim)</strong>
+          <span class="aki-trust-badge__sub">--aki-success border</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--quality" role="listitem"
+               style="border-color: var(--aki-red);">
+        <span class="aki-trust-badge__icon" aria-hidden="true">✓</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Hover (sim)</strong>
+          <span class="aki-trust-badge__sub">--aki-red border</span>
+        </div>
+      </article>
+      <article class="aki-trust-badge aki-trust-badge--support" role="listitem"
+               style="border-color: var(--aki-success);">
+        <span class="aki-trust-badge__icon" aria-hidden="true">💬</span>
+        <div class="aki-trust-badge__content">
+          <strong class="aki-trust-badge__label">Hover (sim)</strong>
+          <span class="aki-trust-badge__sub">--aki-success border</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell B">
+  <details open>
+    <summary>4 Badges (canonical)</summary>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Variant</th><th>Icon</th><th>Tint</th><th>Use case</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><code>--shipping</code></td>
+          <td>🚚</td>
+          <td><code>--aki-info</code></td>
+          <td>Envío asegurado a todo Chile</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><code>--payment</code></td>
+          <td>💳 (or 🔒 checkout)</td>
+          <td><code>--aki-success</code></td>
+          <td>3 cuotas sin interés / pago seguro</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><code>--quality</code></td>
+          <td>✓</td>
+          <td><code>--aki-red</code></td>
+          <td>Manga 100% original</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><code>--support</code></td>
+          <td>💬</td>
+          <td><code>--aki-success</code></td>
+          <td>Soporte por WhatsApp</td>
+        </tr>
+      </tbody>
+    </table>
+  </details>
+  <details>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-info</code> + 8% bg tint — shipping badge</li>
+      <li><code>--aki-success</code> + 8% bg tint — payment + support</li>
+      <li><code>--aki-red</code> + 8% bg tint — quality</li>
+      <li><code>--aki-border</code>, <code>--aki-border-aa</code> — default + hover borders</li>
+      <li><code>--aki-white</code>, <code>--aki-text-muted</code> — text hierarchy</li>
+      <li><code>--font-heading</code> en label · <code>--font-body</code> en sub</li>
+      <li><code>--space-{2,3,4,6}</code>, <code>--radius-md</code></li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell B</summary>
+    <pre><code>.aki-trust-badges--hero        /* 4-col grid homepage */
+.aki-trust-badges--sidebar     /* 1-col stack product */
+.aki-trust-badges--checkout    /* inline horizontal */
+
+.aki-trust-badge               /* base wrapper */
+.aki-trust-badge--shipping     /* tint info */
+.aki-trust-badge--payment      /* tint success */
+.aki-trust-badge--quality      /* tint red */
+.aki-trust-badge--support      /* tint success */
+.aki-trust-badge__icon         /* emoji wrapper */
+.aki-trust-badge__content      /* label + sub */
+.aki-trust-badge__label        /* heading */
+.aki-trust-badge__sub          /* description */</code></pre>
+  </details>
+  <details>
+    <summary>A11y rules</summary>
+    <ul>
+      <li>Color NO único differenciador — siempre emoji + texto</li>
+      <li><code>aria-label</code> en wrapper si emoji no tiene fallback claro</li>
+      <li><code>aria-hidden="true"</code> en emoji cuando texto label es self-explanatory</li>
+      <li><code>role="list"</code> en container · <code>role="listitem"</code> en cada badge</li>
+      <li>Contraste label white sobre dark bg = 21:1 AAA</li>
+      <li>Contraste sub gray-400 (#8A8A8A) sobre surface = 5.47:1 AA</li>
+      <li>Icons NOT interactive — no need touch target ≥44px</li>
+    </ul>
+  </details>
+  <details>
+    <summary>Comportamiento (Cell B implementa shortcode)</summary>
+    <pre><code>// Cell B implements [akb_trust_badges layout="hero|sidebar|checkout"] shortcode
+//
+// add_shortcode('akb_trust_badges', function($atts) {
+//   $atts = shortcode_atts(['layout' => 'hero'], $atts);
+//   ob_start();
+//   include AKB_PLUGIN_DIR . 'templates/trust-badges.php';
+//   return ob_get_clean();
+// });
+//
+// templates/trust-badges.php:
+//   <div class="aki-trust-badges--<?= esc_attr($atts['layout']) ?>" role="list">
+//     <?php foreach ($badges as $badge): ?>
+//       <article class="aki-trust-badge aki-trust-badge--<?= esc_attr($badge['variant']) ?>" role="listitem">
+//         <span class="aki-trust-badge__icon" aria-hidden="true"><?= $badge['icon'] ?></span>
+//         <div class="aki-trust-badge__content">
+//           <strong class="aki-trust-badge__label"><?= esc_html($badge['label']) ?></strong>
+//           <?php if ($atts['layout'] !== 'checkout'): ?>
+//             <span class="aki-trust-badge__sub"><?= esc_html($badge['sub']) ?></span>
+//           <?php endif; ?>
+//         </div>
+//       </article>
+//     <?php endforeach; ?>
+//   </div>
+//
+// Badges array configurable via wp_options 'akibara_trust_badges' OR hardcoded MVP.</code></pre>
+  </details>
+  <details>
+    <summary>Phase 2 / TODOs</summary>
+    <ul>
+      <li>SVG custom icons replace emoji — designer Phase 2 + Cell H delivers icon set</li>
+      <li>Animation on scroll (fade-in stagger) — performance budget check first</li>
+      <li>Click handler en checkout layout: tooltip con detalle (e.g., "WebPay seguro PCI DSS")</li>
+      <li>i18n future-proof: copy hard-coded en es-CL, futuro WP <code>__()</code></li>
+      <li>Voseo grep: "Envío" / "Cuotas" / "Original" / "Soporte" → tuteo neutro ✓ (sin verbos personales)</li>
+      <li>NOTE: O-13-102 + O-13-105 cerradas con este componente (emoji estandar MVP)</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

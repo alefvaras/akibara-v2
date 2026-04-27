@@ -1,0 +1,534 @@
+<!--
+  Item 4 — Newsletter Footer (Double opt-in via Brevo)
+  Spec: audit/sprint-3/cell-h/UI-SPECS-marketing.md#item-4
+  Date: 2026-04-27
+  Consumer: Cell B — wp-content/plugins/akibara-marketing/
+  What this previews: footer newsletter form default + success + error (invalid)
+  + error (duplicate) + responsive (stacked mobile / inline desktop).
+  Brevo wiring: POST /wp-json/akibara/v1/newsletter-subscribe { email, list_id: 4 }
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 4 — Newsletter Footer | Akibara Cell H Mockup</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback inline tokens ── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.prototype-header, .prototype-annotations {
+  background: var(--aki-surface);
+  padding: var(--space-6);
+  margin: 0 auto var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 1200px;
+}
+.prototype-header { border-left: 4px solid var(--aki-red); }
+.prototype-annotations { border: 1px solid var(--aki-border); }
+
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  max-width: 1200px;
+  margin: 0 auto var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+}
+.section-wrapper__head {
+  padding: var(--space-6) var(--space-6) 0;
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+.state-label {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT — site-footer + newsletter
+   ══════════════════════════════════════════════════════ */
+.aki-footer {
+  background: var(--aki-surface);
+  padding: var(--space-12) var(--space-6) var(--space-6);
+  border-top: 4px solid var(--aki-red);
+}
+
+.aki-newsletter {
+  max-width: 720px;
+  margin: 0 auto var(--space-8);
+  text-align: center;
+}
+.aki-newsletter__heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  margin-bottom: var(--space-2);
+}
+.aki-newsletter__sub {
+  font-size: var(--text-sm);
+  color: var(--aki-text-muted);
+  line-height: 1.5;
+  margin-bottom: var(--space-6);
+}
+
+.aki-newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 540px;
+  margin: 0 auto var(--space-4);
+}
+@media (min-width: 600px) {
+  .aki-newsletter-form { flex-direction: row; align-items: stretch; gap: var(--space-3); }
+}
+
+.aki-newsletter-form__field {
+  flex: 1;
+  position: relative;
+  text-align: left;
+}
+.aki-newsletter-form__label {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+.aki-newsletter-form__input {
+  width: 100%;
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--aki-white);
+  min-height: var(--touch-target-min);
+  transition: border-color var(--transition-base);
+}
+.aki-newsletter-form__input::placeholder { color: var(--aki-gray-400); }
+.aki-newsletter-form__input:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+  border-color: var(--aki-red);
+}
+.aki-newsletter-form__input--error { border: 2px solid var(--aki-error); }
+
+.aki-newsletter-form__submit {
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  min-height: var(--touch-target-min);
+  cursor: pointer;
+  transition: background var(--transition-base);
+  white-space: nowrap;
+}
+.aki-newsletter-form__submit:hover { background: var(--aki-red-hover); }
+.aki-newsletter-form__submit:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+.aki-newsletter__incentive {
+  font-size: var(--text-sm);
+  color: var(--aki-gray-200);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(0, 200, 83, 0.1);
+  border-left: 3px solid var(--aki-success);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  margin-top: var(--space-2);
+}
+
+.aki-newsletter__feedback {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  text-align: left;
+}
+.aki-newsletter__feedback--success {
+  background: rgba(0,200,83,0.1);
+  border-left: 3px solid var(--aki-success);
+  color: var(--aki-success);
+}
+.aki-newsletter__feedback--error {
+  background: rgba(255,59,59,0.1);
+  border-left: 3px solid var(--aki-error);
+  color: var(--aki-error);
+}
+.aki-newsletter__feedback strong { display: block; }
+.aki-newsletter__feedback span { display: block; color: var(--aki-gray-200); margin-top: 2px; font-weight: var(--weight-normal); }
+
+.aki-footer__bottom {
+  border-top: 1px solid var(--aki-border);
+  padding-top: var(--space-6);
+  text-align: center;
+  color: var(--aki-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Annotations */
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 4 — Newsletter Footer</h1>
+  <p>
+    Spec: <code>UI-SPECS-marketing.md#item-4</code> · Consumer: Cell B
+    (<code>wp-content/plugins/akibara-marketing/</code>) · Fecha: 2026-04-27<br>
+    Brevo doble opt-in · Lista 4 (Newsletter general) · Welcome flow trigger post-confirm (item 6).
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══════════════════════════════════════
+       STATE 1 — DEFAULT
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <div class="section-wrapper__head">
+      <h2>Estado: Default (footer site-wide)</h2>
+      <span class="state-label">Inline @ ≥600px · Stacked &lt;600px</span>
+    </div>
+    <footer class="aki-footer">
+      <div class="aki-newsletter">
+        <h3 class="aki-newsletter__heading">Suscríbete a nuestro newsletter</h3>
+        <p class="aki-newsletter__sub">Recibe lo último en manga, lanzamientos y ofertas exclusivas.</p>
+        <form class="aki-newsletter-form" action="/wp-json/akibara/v1/newsletter-subscribe" method="post" novalidate>
+          <div class="aki-newsletter-form__field">
+            <label for="nl-email-1" class="aki-newsletter-form__label">Email</label>
+            <input type="email" id="nl-email-1" class="aki-newsletter-form__input"
+                   placeholder="tu@email.cl" required>
+          </div>
+          <button type="submit" class="aki-newsletter-form__submit">Suscribirse</button>
+        </form>
+        <div class="aki-newsletter__incentive">
+          <span aria-hidden="true">✓</span>
+          Recibe 10% descuento en tu primera compra (código WELCOME10)
+        </div>
+      </div>
+      <div class="aki-footer__bottom">
+        © 2026 Akibara · Manga 100% original · Envíos a todo Chile
+      </div>
+    </footer>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 2 — SUCCESS
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <div class="section-wrapper__head">
+      <h2>Estado: Éxito (post-submit, antes de confirm email)</h2>
+      <span class="state-label">role=status · aria-live=polite · campo cleared</span>
+    </div>
+    <footer class="aki-footer">
+      <div class="aki-newsletter">
+        <h3 class="aki-newsletter__heading">Suscríbete a nuestro newsletter</h3>
+        <p class="aki-newsletter__sub">Recibe lo último en manga, lanzamientos y ofertas exclusivas.</p>
+        <form class="aki-newsletter-form" novalidate>
+          <div class="aki-newsletter-form__field">
+            <label for="nl-email-2" class="aki-newsletter-form__label">Email</label>
+            <input type="email" id="nl-email-2" class="aki-newsletter-form__input" placeholder="tu@email.cl">
+          </div>
+          <button type="submit" class="aki-newsletter-form__submit">Suscribirse</button>
+        </form>
+        <div class="aki-newsletter__feedback aki-newsletter__feedback--success" role="status" aria-live="polite">
+          <span aria-hidden="true">✓</span>
+          <div>
+            <strong>¡Gracias!</strong>
+            <span>Te enviamos un email de confirmación. Revisa tu bandeja para activar la suscripción.</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 3 — ERROR (invalid email)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <div class="section-wrapper__head">
+      <h2>Estado: Error — email inválido</h2>
+      <span class="state-label">role=alert · border-error · client-side validation</span>
+    </div>
+    <footer class="aki-footer">
+      <div class="aki-newsletter">
+        <h3 class="aki-newsletter__heading">Suscríbete a nuestro newsletter</h3>
+        <p class="aki-newsletter__sub">Recibe lo último en manga, lanzamientos y ofertas exclusivas.</p>
+        <form class="aki-newsletter-form" novalidate>
+          <div class="aki-newsletter-form__field">
+            <label for="nl-email-3" class="aki-newsletter-form__label">Email</label>
+            <input type="email" id="nl-email-3"
+                   class="aki-newsletter-form__input aki-newsletter-form__input--error"
+                   value="email-mal-escrito" aria-invalid="true" aria-describedby="nl-err-3">
+          </div>
+          <button type="submit" class="aki-newsletter-form__submit">Suscribirse</button>
+        </form>
+        <div id="nl-err-3" class="aki-newsletter__feedback aki-newsletter__feedback--error" role="alert" aria-live="assertive">
+          <span aria-hidden="true">⚠</span>
+          <div>
+            <strong>Email inválido</strong>
+            <span>Por favor ingresa un email válido (ej: tu@correo.cl).</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 4 — ERROR (duplicate)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <div class="section-wrapper__head">
+      <h2>Estado: Error — email ya suscrito</h2>
+      <span class="state-label">Brevo response: contact already exists in list 4</span>
+    </div>
+    <footer class="aki-footer">
+      <div class="aki-newsletter">
+        <h3 class="aki-newsletter__heading">Suscríbete a nuestro newsletter</h3>
+        <p class="aki-newsletter__sub">Recibe lo último en manga, lanzamientos y ofertas exclusivas.</p>
+        <form class="aki-newsletter-form" novalidate>
+          <div class="aki-newsletter-form__field">
+            <label for="nl-email-4" class="aki-newsletter-form__label">Email</label>
+            <input type="email" id="nl-email-4"
+                   class="aki-newsletter-form__input aki-newsletter-form__input--error"
+                   value="ya-suscrito@ejemplo.cl" aria-invalid="true" aria-describedby="nl-err-4">
+          </div>
+          <button type="submit" class="aki-newsletter-form__submit">Suscribirse</button>
+        </form>
+        <div id="nl-err-4" class="aki-newsletter__feedback aki-newsletter__feedback--error" role="alert">
+          <span aria-hidden="true">ℹ</span>
+          <div>
+            <strong>Este email ya está suscrito</strong>
+            <span>Si no recibes nuestros correos, revisa la carpeta de spam o <a href="#" style="color: var(--aki-white); text-decoration: underline;">contáctanos</a>.</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell B">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-red</code>, <code>--aki-red-hover</code> — submit button</li>
+      <li><code>--aki-success</code> + <code>rgba(0,200,83,0.1)</code> bg tint — success feedback + incentive</li>
+      <li><code>--aki-error</code> + <code>rgba(255,59,59,0.1)</code> bg tint — error feedback</li>
+      <li><code>--aki-surface-2</code>, <code>--aki-border</code> — input default</li>
+      <li><code>--aki-focus-outline</code> — WCAG 2.4.13 focus ring</li>
+      <li><code>--touch-target-min</code> (44px) — input + submit</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell B</summary>
+    <pre><code>.aki-newsletter                       /* outer wrapper */
+.aki-newsletter__heading              /* "Suscríbete a..." */
+.aki-newsletter__sub                  /* subheading */
+.aki-newsletter__incentive            /* "+10% descuento" pill */
+.aki-newsletter__feedback             /* response message wrapper */
+.aki-newsletter__feedback--success
+.aki-newsletter__feedback--error
+.aki-newsletter-form                  /* flex container */
+.aki-newsletter-form__field           /* input wrapper */
+.aki-newsletter-form__label           /* visually-hidden */
+.aki-newsletter-form__input
+.aki-newsletter-form__input--error
+.aki-newsletter-form__submit</code></pre>
+  </details>
+  <details>
+    <summary>Brevo wiring (Cell B implementa)</summary>
+    <pre><code>// REST endpoint: POST /wp-json/akibara/v1/newsletter-subscribe
+//   { email: "user@example.cl", list_id: 4 }
+//
+// Cell B handler (wp-content/plugins/akibara-marketing/includes/api-newsletter.php):
+//
+// 1. Validate email server-side (filter_var FILTER_VALIDATE_EMAIL)
+// 2. Call Brevo API:
+//    POST https://api.brevo.com/v3/contacts
+//    headers: api-key (from wp-config-private.php BREVO_API_KEY)
+//    body: {
+//      email,
+//      listIds: [4],                    // newsletter list
+//      attributes: { OPT_IN_SOURCE: 'footer-newsletter', OPT_IN_DATE: now() },
+//      updateEnabled: false              // 409 if duplicate
+//    }
+// 3. If 201 → respond { status: 'success' }
+//    If 400 invalid email → { status: 'error', code: 'invalid_email' }
+//    If 409 duplicate → { status: 'error', code: 'duplicate' }
+//    Brevo automatically envía DOI confirmation email (configured per-list)
+//
+// 4. Frontend JS (vanilla):
+//    - on form submit: prevent default, fetch POST
+//    - if success: replace form with .aki-newsletter__feedback--success + GA4 event
+//    - if error: add .aki-newsletter-form__input--error + render feedback
+//
+// 5. Welcome flow: triggered AFTER user click confirm in DOI email
+//    Brevo webhook → Cell B route → set customer meta welcome_notice_pending=true
+//    → Item 6 displays in account dashboard</code></pre>
+  </details>
+  <details>
+    <summary>Edge cases / TODOs</summary>
+    <ul>
+      <li>Honeypot anti-bot field — Cell B add visually-hidden input "url" (rejected if filled)</li>
+      <li>Rate limit: max 3 attempts/IP/min — Cell B middleware</li>
+      <li>Verify código WELCOME10 está activo en Cell B `welcome-discount` module antes de show incentive</li>
+      <li>i18n: copy hard-coded en es-CL — futuro Phase 2 can use WP `__()` if needed</li>
+      <li>Voseo grep: "Suscríbete" / "Recibe" / "Te enviamos" / "Por favor ingresa" → tuteo neutro ✓</li>
+      <li>TODO Cell B: GDPR compliance — checkbox "He leído política privacidad" si scope expande a EU users (no MVP)</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

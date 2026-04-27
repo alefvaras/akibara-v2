@@ -1,0 +1,185 @@
+/**
+ * Design Tokens — Akibara Manga Crimson v3
+ *
+ * Source of truth para todos los design constants.
+ * Sprint 3 Cell H — formalizado 2026-04-27.
+ *
+ * Catalog: audit/sprint-3/cell-h/design-tokens.md
+ *
+ * Reglas:
+ * - Use var(--aki-*) en CSS — NO hex hardcoded.
+ * - Excepción: email templates (limitación email clients) con comentario del token equivalente.
+ * - Touch targets ≥44px, focus ring 3px (WCAG 2.4.13 + 2.5.5).
+ * - Respect prefers-reduced-motion (override al final del file).
+ */
+
+:root {
+  /* ── BRAND COLORS ─────────────────────────────────────────────── */
+  --aki-red: #D90010;
+  --aki-red-hover: #BB000D;
+  --aki-red-bright: #FF2020;
+  --aki-red-dark: #8B0000;
+  --aki-yellow: #FFD700;
+  --aki-yellow-bright: #FFE033;
+  --aki-yellow-dark: #C8960C;
+
+  /* ── SEMANTIC STATUS ──────────────────────────────────────────── */
+  --aki-success: #00C853;
+  --aki-warning: #F59E0B;
+  --aki-error: #FF3B3B;
+  --aki-info: #3B82F6;
+
+  /* ── NEUTRAL / SURFACE (dark theme) ──────────────────────────── */
+  --aki-black: #0A0A0A;
+  --aki-surface: #111111;
+  --aki-surface-2: #1A1A1A;
+  --aki-surface-3: #222222;
+  --aki-border: #2A2A2E;
+  --aki-border-light: #333333;
+  --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF;
+  --aki-gray-100: #F5F5F5;
+  --aki-gray-200: #E0E0E0;
+  --aki-gray-300: #B0B0B0;
+  --aki-gray-400: #8A8A8A;
+  --aki-gray-500: #8C8C8C;
+  --aki-gray-600: #3A3A3E;
+  --aki-gray-700: #2A2A2E;
+  --aki-gray-800: #1A1A1E;
+  --aki-gray-900: #171717;
+
+  --aki-text-muted: var(--aki-gray-400);
+  --aki-muted: var(--aki-text-muted);
+  --aki-light: var(--aki-gray-200);
+
+  /* ── SPECIAL PURPOSE ─────────────────────────────────────────── */
+  --aki-email-bg: #0D0D0F;
+  --aki-email-surface: #161618;
+  --aki-topbar-bg: #8B0000;
+
+  /* ── EDITORIAL PUBLISHER PALETTE (formalized, optional usage) ── */
+  --aki-editorial-ivrea: #60A5FA;
+  --aki-editorial-panini: #F87171;
+  --aki-editorial-planeta: #4ADE80;
+  --aki-editorial-norma: #34D399;
+  --aki-editorial-ovni: #C084FC;
+  --aki-editorial-kamite: #FB923C;
+  --aki-editorial-utop: #38BDF8;
+  --aki-editorial-milky: #A78BFA;
+  --aki-editorial-tmvn: #FBBF24;
+
+  /* ── TYPOGRAPHY ──────────────────────────────────────────────── */
+  --font-heading: 'Bebas Neue', 'Impact', 'Arial Narrow', sans-serif;
+  --font-display: 'Russo One', var(--font-heading);
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.775rem + 0.25vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+  --text-lg: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1rem + 0.75vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.1rem + 1.5vw, 1.75rem);
+  --text-3xl: clamp(1.8rem, 1.4rem + 2vw, 2.5rem);
+  --text-4xl: clamp(2.2rem, 1.6rem + 3vw, 3.5rem);
+  --text-5xl: clamp(2.8rem, 2rem + 4vw, 5rem);
+  --text-6xl: clamp(3.5rem, 2.5rem + 5vw, 7rem);
+
+  /* ── SPACING (4px base) ──────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* ── LAYOUT ──────────────────────────────────────────────────── */
+  --container-max: 1400px;
+  --container-narrow: 900px;
+  --header-height: 70px;
+  --sidebar-width: 280px;
+
+  /* ── BORDER RADIUS ───────────────────────────────────────────── */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* ── SHADOWS ─────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.6);
+  --shadow-glow-red: 0 0 20px rgba(217, 0, 16, 0.3);
+  --shadow-glow-info: 0 0 20px rgba(59, 130, 246, 0.3);
+  --shadow-glow-yellow: 0 0 20px rgba(255, 215, 0, 0.3);
+
+  /* ── MOTION ──────────────────────────────────────────────────── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Z-INDEX STACK ───────────────────────────────────────────── */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-lightbox: 900;
+
+  /* ── DECORATIVE / TRANSFORM ──────────────────────────────────── */
+  --skew-sm: -2deg;
+  --skew-md: -4deg;
+  --skew-lg: -6deg;
+
+  /* ── ACCESSIBILITY ───────────────────────────────────────────── */
+  --aki-focus-outline: 3px solid var(--aki-red);
+  --aki-focus-offset: 2px;
+  --touch-target-min: 44px;
+}
+
+/* ── REDUCED MOTION OVERRIDE (WCAG 2.3.3) ─────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+    --transition-bounce: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── BASE FOCUS RING (WCAG 2.4.13) ────────────────────────────── */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}

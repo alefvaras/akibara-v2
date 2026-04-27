@@ -1,0 +1,352 @@
+<!--
+  Cell H Sprint 3 — Mockups Index
+  Date: 2026-04-27
+  Navigates between 10 prototype HTMLs (1 Figma cover PNG + 9 HTML/CSS prototypes).
+  Item 9 was already delivered; remaining 9 produced as Figma MCP fallback
+  per memoria project_figma_mockup_before_visual.md (Starter rate-limit blocker).
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cell H Sprint 3 — Mockups Index | Akibara</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem; --text-lg: 1.125rem; --text-xl: 1.25rem;
+  --text-2xl: 1.75rem; --text-3xl: 2.5rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1280px; margin: 0 auto; }
+
+header.page-head {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-8);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+}
+header.page-head h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-3xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-3);
+}
+header.page-head p { color: var(--aki-gray-300); font-size: var(--text-base); line-height: 1.6; max-width: 800px; }
+header.page-head code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--aki-surface-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--aki-gray-200);
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.card {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  position: relative;
+  min-height: 200px;
+}
+.card:hover {
+  border-color: var(--aki-red);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.card:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+.card__num {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  color: var(--aki-red);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.card__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  letter-spacing: 0.5px;
+  color: var(--aki-white);
+  line-height: 1.2;
+}
+
+.card__sub {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+.card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+}
+.card__pill--cell-a {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--aki-info);
+}
+.card__pill--cell-b {
+  background: rgba(0, 200, 83, 0.15);
+  color: var(--aki-success);
+}
+.card__pill--blocking {
+  background: rgba(217, 0, 16, 0.15);
+  color: var(--aki-red);
+}
+.card__pill--conditional {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--aki-warning);
+}
+.card__pill--png {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--aki-yellow);
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+}
+
+footer.page-foot {
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--aki-border);
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  .card:hover { transform: none; }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="page-head">
+    <h1>Cell H Sprint 3 — Mockups Index</h1>
+    <p>
+      Diez prototipos del Sprint 3 Cell H. Item 9 (Finance dashboard, BLOQUEANTE) entregado
+      previamente como HTML prototype durante el block del Figma MCP. Los 9 restantes producidos
+      hoy (2026-04-27) como fallback robusto al rate-limit Figma Starter, consumiendo
+      <code>wp-content/themes/akibara/assets/css/tokens.css</code> como source of truth.
+    </p>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background: var(--aki-info);"></span>Cell A consumer</span>
+      <span class="legend-item"><span class="legend-dot" style="background: var(--aki-success);"></span>Cell B consumer</span>
+      <span class="legend-item"><span class="legend-dot" style="background: var(--aki-red);"></span>BLOQUEANTE</span>
+      <span class="legend-item"><span class="legend-dot" style="background: var(--aki-warning);"></span>Conditional</span>
+    </div>
+  </header>
+
+  <h2 class="section-title">Tokens reference (Figma cover)</h2>
+  <div class="cards-grid">
+    <a href="00-cover-tokens.png" class="card" target="_blank" rel="noopener">
+      <span class="card__num">00</span>
+      <span class="card__title">Tokens cover (Figma)</span>
+      <span class="card__sub">Cover page con 16 swatches de la paleta Manga Crimson v3. Generado en Figma antes del MCP rate-limit.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--png">PNG</span>
+      </div>
+    </a>
+  </div>
+
+  <h2 class="section-title">Cell A · Preventas (3 prototipos)</h2>
+  <div class="cards-grid">
+    <a href="01-encargos-form.html" class="card">
+      <span class="card__num">01</span>
+      <span class="card__title">Encargos form</span>
+      <span class="card__sub">Form styling default / focus / error / success / submit states. Layout 1col mobile → 2col desktop.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-a">Cell A</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">Request A-01</span>
+      </div>
+    </a>
+    <a href="03-preventa-card.html" class="card">
+      <span class="card__num">03</span>
+      <span class="card__title">Preventa card 4 estados</span>
+      <span class="card__sub">pending / confirmed / shipping / delivered. Grid 1→2→4 cols. Mapped a wp_akb_preorders.state.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-a">Cell A</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">Request A-02</span>
+      </div>
+    </a>
+    <a href="05-oos-preventa.html" class="card">
+      <span class="card__num">05</span>
+      <span class="card__title">Auto-OOS preventa</span>
+      <span class="card__sub">"Fecha por confirmar" — reemplaza badge "Agotado" estándar de WC cuando _allow_preventa=yes.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-a">Cell A</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">Request A-03</span>
+      </div>
+    </a>
+  </div>
+
+  <h2 class="section-title">Cell B · Marketing (7 prototipos)</h2>
+  <div class="cards-grid">
+    <a href="02-cookie-banner.html" class="card">
+      <span class="card__num">02</span>
+      <span class="card__title">Cookie consent banner</span>
+      <span class="card__sub">GDPR + Ley 19.628 Chile. Default + expanded preferences + dismissed. Glassmorphism.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-b">Cell B</span>
+      </div>
+    </a>
+    <a href="04-newsletter-footer.html" class="card">
+      <span class="card__num">04</span>
+      <span class="card__title">Newsletter footer</span>
+      <span class="card__sub">Brevo doble opt-in. Default / success / error invalid / error duplicate. Stacked mobile / inline desktop.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-b">Cell B</span>
+      </div>
+    </a>
+    <a href="06-welcome-notice.html" class="card">
+      <span class="card__num">06</span>
+      <span class="card__title">Welcome bienvenida</span>
+      <span class="card__sub">Post-DOI confirm notice. Default / copied / dismissed + thank-you variant. WELCOME10 código.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-b">Cell B</span>
+      </div>
+    </a>
+    <a href="07-popup-modal.html" class="card">
+      <span class="card__num">07</span>
+      <span class="card__title">Popup modal — 3 variantes</span>
+      <span class="card__sub">Reusable base + newsletter / discount / review variants. Focus trap, Escape close, dialog/aria-modal.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-b">Cell B</span>
+      </div>
+    </a>
+    <a href="08-cart-abandoned-email.html" class="card">
+      <span class="card__num">08</span>
+      <span class="card__title">Cart-abandoned email</span>
+      <span class="card__sub">CONDITIONAL pending Cell B Brevo decision. Email-safe table layout fallback if upstream NOT firing.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-b">Cell B</span>
+        <span class="card__pill card__pill--conditional">Conditional</span>
+      </div>
+    </a>
+    <a href="09-finance-dashboard.html" class="card" style="border-color: rgba(217,0,16,0.4);">
+      <span class="card__num">09</span>
+      <span class="card__title">Finance dashboard 5 widgets</span>
+      <span class="card__sub">Top series / editoriales / encargos / trending / stock crítico. Responsive 4→2→1 cols.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-b">Cell B</span>
+        <span class="card__pill card__pill--blocking">BLOQUEANTE</span>
+      </div>
+    </a>
+    <a href="10-trust-badges.html" class="card">
+      <span class="card__num">10</span>
+      <span class="card__title">Trust badges</span>
+      <span class="card__sub">4 badges (shipping/payment/quality/support) × 3 layouts (hero/sidebar/checkout). Emoji MVP.</span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-b">Cell B</span>
+      </div>
+    </a>
+  </div>
+
+  <footer class="page-foot">
+    <p>
+      Cell H — Design Ops Sprint 3 · 2026-04-27 ·
+      Specs: <code style="background: rgba(255,215,0,0.15); color: var(--aki-yellow); padding: 2px 6px; border-radius: 2px;">audit/sprint-3/cell-h/UI-SPECS-{preventas,marketing}.md</code> ·
+      Tokens: <code style="background: rgba(255,215,0,0.15); color: var(--aki-yellow); padding: 2px 6px; border-radius: 2px;">wp-content/themes/akibara/assets/css/tokens.css</code>
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>

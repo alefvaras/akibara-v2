@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 9 — Finance Dashboard (BLOQUEANTE Cell B) — Akibara Mockup</title>
+<style>
+/* Design tokens — synced with wp-content/themes/akibara/assets/css/tokens.css */
+:root {
+  --aki-red: #D90010;
+  --aki-red-hover: #BB000D;
+  --aki-red-bright: #FF2020;
+  --aki-red-dark: #8B0000;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853;
+  --aki-warning: #F59E0B;
+  --aki-error: #FF3B3B;
+  --aki-info: #3B82F6;
+  --aki-black: #0A0A0A;
+  --aki-surface: #111111;
+  --aki-surface-2: #1A1A1A;
+  --aki-surface-3: #222222;
+  --aki-border: #2A2A2E;
+  --aki-border-light: #333333;
+  --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF;
+  --aki-gray-200: #E0E0E0;
+  --aki-gray-300: #B0B0B0;
+  --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --aki-editorial-ivrea: #60A5FA;
+  --aki-editorial-panini: #F87171;
+  --aki-editorial-planeta: #4ADE80;
+  --aki-editorial-norma: #34D399;
+  --aki-editorial-ovni: #C084FC;
+  --aki-editorial-milky: #A78BFA;
+  --aki-editorial-utop: #38BDF8;
+  --aki-editorial-kamite: #FB923C;
+  --aki-editorial-tmvn: #FBBF24;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --text-3xl: clamp(1.8rem, 1.5rem + 1vw, 2.5rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Spec banner */
+.spec-banner {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-12);
+  border-radius: var(--radius-md);
+}
+.spec-banner h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.spec-banner p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.spec-banner code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+/* Dashboard */
+.aki-dashboard {
+  background: var(--aki-surface);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--aki-border);
+}
+
+.aki-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--aki-border);
+}
+
+.aki-dashboard__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--aki-white);
+}
+.aki-dashboard__timestamp {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+
+.aki-dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+}
+
+@media (max-width: 1023px) {
+  .aki-dashboard__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .aki-dashboard__grid { grid-template-columns: 1fr; }
+  body { padding: var(--space-4); }
+}
+
+/* Widget base */
+.aki-dashboard-widget {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 320px;
+}
+
+.aki-dashboard-widget--full { grid-column: 1 / -1; min-height: auto; }
+
+.aki-dashboard-widget__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.aki-dashboard-widget__title-icon {
+  width: 8px;
+  height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+
+.aki-dashboard-widget__footer {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--aki-border);
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.aki-dashboard-widget__action {
+  font-size: var(--text-xs);
+  color: var(--aki-red);
+  text-decoration: none;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: var(--space-2);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-base);
+}
+.aki-dashboard-widget__action:hover { color: var(--aki-red-bright); background: rgba(217,0,16,0.08); }
+.aki-dashboard-widget__action:focus-visible { outline: var(--aki-focus-outline); outline-offset: 2px; }
+
+/* Widget 1: Top Series — bar chart */
+.bar-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.bar-row { display: flex; flex-direction: column; gap: 4px; }
+.bar-meta { display: flex; justify-content: space-between; font-size: var(--text-xs); }
+.bar-name { color: var(--aki-white); font-weight: var(--weight-medium); }
+.bar-count { color: var(--aki-text-muted); font-family: 'JetBrains Mono', monospace; }
+.bar-track { height: 8px; background: var(--aki-surface-2); border-radius: var(--radius-sm); overflow: hidden; }
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--aki-red), var(--aki-red-bright));
+  border-radius: var(--radius-sm);
+}
+.bar-row:nth-child(2) .bar-fill { background: linear-gradient(90deg, var(--aki-red-hover), var(--aki-red)); }
+.bar-row:nth-child(3) .bar-fill { background: linear-gradient(90deg, var(--aki-red-dark), var(--aki-red-hover)); }
+.bar-row:nth-child(4) .bar-fill { background: var(--aki-gray-400); }
+.bar-row:nth-child(5) .bar-fill { background: var(--aki-gray-400); opacity: 0.6; }
+
+/* Widget 2: Top Editoriales — stacked bar */
+.editorial-list { display: flex; flex-direction: column; gap: var(--space-2); }
+.editorial-row { display: flex; align-items: center; gap: var(--space-3); }
+.editorial-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.editorial-name { font-size: var(--text-xs); color: var(--aki-white); font-weight: var(--weight-medium); flex: 1; }
+.editorial-count { font-size: var(--text-xs); color: var(--aki-text-muted); font-family: 'JetBrains Mono', monospace; }
+.editorial-bar-container { display: flex; height: 24px; border-radius: var(--radius-sm); overflow: hidden; margin-top: var(--space-2); }
+.editorial-bar { height: 100%; }
+
+/* Widget 3: Encargos pendientes */
+.encargos-list { display: flex; flex-direction: column; gap: var(--space-2); }
+.encargo-item {
+  background: var(--aki-surface-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--aki-warning);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.encargo-item--confirmed { border-left-color: var(--aki-success); }
+.encargo-name { font-size: var(--text-xs); color: var(--aki-white); font-weight: var(--weight-medium); }
+.encargo-meta { font-size: 10px; color: var(--aki-text-muted); display: flex; gap: var(--space-2); }
+.encargo-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  background: rgba(245,158,11,0.15);
+  color: var(--aki-warning);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  width: max-content;
+}
+.encargo-status--confirmed { background: rgba(0,200,83,0.15); color: var(--aki-success); }
+
+/* Widget 4: Trending */
+.trending-list { display: flex; flex-direction: column; gap: var(--space-2); }
+.trending-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.trending-rank {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--aki-text-muted);
+  font-size: var(--text-xs);
+  min-width: 20px;
+}
+.trending-name { color: var(--aki-white); font-size: var(--text-xs); font-weight: var(--weight-medium); }
+.trending-count {
+  color: var(--aki-gray-300);
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.trending-indicator {
+  font-size: 12px;
+  font-weight: var(--weight-bold);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 32px;
+  justify-content: center;
+}
+.trending-indicator--up { color: var(--aki-success); }
+.trending-indicator--neutral { color: var(--aki-gray-400); }
+.trending-indicator--down { color: var(--aki-error); }
+
+/* Widget 5: Stock crítico full-width table */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+.stock-table thead th {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+  color: var(--aki-text-muted);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 10px;
+}
+.stock-table tbody td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+  vertical-align: middle;
+  color: var(--aki-white);
+}
+.stock-table tbody tr:hover { background: var(--aki-surface-2); }
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+}
+.stock-badge--critical { background: rgba(255,59,59,0.15); color: var(--aki-error); }
+.stock-badge--warning { background: rgba(245,158,11,0.15); color: var(--aki-warning); }
+.stock-badge--attention { background: rgba(59,130,246,0.15); color: var(--aki-info); }
+.stock-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px var(--space-3);
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  min-height: 32px;
+  transition: var(--transition-base);
+}
+.stock-cta:hover { background: var(--aki-red-hover); }
+.stock-cta:focus-visible { outline: var(--aki-focus-outline); outline-offset: 2px; }
+
+/* Annotation labels */
+.annotation {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="spec-banner">
+  <h1>Item 9 — Finance Dashboard (BLOQUEANTE Cell B)</h1>
+  <p>
+    Mockup HTML/CSS prototype usando design tokens de
+    <code>wp-content/themes/akibara/assets/css/tokens.css</code>.
+    Spec en <code>audit/sprint-3/cell-h/UI-SPECS-marketing.md#item-9</code>.
+    <br><br>
+    <strong>Cell B implementation reference:</strong>
+    Container grid <code>.aki-dashboard__grid</code> con responsive breakpoints (1280→1023→768).
+    5 widgets con clases <code>.aki-dashboard-widget</code> + variants.
+    Tokens consumidos: 28 colors + 13 spacing + 4 radius (todos definidos en tokens.css).
+  </p>
+</div>
+
+<div class="aki-dashboard" role="region" aria-label="Finance dashboard">
+  <header class="aki-dashboard__header">
+    <h1 class="aki-dashboard__title">Finance Dashboard</h1>
+    <span class="aki-dashboard__timestamp">Actualizado: hace 2h</span>
+  </header>
+
+  <div class="aki-dashboard__grid">
+    <!-- WIDGET 1: TOP SERIES POR VOLUMEN -->
+    <article class="aki-dashboard-widget" aria-labelledby="w1-title">
+      <h2 class="aki-dashboard-widget__title" id="w1-title">
+        <span class="aki-dashboard-widget__title-icon" aria-hidden="true"></span>
+        Top Series por Volumen
+      </h2>
+      <div class="bar-list" role="list">
+        <div class="bar-row" role="listitem">
+          <div class="bar-meta"><span class="bar-name">One Piece</span><span class="bar-count">196K</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width: 100%"></div></div>
+        </div>
+        <div class="bar-row" role="listitem">
+          <div class="bar-meta"><span class="bar-name">Berserk</span><span class="bar-count">142K</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width: 72%"></div></div>
+        </div>
+        <div class="bar-row" role="listitem">
+          <div class="bar-meta"><span class="bar-name">Jujutsu Kaisen</span><span class="bar-count">88K</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width: 45%"></div></div>
+        </div>
+        <div class="bar-row" role="listitem">
+          <div class="bar-meta"><span class="bar-name">Chainsaw Man</span><span class="bar-count">52K</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width: 27%"></div></div>
+        </div>
+        <div class="bar-row" role="listitem">
+          <div class="bar-meta"><span class="bar-name">Kingdom</span><span class="bar-count">31K</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width: 16%"></div></div>
+        </div>
+      </div>
+      <footer class="aki-dashboard-widget__footer">
+        <a href="#" class="aki-dashboard-widget__action">Ver más</a>
+        <a href="#" class="aki-dashboard-widget__action">Exportar CSV</a>
+      </footer>
+    </article>
+
+    <!-- WIDGET 2: TOP EDITORIALES -->
+    <article class="aki-dashboard-widget" aria-labelledby="w2-title">
+      <h2 class="aki-dashboard-widget__title" id="w2-title">
+        <span class="aki-dashboard-widget__title-icon" aria-hidden="true"></span>
+        Top Editoriales
+      </h2>
+      <div class="editorial-bar-container" aria-hidden="true">
+        <div class="editorial-bar" style="background: var(--aki-editorial-ivrea); width: 28%"></div>
+        <div class="editorial-bar" style="background: var(--aki-editorial-panini); width: 22%"></div>
+        <div class="editorial-bar" style="background: var(--aki-editorial-planeta); width: 18%"></div>
+        <div class="editorial-bar" style="background: var(--aki-editorial-ovni); width: 12%"></div>
+        <div class="editorial-bar" style="background: var(--aki-editorial-milky); width: 10%"></div>
+        <div class="editorial-bar" style="background: var(--aki-editorial-utop); width: 6%"></div>
+        <div class="editorial-bar" style="background: var(--aki-editorial-kamite); width: 4%"></div>
+      </div>
+      <ul class="editorial-list">
+        <li class="editorial-row">
+          <span class="editorial-dot" style="background: var(--aki-editorial-ivrea)" aria-hidden="true"></span>
+          <span class="editorial-name">Ivrea</span><span class="editorial-count">2,840 subs</span>
+        </li>
+        <li class="editorial-row">
+          <span class="editorial-dot" style="background: var(--aki-editorial-panini)" aria-hidden="true"></span>
+          <span class="editorial-name">Panini</span><span class="editorial-count">2,210</span>
+        </li>
+        <li class="editorial-row">
+          <span class="editorial-dot" style="background: var(--aki-editorial-planeta)" aria-hidden="true"></span>
+          <span class="editorial-name">Planeta</span><span class="editorial-count">1,805</span>
+        </li>
+        <li class="editorial-row">
+          <span class="editorial-dot" style="background: var(--aki-editorial-ovni)" aria-hidden="true"></span>
+          <span class="editorial-name">Ovni Press</span><span class="editorial-count">1,210</span>
+        </li>
+        <li class="editorial-row">
+          <span class="editorial-dot" style="background: var(--aki-editorial-milky)" aria-hidden="true"></span>
+          <span class="editorial-name">Milky Way</span><span class="editorial-count">1,000</span>
+        </li>
+      </ul>
+      <footer class="aki-dashboard-widget__footer">
+        <a href="#" class="aki-dashboard-widget__action">Ver listas Brevo</a>
+      </footer>
+    </article>
+
+    <!-- WIDGET 3: ENCARGOS PENDIENTES -->
+    <article class="aki-dashboard-widget" aria-labelledby="w3-title">
+      <h2 class="aki-dashboard-widget__title" id="w3-title">
+        <span class="aki-dashboard-widget__title-icon" aria-hidden="true"></span>
+        Encargos Pendientes
+      </h2>
+      <ul class="encargos-list">
+        <li class="encargo-item">
+          <span class="encargo-status">⏳ Pending</span>
+          <span class="encargo-name">Jujutsu Kaisen 24</span>
+          <span class="encargo-meta"><span>Cliente: María R.</span><span>·</span><span>Hace 2d</span></span>
+        </li>
+        <li class="encargo-item">
+          <span class="encargo-status">⏳ Pending</span>
+          <span class="encargo-name">Jujutsu Kaisen 26</span>
+          <span class="encargo-meta"><span>Cliente: Pedro C.</span><span>·</span><span>Hace 5d</span></span>
+        </li>
+        <li class="encargo-item encargo-item--confirmed">
+          <span class="encargo-status encargo-status--confirmed">✓ Confirmed</span>
+          <span class="encargo-name">Berserk Deluxe Vol. 14</span>
+          <span class="encargo-meta"><span>Cliente: Andrea V.</span><span>·</span><span>Hace 1d</span></span>
+        </li>
+      </ul>
+      <footer class="aki-dashboard-widget__footer">
+        <a href="#" class="aki-dashboard-widget__action">Administrar encargos</a>
+      </footer>
+    </article>
+
+    <!-- WIDGET 4: TRENDING SEARCHES -->
+    <article class="aki-dashboard-widget" aria-labelledby="w4-title">
+      <h2 class="aki-dashboard-widget__title" id="w4-title">
+        <span class="aki-dashboard-widget__title-icon" aria-hidden="true"></span>
+        Trending Searches
+      </h2>
+      <ul class="trending-list">
+        <li class="trending-row">
+          <span class="trending-rank">#1</span>
+          <span class="trending-name">One Piece</span>
+          <span class="trending-count">196K</span>
+          <span class="trending-indicator trending-indicator--up" aria-label="Subiendo">▲ 12%</span>
+        </li>
+        <li class="trending-row">
+          <span class="trending-rank">#2</span>
+          <span class="trending-name">Jujutsu Kaisen</span>
+          <span class="trending-count">34K</span>
+          <span class="trending-indicator trending-indicator--up" aria-label="Subiendo">▲ 8%</span>
+        </li>
+        <li class="trending-row">
+          <span class="trending-rank">#3</span>
+          <span class="trending-name">Chainsaw Man</span>
+          <span class="trending-count">21K</span>
+          <span class="trending-indicator trending-indicator--neutral" aria-label="Estable">─ 0%</span>
+        </li>
+        <li class="trending-row">
+          <span class="trending-rank">#4</span>
+          <span class="trending-name">Berserk</span>
+          <span class="trending-count">15K</span>
+          <span class="trending-indicator trending-indicator--up" aria-label="Subiendo">▲ 4%</span>
+        </li>
+        <li class="trending-row">
+          <span class="trending-rank">#5</span>
+          <span class="trending-name">Berserk (vol. 9)</span>
+          <span class="trending-count">9K</span>
+          <span class="trending-indicator trending-indicator--down" aria-label="Bajando">▼ 6%</span>
+        </li>
+      </ul>
+      <footer class="aki-dashboard-widget__footer">
+        <a href="#" class="aki-dashboard-widget__action">Ver últimos 7 días</a>
+      </footer>
+    </article>
+
+    <!-- WIDGET 5: STOCK CRÍTICO (full width) -->
+    <article class="aki-dashboard-widget aki-dashboard-widget--full" aria-labelledby="w5-title">
+      <h2 class="aki-dashboard-widget__title" id="w5-title">
+        <span class="aki-dashboard-widget__title-icon" aria-hidden="true"></span>
+        Stock Crítico
+      </h2>
+      <table class="stock-table">
+        <thead>
+          <tr>
+            <th scope="col">Producto</th>
+            <th scope="col">SKU</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Naruto Vol. 72 (último)</td>
+            <td><code>NRTO-72-ES</code></td>
+            <td>0 unidades</td>
+            <td><span class="stock-badge stock-badge--critical">⚠ Agotado</span></td>
+            <td><a href="#" class="stock-cta" aria-label="Crear preventa para Naruto Vol. 72">Crear preventa</a></td>
+          </tr>
+          <tr>
+            <td>Demon Slayer Box Set</td>
+            <td><code>DSBOX-01</code></td>
+            <td>1 unidad</td>
+            <td><span class="stock-badge stock-badge--warning">⚠ Bajo</span></td>
+            <td><a href="#" class="stock-cta" aria-label="Crear preventa para Demon Slayer Box Set">Crear preventa</a></td>
+          </tr>
+          <tr>
+            <td>Vagabond Tomo 37</td>
+            <td><code>VBND-37</code></td>
+            <td>2 unidades</td>
+            <td><span class="stock-badge stock-badge--warning">⚠ Bajo</span></td>
+            <td><a href="#" class="stock-cta" aria-label="Crear preventa para Vagabond 37">Crear preventa</a></td>
+          </tr>
+          <tr>
+            <td>Solo Leveling Vol. 5</td>
+            <td><code>SLVL-05</code></td>
+            <td>3 unidades</td>
+            <td><span class="stock-badge stock-badge--attention">ⓘ Atención</span></td>
+            <td><a href="#" class="stock-cta" aria-label="Crear preventa para Solo Leveling 5">Crear preventa</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <footer class="aki-dashboard-widget__footer">
+        <a href="#" class="aki-dashboard-widget__action">Ver inventario completo</a>
+        <a href="#" class="aki-dashboard-widget__action">Configurar threshold</a>
+      </footer>
+    </article>
+  </div>
+</div>
+
+</body>
+</html>

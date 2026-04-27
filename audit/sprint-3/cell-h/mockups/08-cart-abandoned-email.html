@@ -1,0 +1,678 @@
+<!--
+  Item 8 — Cart-Abandoned Email Template (CONDITIONAL)
+  Spec: audit/sprint-3/cell-h/UI-SPECS-marketing.md#item-8
+  Date: 2026-04-27
+  Consumer: Cell B — wp-content/plugins/akibara-marketing/
+
+  ┌─────────────────────────── CONDITIONAL ─────────────────────────────┐
+  │ Status: PENDING decisión Cell B sobre Brevo upstream firing.        │
+  │                                                                     │
+  │ Per memoria `project_brevo_upstream_capabilities.md`:               │
+  │ - Brevo Abandoned Cart upstream activo en cuenta Akibara.            │
+  │ - NO rebuild de features que Brevo cubre nativo.                    │
+  │                                                                     │
+  │ Verify via Gmail MCP: search "from:brevo abandoned cart" past 30d.  │
+  │   - Si firing → Cell B decommissions legacy 539 LOC module.         │
+  │     Documentar en audit/sprint-3/cell-b/DECISION-CART-ABANDONED.md  │
+  │   - Si NOT firing → fallback Cell H email template (este mockup).   │
+  │                                                                     │
+  │ Este HTML es el FALLBACK template if Brevo upstream NOT firing.     │
+  │ Email-safe constraints:                                              │
+  │   - NO flexbox/grid (table layouts only)                            │
+  │   - hex hardcoded permitido (limitación email clients)              │
+  │     pero documentar token equivalente en comentarios                │
+  │   - Inline CSS preferred sobre <style> (some clients strip it)      │
+  │   - alt text en images, fallback texts (alt fallback)               │
+  └─────────────────────────────────────────────────────────────────────┘
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 8 — Cart Abandoned Email | Akibara Cell H Mockup</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/*
+ * NOTE: Top-level <style> here is for PROTOTYPE preview only.
+ * The actual email template uses INLINE styles (see <style> block within iframe-rendered email).
+ * Email-safe approach uses table layouts + inline styles to maximize client compatibility.
+ *
+ * Tokens equivalents (per design-tokens.md §12 Migration path):
+ *   #D90010 = --aki-red          | #BB000D = --aki-red-hover
+ *   #0D0D0F = --aki-email-bg     | #161618 = --aki-email-surface
+ *   #FFFFFF = --aki-white        | #B0B0B0 = --aki-gray-300  | #8A8A8A = --aki-gray-400
+ *   #00C853 = --aki-success      | #FFD700 = --aki-yellow
+ */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A;
+  --aki-border: #2A2A2E; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px;
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+}
+
+.prototype-header, .prototype-annotations {
+  background: var(--aki-surface);
+  padding: var(--space-6);
+  margin: 0 auto var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 800px;
+}
+.prototype-header { border-left: 4px solid var(--aki-warning); }
+.prototype-annotations { border: 1px solid var(--aki-border); }
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-warning);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-header .conditional-banner {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 3px solid var(--aki-warning);
+  border-radius: var(--radius-sm);
+  color: var(--aki-gray-200);
+  font-size: var(--text-sm);
+}
+
+.email-frame {
+  max-width: 640px;
+  margin: 0 auto var(--space-8);
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+/* ──────────────────────────────────────────────────────
+   EMAIL TEMPLATE — table-based, email-client safe
+   ──────────────────────────────────────────────────────
+   Stylesheet here is for prototype preview. In production,
+   styles MUST be inlined per email client compatibility.
+   Outlook does not support flexbox/grid. */
+.email-table {
+  width: 100%;
+  background: #0D0D0F;  /* --aki-email-bg */
+  font-family: 'Inter', Arial, sans-serif;
+  color: #FFFFFF;
+  border-collapse: collapse;
+}
+.email-header-table {
+  background: #161618;  /* --aki-email-surface */
+  border-bottom: 4px solid #D90010;  /* --aki-red */
+}
+.email-header-cell {
+  padding: 24px;
+  text-align: center;
+}
+.email-logo {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.email-logo-accent { color: #D90010; }
+
+.email-hero-cell {
+  padding: 48px 24px 24px;
+  text-align: center;
+}
+.email-hero-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+}
+.email-hero-title {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 36px;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.email-hero-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #B0B0B0;  /* --aki-gray-300 */
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.email-cta-cell {
+  padding: 24px;
+  text-align: center;
+}
+.email-cta-button {
+  display: inline-block;
+  background: #D90010;  /* --aki-red */
+  color: #FFFFFF;
+  text-decoration: none;
+  padding: 16px 40px;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 4px;
+  min-height: 44px;
+  line-height: 24px;
+}
+
+.email-cart-section {
+  background: #161618;
+  padding: 24px;
+  border-top: 1px solid #2A2A2E;
+}
+.email-cart-title {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #FFFFFF;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.email-cart-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.email-cart-row td {
+  border-bottom: 1px solid #2A2A2E;
+  padding: 12px 0;
+  vertical-align: middle;
+}
+.email-cart-row:last-child td { border-bottom: none; }
+.email-cart-thumb {
+  width: 60px;
+  height: 75px;
+  background: #222;
+  border-radius: 4px;
+  display: inline-block;
+  font-family: monospace;
+  color: #8A8A8A;
+  text-align: center;
+  font-size: 10px;
+  line-height: 75px;
+  vertical-align: middle;
+  margin-right: 12px;
+}
+.email-cart-name {
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+.email-cart-meta {
+  color: #8A8A8A;
+  font-size: 12px;
+  font-family: monospace;
+}
+.email-cart-qty, .email-cart-price {
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.email-totals-table {
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #2A2A2E;
+}
+.email-totals-row td {
+  padding: 4px 0;
+  font-size: 14px;
+}
+.email-totals-row td:first-child {
+  color: #B0B0B0;
+}
+.email-totals-row td:last-child {
+  text-align: right;
+  color: #FFFFFF;
+}
+.email-totals-row.total td {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #FFFFFF;
+  padding-top: 12px;
+}
+
+.email-incentive-cell {
+  background: rgba(0, 200, 83, 0.08);
+  border-left: 3px solid #00C853;
+  padding: 16px 24px;
+  margin: 24px;
+  border-radius: 4px;
+}
+.email-incentive-title {
+  color: #00C853;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.email-incentive-body {
+  color: #FFFFFF;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.email-incentive-code {
+  background: #0A0A0A;
+  color: #FFD700;
+  font-family: monospace;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 2px;
+  border: 1px dashed #FFD700;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.email-trust-section {
+  background: #0D0D0F;
+  padding: 32px 24px;
+  border-top: 1px solid #2A2A2E;
+}
+.email-trust-table {
+  width: 100%;
+}
+.email-trust-cell {
+  text-align: center;
+  width: 33.33%;
+  padding: 8px;
+  vertical-align: top;
+}
+.email-trust-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.email-trust-label {
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.email-trust-sub {
+  color: #8A8A8A;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.email-footer-cell {
+  background: #0A0A0A;
+  padding: 24px;
+  text-align: center;
+  border-top: 1px solid #2A2A2E;
+}
+.email-footer-link {
+  color: #B0B0B0;
+  text-decoration: underline;
+  font-size: 12px;
+  margin: 0 8px;
+}
+.email-footer-meta {
+  color: #8A8A8A;
+  font-size: 11px;
+  margin-top: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .email-hero-title { font-size: 28px; }
+  .email-cta-button { padding: 14px 24px; font-size: 16px; }
+  .email-trust-cell { display: block; width: 100%; padding: 12px 0; }
+  .email-cart-thumb { width: 48px; height: 60px; line-height: 60px; }
+}
+
+/* Annotations */
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>⚠ Item 8 — Cart-Abandoned Email · CONDITIONAL</h1>
+  <p>
+    Spec: <code>UI-SPECS-marketing.md#item-8</code> · Consumer: Cell B
+    (<code>wp-content/plugins/akibara-marketing/</code>) · Fecha: 2026-04-27
+  </p>
+  <div class="conditional-banner">
+    <strong>⚠ CONDITIONAL — pending Cell B Brevo decision:</strong><br>
+    Per memoria <code>project_brevo_upstream_capabilities.md</code>, Brevo Abandoned Cart upstream
+    está activo en cuenta Akibara. Cell B debe verificar (Gmail MCP search "from:brevo abandoned cart" 30d):
+    <ul style="margin-top: var(--space-2); margin-left: var(--space-6);">
+      <li>✅ Si Brevo firing → decomission legacy 539 LOC. Documentar en <code>audit/sprint-3/cell-b/DECISION-CART-ABANDONED.md</code>. Este template NO se usa.</li>
+      <li>⏳ Si Brevo NOT firing → este template se usa como fallback. Cell B configura via Brevo transactional API o WP Mail.</li>
+    </ul>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     EMAIL TEMPLATE PREVIEW
+     Renders inside .email-frame to simulate email client view.
+     In production, this HTML is sent via Brevo transactional API.
+     ══════════════════════════════════════════════════════ -->
+<div class="email-frame">
+  <table class="email-table" cellpadding="0" cellspacing="0" role="presentation">
+    <!-- HEADER -->
+    <tr>
+      <td>
+        <table class="email-header-table" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+          <tr>
+            <td class="email-header-cell">
+              <a href="https://akibara.cl" class="email-logo">
+                Aki<span class="email-logo-accent">bara</span>
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- HERO -->
+    <tr>
+      <td class="email-hero-cell">
+        <div class="email-hero-icon" aria-hidden="true">🛒</div>
+        <h1 class="email-hero-title">¿Olvidaste tu carrito?</h1>
+        <p class="email-hero-text">
+          Hola María, dejaste algunos manga esperándote.
+          Vuelve y completa tu pedido antes que se agoten.
+        </p>
+      </td>
+    </tr>
+
+    <!-- CTA primary -->
+    <tr>
+      <td class="email-cta-cell">
+        <a href="https://akibara.cl/recuperar-carrito?token=xxx" class="email-cta-button">
+          Recuperar mi carrito →
+        </a>
+      </td>
+    </tr>
+
+    <!-- CART SUMMARY -->
+    <tr>
+      <td class="email-cart-section">
+        <h2 class="email-cart-title">Tu carrito ({{ items_count }} items)</h2>
+        <table class="email-cart-table" cellpadding="0" cellspacing="0" role="presentation">
+          <tr class="email-cart-row">
+            <td>
+              <span class="email-cart-thumb" aria-hidden="true">IMG</span>
+            </td>
+            <td>
+              <span class="email-cart-name">Jujutsu Kaisen Vol. 24</span>
+              <span class="email-cart-meta">Ivrea · SKU JJK-24</span>
+            </td>
+            <td class="email-cart-qty">×1</td>
+            <td class="email-cart-price">$8.990</td>
+          </tr>
+          <tr class="email-cart-row">
+            <td>
+              <span class="email-cart-thumb" aria-hidden="true">IMG</span>
+            </td>
+            <td>
+              <span class="email-cart-name">Berserk Deluxe Vol. 13</span>
+              <span class="email-cart-meta">Panini · SKU BRSK-DLX-13</span>
+            </td>
+            <td class="email-cart-qty">×1</td>
+            <td class="email-cart-price">$19.990</td>
+          </tr>
+          <tr class="email-cart-row">
+            <td>
+              <span class="email-cart-thumb" aria-hidden="true">IMG</span>
+            </td>
+            <td>
+              <span class="email-cart-name">Chainsaw Man Vol. 14</span>
+              <span class="email-cart-meta">Panini · SKU CSM-14</span>
+            </td>
+            <td class="email-cart-qty">×1</td>
+            <td class="email-cart-price">$8.990</td>
+          </tr>
+        </table>
+
+        <table class="email-totals-table" cellpadding="0" cellspacing="0" role="presentation">
+          <tr class="email-totals-row">
+            <td>Subtotal</td>
+            <td>$37.970</td>
+          </tr>
+          <tr class="email-totals-row">
+            <td>Envío estimado</td>
+            <td>$3.500</td>
+          </tr>
+          <tr class="email-totals-row total">
+            <td>Total</td>
+            <td>$41.470</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- INCENTIVE -->
+    <tr>
+      <td>
+        <div class="email-incentive-cell">
+          <div class="email-incentive-title">🎁 Recupera tu carrito y ahorra</div>
+          <p class="email-incentive-body">
+            Completa tu compra en las próximas <strong>24 horas</strong> y recibe
+            <strong>10% descuento</strong> con este código:
+          </p>
+          <span class="email-incentive-code">RECOVERY10</span>
+        </div>
+      </td>
+    </tr>
+
+    <!-- TRUST -->
+    <tr>
+      <td class="email-trust-section">
+        <table class="email-trust-table" cellpadding="0" cellspacing="0" role="presentation">
+          <tr>
+            <td class="email-trust-cell">
+              <div class="email-trust-icon" aria-hidden="true">🚚</div>
+              <div class="email-trust-label">Envío Chile</div>
+              <div class="email-trust-sub">A todo el país</div>
+            </td>
+            <td class="email-trust-cell">
+              <div class="email-trust-icon" aria-hidden="true">💳</div>
+              <div class="email-trust-label">3 cuotas sin interés</div>
+              <div class="email-trust-sub">WebPay</div>
+            </td>
+            <td class="email-trust-cell">
+              <div class="email-trust-icon" aria-hidden="true">💬</div>
+              <div class="email-trust-label">Soporte WhatsApp</div>
+              <div class="email-trust-sub">Lun–Sáb</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- FOOTER -->
+    <tr>
+      <td class="email-footer-cell">
+        <a href="https://akibara.cl/politica-privacidad" class="email-footer-link">Política de privacidad</a>
+        <span style="color:#444;">·</span>
+        <a href="https://akibara.cl/terminos" class="email-footer-link">Términos</a>
+        <span style="color:#444;">·</span>
+        <a href="{{ unsubscribe_url }}" class="email-footer-link">Cancelar suscripción</a>
+        <p class="email-footer-meta">
+          © 2026 Akibara · Av. Ejemplo 1234, Santiago, Chile<br>
+          Si no quieres recibir más emails como este, puedes
+          <a href="{{ unsubscribe_url }}" class="email-footer-link" style="margin: 0;">cancelar tu suscripción aquí</a>.
+        </p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell B">
+  <details open>
+    <summary>⚠ DECISIÓN PENDIENTE Cell B</summary>
+    <ol>
+      <li>Cell B debe ejecutar Gmail MCP search: <code>from:brevo abandoned cart</code> en últimos 30 días</li>
+      <li>Si encuentra emails firing automáticamente → Brevo upstream activo, este template NO se usa</li>
+      <li>Documentar decisión en <code>audit/sprint-3/cell-b/DECISION-CART-ABANDONED.md</code></li>
+      <li>Si decisión es "use Brevo upstream":
+        <ul>
+          <li>Decommission legacy 539 LOC en <code>wp-content/plugins/akibara-marketing/legacy/cart-abandoned/</code></li>
+          <li>Verificar Brevo template alineado con brand (logo, fonts, colors)</li>
+          <li>Si Brevo template not branded → considerar este template como reference para customizar Brevo</li>
+        </ul>
+      </li>
+      <li>Si decisión es "use Cell H fallback":
+        <ul>
+          <li>Cell B implementa cron que detecta cart_abandoned (24h since last activity)</li>
+          <li>Render este template via PHP + send via wp_mail() o Brevo transactional API</li>
+        </ul>
+      </li>
+    </ol>
+  </details>
+  <details>
+    <summary>Email-safe constraints</summary>
+    <ul>
+      <li>Tabla layouts only (NO flexbox, NO grid, NO position absolute) — Outlook compat</li>
+      <li>Inline styles preferidos sobre <code>&lt;style&gt;</code> — Gmail strips some style blocks</li>
+      <li>Hex hardcoded permitido — limitación email clients no support CSS vars</li>
+      <li>Token equivalentes documentados en comentarios (per design-tokens.md §12)</li>
+      <li>Webfonts loaded via Google Fonts <code>&lt;link&gt;</code> con system fallbacks</li>
+      <li><code>role="presentation"</code> en tablas decorativas</li>
+      <li>alt text en images, fallback texts cuando emoji</li>
+      <li>Min 14px font-size en body (mobile readability)</li>
+      <li>CTA button height ≥44px (touch-friendly)</li>
+    </ul>
+  </details>
+  <details>
+    <summary>Variables Liquid/template</summary>
+    <pre><code>{{ first_name }}             // greet "Hola {{ first_name }}"
+{{ items_count }}            // cart items count
+{{ items }}                  // array of {name, sku, qty, price, thumb}
+{{ subtotal }}, {{ shipping }}, {{ total }}  // formatted CLP
+{{ recovery_url }}           // signed token URL to /recuperar-carrito
+{{ recovery_code }}          // RECOVERY10 or similar (Cell B WC coupon)
+{{ unsubscribe_url }}        // legal compliance — Brevo provides
+{{ expires_at }}             // 24h from send time, ISO format
+
+// Brevo transactional fields (if upstream):
+//   contact attributes: FIRSTNAME, EMAIL
+//   transactional template ID: configured in Brevo admin
+//   webhook trigger: cart_abandoned event from WC</code></pre>
+  </details>
+  <details>
+    <summary>Tokens equivalentes (documentados como migration path)</summary>
+    <pre><code>// Email hex → CSS token mapping (design-tokens.md §12)
+#0D0D0F → --aki-email-bg
+#161618 → --aki-email-surface
+#D90010 → --aki-red
+#BB000D → --aki-red-hover
+#00C853 → --aki-success
+#FFD700 → --aki-yellow
+#FFFFFF → --aki-white
+#B0B0B0 → --aki-gray-300
+#8A8A8A → --aki-gray-400 / --aki-text-muted
+#2A2A2E → --aki-border</code></pre>
+  </details>
+  <details>
+    <summary>Edge cases / TODOs</summary>
+    <ul>
+      <li>Dark mode: emails YA están en dark theme (brand) — no light mode support necesario</li>
+      <li>Outlook 2007–2019: usar VML fallback para CTA button (rounded-corners) si polish requerido</li>
+      <li>Apple Mail dark mode: no override needed (theme is dark)</li>
+      <li>Image-blocking: critical info debe estar en text, no images</li>
+      <li>Plain-text version: Brevo auto-genera de HTML — verificar legibilidad</li>
+      <li>Unsubscribe required (CAN-SPAM / GDPR / Ley 19.628 Chile) — Brevo provides {{ unsubscribe_url }}</li>
+      <li>Voseo grep: "Olvidaste" / "Recupera" / "Vuelve" / "Completa" → tuteo neutro ✓</li>
+      <li>TODO Cell B: A/B test subject line (open rate metric)</li>
+      <li>TODO Cell B: cart token signing (HMAC) para evitar exploits del recovery URL</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

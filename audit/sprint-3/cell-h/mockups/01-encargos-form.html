@@ -1,0 +1,561 @@
+<!--
+  Item 1 — Encargos Form Styling
+  Spec: audit/sprint-3/cell-h/UI-SPECS-preventas.md#item-1 (Request A-01)
+  Date: 2026-04-27
+  Consumer: Cell A — wp-content/plugins/akibara-preventas/
+  What this previews: shortcode [akb_encargos_form] form layout + states
+  (default / focus / error / success / submit hover) responsive 1col→2col.
+  No conditions — straightforward styling delta.
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 1 — Encargos Form | Akibara Cell H Mockup</title>
+<!-- Tokens source of truth (relative path: mockups → cell-h → sprint-3 → audit → root → wp-content/...) -->
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback inline tokens — applied if external tokens.css fails to load in standalone preview ── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020; --aki-red-dark: #8B0000;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --text-3xl: clamp(1.8rem, 1.5rem + 1vw, 2.5rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Prototype shell ── */
+.prototype-header {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+}
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  max-width: 1200px;
+  margin: 0 auto var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.prototype-section {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.prototype-section h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.prototype-section h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+.prototype-section .state-label {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT — .akb-encargos-form
+   ══════════════════════════════════════════════════════ */
+.akb-encargos-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  max-width: 720px;
+}
+
+@media (min-width: 768px) {
+  .akb-encargos-form {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+  .akb-encargos-form__row--full { grid-column: 1 / -1; }
+}
+
+.akb-encargos-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.akb-encargos-form__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--aki-gray-200);
+  letter-spacing: 0.3px;
+}
+.akb-encargos-form__label .req {
+  color: var(--aki-red);
+  margin-left: 2px;
+}
+.akb-field {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--aki-white);
+  min-height: var(--touch-target-min);
+  transition: border-color var(--transition-base), background var(--transition-base);
+  width: 100%;
+}
+.akb-field::placeholder { color: var(--aki-gray-400); }
+.akb-field:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+  border-color: var(--aki-red);
+}
+textarea.akb-field {
+  min-height: 120px;
+  resize: vertical;
+  font-family: var(--font-body);
+}
+
+.akb-field--error { border: 2px solid var(--aki-error); }
+.akb-field--success { border: 2px solid var(--aki-success); }
+
+.akb-encargos-form__hint {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+.akb-encargos-form__error {
+  font-size: var(--text-xs);
+  color: var(--aki-error);
+  font-weight: var(--weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.akb-encargos-form__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  cursor: pointer;
+  min-height: var(--touch-target-min);
+}
+.akb-encargos-form__checkbox input[type="checkbox"] {
+  width: 22px; height: 22px;
+  margin-top: 2px;
+  accent-color: var(--aki-red);
+  cursor: pointer;
+}
+.akb-encargos-form__checkbox-text {
+  font-size: var(--text-sm);
+  color: var(--aki-gray-200);
+  line-height: 1.5;
+}
+
+.akb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  min-height: var(--touch-target-min);
+  cursor: pointer;
+  transition: background var(--transition-base), transform var(--transition-base);
+  width: 100%;
+}
+.akb-btn:hover:not(:disabled) {
+  background: var(--aki-red-hover);
+}
+.akb-btn:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.akb-btn:disabled {
+  background: var(--aki-gray-400);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.akb-btn--loading::before {
+  content: '';
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: var(--aki-white);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.akb-encargos-form__feedback {
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+.akb-encargos-form__feedback--success {
+  background: rgba(0,200,83,0.1);
+  border-left: 3px solid var(--aki-success);
+  color: var(--aki-success);
+}
+.akb-encargos-form__feedback--error {
+  background: rgba(255,59,59,0.1);
+  border-left: 3px solid var(--aki-error);
+  color: var(--aki-error);
+}
+
+/* Annotations */
+.prototype-annotations {
+  max-width: 1200px;
+  margin: 0 auto var(--space-8);
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code {
+  background: none;
+  padding: 0;
+  color: var(--aki-gray-200);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+}
+
+/* Defense in depth — explicit reduced-motion override even if tokens.css already covers it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Responsive body padding */
+@media (max-width: 767px) {
+  body { padding: var(--space-4); }
+}
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 1 — Encargos Form</h1>
+  <p>
+    Spec: <code>UI-SPECS-preventas.md#item-1</code> · Consumer: Cell A
+    (<code>wp-content/plugins/akibara-preventas/</code>) · Fecha: 2026-04-27<br>
+    Shortcode: <code>[akb_encargos_form]</code> · Mapped request: A-01.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ═════════════════════════════════════
+       STATE 1 — DEFAULT (mobile + desktop layout shift demonstrated)
+       ═════════════════════════════════════ -->
+  <section class="prototype-section" data-state="default">
+    <h2>Estado: Default (con datos llenados)</h2>
+    <span class="state-label">Layout 2-col @ ≥768px · 1-col @ &lt;768px</span>
+    <form class="akb-encargos-form" novalidate>
+      <div class="akb-encargos-form__field">
+        <label class="akb-encargos-form__label" for="enc-1-name">
+          Nombre <span class="req" aria-hidden="true">*</span>
+        </label>
+        <input type="text" id="enc-1-name" class="akb-field" value="María Reyes" required>
+      </div>
+      <div class="akb-encargos-form__field">
+        <label class="akb-encargos-form__label" for="enc-1-email">
+          Email <span class="req" aria-hidden="true">*</span>
+        </label>
+        <input type="email" id="enc-1-email" class="akb-field" value="maria@ejemplo.cl" required>
+      </div>
+      <div class="akb-encargos-form__field akb-encargos-form__row--full">
+        <label class="akb-encargos-form__label" for="enc-1-product">
+          Manga / serie que buscas <span class="req" aria-hidden="true">*</span>
+        </label>
+        <input type="text" id="enc-1-product" class="akb-field" value="Jujutsu Kaisen Vol. 26" required>
+        <span class="akb-encargos-form__hint">Indica título y volumen si lo sabes.</span>
+      </div>
+      <div class="akb-encargos-form__field akb-encargos-form__row--full">
+        <label class="akb-encargos-form__label" for="enc-1-msg">Mensaje</label>
+        <textarea id="enc-1-msg" class="akb-field" rows="4" placeholder="Cualquier detalle adicional..."></textarea>
+      </div>
+      <div class="akb-encargos-form__row--full">
+        <label class="akb-encargos-form__checkbox">
+          <input type="checkbox" id="enc-1-consent" checked>
+          <span class="akb-encargos-form__checkbox-text">
+            Acepto recibir un email cuando esté disponible.
+          </span>
+        </label>
+      </div>
+      <div class="akb-encargos-form__row--full">
+        <button type="submit" class="akb-btn">Enviar encargo</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ═════════════════════════════════════
+       STATE 2 — FOCUS RING DEMO
+       ═════════════════════════════════════ -->
+  <section class="prototype-section" data-state="focus">
+    <h2>Estado: Focus ring (WCAG 2.4.13)</h2>
+    <span class="state-label">Outline 3px solid --aki-red, offset 2px</span>
+    <form class="akb-encargos-form" novalidate>
+      <div class="akb-encargos-form__field">
+        <label class="akb-encargos-form__label" for="enc-2-name">Nombre</label>
+        <input type="text" id="enc-2-name" class="akb-field"
+               value="Foco simulado" style="outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); border-color: var(--aki-red);">
+      </div>
+      <div class="akb-encargos-form__field">
+        <label class="akb-encargos-form__label" for="enc-2-email">Email</label>
+        <input type="email" id="enc-2-email" class="akb-field" value="ana@ejemplo.cl">
+      </div>
+    </form>
+  </section>
+
+  <!-- ═════════════════════════════════════
+       STATE 3 — ERROR
+       ═════════════════════════════════════ -->
+  <section class="prototype-section" data-state="error">
+    <h2>Estado: Error de validación</h2>
+    <span class="state-label">.akb-field--error · role=alert · aria-live=polite</span>
+    <form class="akb-encargos-form" novalidate>
+      <div class="akb-encargos-form__field">
+        <label class="akb-encargos-form__label" for="enc-3-name">Nombre</label>
+        <input type="text" id="enc-3-name" class="akb-field" value="">
+      </div>
+      <div class="akb-encargos-form__field">
+        <label class="akb-encargos-form__label" for="enc-3-email">
+          Email <span class="req" aria-hidden="true">*</span>
+        </label>
+        <input type="email" id="enc-3-email" class="akb-field akb-field--error"
+               value="email-invalido" aria-invalid="true" aria-describedby="enc-3-email-err">
+        <span class="akb-encargos-form__error" id="enc-3-email-err" role="alert">
+          <span aria-hidden="true">⚠</span> Por favor ingresa un email válido.
+        </span>
+      </div>
+      <div class="akb-encargos-form__row--full">
+        <div class="akb-encargos-form__feedback akb-encargos-form__feedback--error" role="status" aria-live="polite">
+          <span aria-hidden="true">⚠</span>
+          <span>No pudimos enviar tu encargo. Revisa los campos marcados e intenta de nuevo.</span>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <!-- ═════════════════════════════════════
+       STATE 4 — SUCCESS
+       ═════════════════════════════════════ -->
+  <section class="prototype-section" data-state="success">
+    <h2>Estado: Éxito (post-submit)</h2>
+    <span class="state-label">Feedback role=status · tuteo neutro chileno</span>
+    <div class="akb-encargos-form">
+      <div class="akb-encargos-form__row--full">
+        <div class="akb-encargos-form__feedback akb-encargos-form__feedback--success" role="status" aria-live="polite">
+          <span aria-hidden="true">✓</span>
+          <span>Tu mensaje fue enviado. Te avisaremos por email cuando lo tengamos en stock.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════
+       STATE 5 — SUBMIT BUTTON HOVER + LOADING
+       ═════════════════════════════════════ -->
+  <section class="prototype-section" data-state="button-states">
+    <h2>Estado: Botón submit (default / hover / loading / disabled)</h2>
+    <span class="state-label">min-height 44px · uppercase Bebas Neue</span>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); max-width: 720px;">
+      <button type="button" class="akb-btn">Default</button>
+      <button type="button" class="akb-btn" style="background: var(--aki-red-hover);">Hover (simulated)</button>
+      <button type="button" class="akb-btn akb-btn--loading" disabled>Enviando…</button>
+      <button type="button" class="akb-btn" disabled>Disabled</button>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell A">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-red</code>, <code>--aki-red-hover</code> — submit button bg + hover</li>
+      <li><code>--aki-surface-2</code>, <code>--aki-border</code> — input field default</li>
+      <li><code>--aki-error</code>, <code>--aki-success</code> — validation states + feedback messages</li>
+      <li><code>--aki-focus-outline</code>, <code>--aki-focus-offset</code> — WCAG 2.4.13 focus ring</li>
+      <li><code>--touch-target-min</code> (44px) — submit + checkbox enforced</li>
+      <li><code>--space-{2,3,4,6}</code>, <code>--radius-sm</code>, <code>--text-{xs,sm,base,lg}</code></li>
+      <li><code>--font-heading</code> en submit; <code>--font-body</code> en form fields</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell A</summary>
+    <pre><code>.akb-encargos-form              /* form wrapper, grid 1col mobile / 2col desktop */
+.akb-encargos-form__field       /* label + input pair */
+.akb-encargos-form__label       /* visible label */
+.akb-encargos-form__row--full   /* grid-column: 1/-1 modifier */
+.akb-encargos-form__checkbox    /* consent + native checkbox */
+.akb-encargos-form__hint        /* helper text below input */
+.akb-encargos-form__error       /* error message inline */
+.akb-encargos-form__feedback                 /* feedback wrapper */
+.akb-encargos-form__feedback--success
+.akb-encargos-form__feedback--error
+.akb-field                      /* input + textarea base */
+.akb-field--error
+.akb-field--success
+.akb-btn                        /* submit button base */
+.akb-btn--loading               /* loading spinner state */</code></pre>
+  </details>
+  <details>
+    <summary>Comportamiento JS / data binding (Cell A implementa)</summary>
+    <pre><code>// Cell A binds these in PHP shortcode renderer:
+//   wp-content/plugins/akibara-preventas/includes/encargos-form.php
+//
+// 1. JS validation (vanilla, no framework):
+//    - email regex client-side + native type="email"
+//    - if invalid: add .akb-field--error + render .akb-encargos-form__error
+//    - if all valid: submit AJAX to /wp-json/akibara/v1/encargos
+//
+// 2. AJAX response handling:
+//    - success → swap form html with .akb-encargos-form__feedback--success
+//    - error   → render .akb-encargos-form__feedback--error + keep form
+//
+// 3. Loading state:
+//    - on submit: button.disabled=true + className+='.akb-btn--loading'
+//    - on response: revert
+//
+// 4. Accessibility:
+//    - aria-live="polite" on feedback container (announce to SR)
+//    - aria-invalid="true" on .akb-field--error
+//    - focus moves to first error field on validation fail</code></pre>
+  </details>
+  <details>
+    <summary>Edge cases / TODOs</summary>
+    <ul>
+      <li>Honeypot anti-spam field invisible (visually-hidden) — Cell A debe agregar</li>
+      <li>Rate limiting backend per IP — Cell A handle (no UI delta)</li>
+      <li>Si user no logged-in: pre-fill email solo si cookie consent — Cell B owns cookie</li>
+      <li>Voseo grep: copy usa tuteo chileno neutro ("Tu mensaje fue enviado" / "Por favor ingresa") — NO formal "Su mensaje" ni voseo Argentina</li>
+      <li>TODO: pendiente decisión Cell A si form vive en /encargos page o como modal trigger desde producto OOS (ver item 5)</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

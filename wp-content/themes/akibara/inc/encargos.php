@@ -1,13 +1,27 @@
 <?php
 /**
  * Akibara — AJAX handler para formulario de encargos
- * Envía notificación por email al admin + opcionalmente a Brevo.
+ *
+ * SPRINT 3 MIGRATION NOTE (2026-04-27):
+ * La lógica de encargos fue movida a wp-content/plugins/akibara-preventas/modules/encargos/module.php.
+ * Este archivo es un shim de retrocompatibilidad:
+ * - Si akibara-preventas está activo: sus hooks ya registraron akibara_encargo_submit → NO duplicar.
+ * - Si akibara-preventas NO está activo (fallback): este archivo registra la función legacy.
+ *
+ * RFC-THEME-CHANGE-01 abierto en audit/sprint-3/rfc/ para eliminar este shim en Sprint 3.5
+ * una vez confirmado que akibara-preventas está activo en prod.
  *
  * @package Akibara
  */
 
 defined( 'ABSPATH' ) || exit;
 
+// Delegate to plugin if loaded; do not double-register.
+if ( defined( 'AKB_PREVENTAS_ENCARGOS_LOADED' ) ) {
+    return;
+}
+
+// Legacy fallback — only active when akibara-preventas is NOT loaded.
 add_action( 'wp_ajax_akibara_encargo_submit', 'akibara_ajax_encargo_submit' );
 add_action( 'wp_ajax_nopriv_akibara_encargo_submit', 'akibara_ajax_encargo_submit' );
 
