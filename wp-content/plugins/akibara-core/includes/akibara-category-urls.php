@@ -25,29 +25,31 @@ define( 'AKB_CORE_CATEGORY_URLS_LOADED', '1.0.0' );
  * Se ejecuta en init > 5 (después de que WC registre la taxonomía).
  */
 add_action( 'init', 'akb_register_clean_category_rules', 15 );
-function akb_register_clean_category_rules(): void {
-	$slugs = get_transient( 'akb_product_cat_slugs' );
-	if ( false === $slugs ) {
-		$slugs = get_terms(
-			array(
-				'taxonomy'   => 'product_cat',
-				'hide_empty' => false,
-				'fields'     => 'slugs',
-			)
-		);
-		if ( is_wp_error( $slugs ) || empty( $slugs ) ) {
+if ( ! function_exists( 'akb_register_clean_category_rules' ) ) {
+	function akb_register_clean_category_rules(): void {
+		$slugs = get_transient( 'akb_product_cat_slugs' );
+		if ( false === $slugs ) {
+			$slugs = get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'hide_empty' => false,
+					'fields'     => 'slugs',
+				)
+			);
+			if ( is_wp_error( $slugs ) || empty( $slugs ) ) {
+				return;
+			}
+			set_transient( 'akb_product_cat_slugs', $slugs, HOUR_IN_SECONDS );
+		}
+		if ( empty( $slugs ) ) {
 			return;
 		}
-		set_transient( 'akb_product_cat_slugs', $slugs, HOUR_IN_SECONDS );
-	}
-	if ( empty( $slugs ) ) {
-		return;
-	}
-	foreach ( $slugs as $slug ) {
-		$re = preg_quote( $slug, '/' );
-		add_rewrite_rule( "^{$re}/feed/(feed|rdf|rss|rss2|atom)/?$", "index.php?product_cat={$slug}&feed=\$matches[1]", 'top' );
-		add_rewrite_rule( "^{$re}/page/?([0-9]{1,})/?$", "index.php?product_cat={$slug}&paged=\$matches[1]", 'top' );
-		add_rewrite_rule( "^{$re}/?$", "index.php?product_cat={$slug}", 'top' );
+		foreach ( $slugs as $slug ) {
+			$re = preg_quote( $slug, '/' );
+			add_rewrite_rule( "^{$re}/feed/(feed|rdf|rss|rss2|atom)/?$", "index.php?product_cat={$slug}&feed=\$matches[1]", 'top' );
+			add_rewrite_rule( "^{$re}/page/?([0-9]{1,})/?$", "index.php?product_cat={$slug}&paged=\$matches[1]", 'top' );
+			add_rewrite_rule( "^{$re}/?$", "index.php?product_cat={$slug}", 'top' );
+		}
 	}
 }
 
@@ -55,11 +57,13 @@ function akb_register_clean_category_rules(): void {
  * Filtra term_link para devolver la URL corta /{slug}/.
  */
 add_filter( 'term_link', 'akb_clean_category_url', 10, 3 );
-function akb_clean_category_url( string $url, \WP_Term $term, string $taxonomy ): string {
-	if ( 'product_cat' !== $taxonomy ) {
-		return $url;
+if ( ! function_exists( 'akb_clean_category_url' ) ) {
+	function akb_clean_category_url( string $url, \WP_Term $term, string $taxonomy ): string {
+		if ( 'product_cat' !== $taxonomy ) {
+			return $url;
+		}
+		return trailingslashit( home_url( '/' . $term->slug ) );
 	}
-	return trailingslashit( home_url( '/' . $term->slug ) );
 }
 
 /**

@@ -29,6 +29,12 @@ if ( defined( 'AKB_CORE_PLACES_LOADED' ) ) {
 	return;
 }
 define( 'AKB_CORE_PLACES_LOADED', '1.0.0' );
+
+// F-pivot defensive guard (mesa-01 vote 2026-04-27): if functions already declared
+// via another load path, skip this module to prevent fatal redeclare.
+if ( function_exists( 'akb_places_is_enabled' ) ) {
+	return;
+}
 /**
  * ¿Está configurada la API key?
  */
