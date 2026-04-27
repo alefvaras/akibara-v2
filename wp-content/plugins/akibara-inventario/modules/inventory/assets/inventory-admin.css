@@ -1,0 +1,103 @@
+/* Akibara Inventario — Stock Central admin CSS
+ * Migrated from plugins/akibara/modules/inventory/assets/inventory-admin.css
+ * Cell H fixes applied (Sprint 4):
+ *   - mesa-07 F-01: overflow-x:auto on .akb-inv-wrap + .akb-inv-col-sku hidden <600px
+ *   - mesa-08 F-04: stock CTA color --aki-red → --aki-red-bright (4.93:1 PASS AA)
+ *   - mesa-05 F-03: stock CTA .akb-inv-cta min-height 32px → 44px (WCAG 2.5.8)
+ */
+
+.akb-inv{font-size:13px}
+.akb-inv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--akb-s3);margin-bottom:var(--akb-s5)}
+.akb-inv-stat{background:var(--akb-surface);border:1px solid var(--akb-border);border-radius:var(--akb-r-lg);padding:var(--akb-s4);text-align:center}
+.akb-inv-stat b{display:block;font-size:26px;line-height:1.2}.akb-inv-stat small{color:var(--akb-text-secondary);font-size:11px;font-weight:500}
+.st-ok{color:var(--akb-success)}.st-warn{color:var(--akb-warning)}.st-bad{color:var(--akb-error)}.st-brand{color:var(--akb-brand)}
+.akb-inv-alert{margin:0 0 var(--akb-s3);padding:8px 12px;border-radius:var(--akb-r-sm);font-size:12px;border:1px solid transparent}
+.akb-inv-alert--error{background:var(--akb-error-bg);color:var(--akb-error);border-color:#f3c0c0}
+.akb-inv-alert--ok{background:var(--akb-success-bg);color:var(--akb-success);border-color:#b8e5c2}
+.akb-inv-tabs{display:flex;gap:var(--akb-s1);margin-bottom:var(--akb-s4);border-bottom:2px solid var(--akb-border)}
+.akb-inv-tab{background:none;border:none;padding:var(--akb-s2) var(--akb-s4);font-size:13px;font-weight:600;color:var(--akb-text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+.akb-inv-tab:hover{color:var(--akb-text)}.akb-inv-tab.on{color:var(--akb-brand);border-bottom-color:var(--akb-brand)}
+.akb-inv-bar{display:flex;flex-wrap:wrap;gap:var(--akb-s2);margin-bottom:var(--akb-s3);align-items:center}
+.akb-inv-bar input[type=text],.akb-inv-bar select{height:34px;padding:0 var(--akb-s3);border:1px solid var(--akb-border);border-radius:var(--akb-r-md);font-size:13px;background:var(--akb-surface)}
+.akb-inv-bar input[type=text]{flex:1 1 180px;min-width:160px}
+.akb-inv-bar input:focus,.akb-inv-bar select:focus{border-color:var(--akb-brand);outline:none;box-shadow:0 0 0 2px rgba(217,0,16,.12)}
+.akb-inv-restock-toggle{font-size:12px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.akb-inv-bulk{display:flex;align-items:center;gap:var(--akb-s2);margin-bottom:var(--akb-s3);padding:var(--akb-s2) var(--akb-s3);background:var(--akb-info-bg);border:1px solid #b8daff;border-radius:var(--akb-r-md);font-size:12px}
+.akb-inv-bulk select,.akb-inv-bulk input{height:28px;font-size:12px;padding:0 6px;border:1px solid var(--akb-border);border-radius:var(--akb-r-sm)}
+
+/* mesa-07 F-01: overflow-x:auto para responsividad en 375px (tabla ancha en móvil) */
+.akb-inv-wrap{overflow-x:auto;background:var(--akb-surface);border:1px solid var(--akb-border);border-radius:var(--akb-r-lg)}
+
+table.akb-inv-t{width:100%;border-collapse:collapse}
+.akb-inv-t th{position:sticky;top:0;background:var(--akb-bg);padding:8px 10px;text-align:left;font-size:11px;font-weight:600;color:var(--akb-text-secondary);text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--akb-border);white-space:nowrap;user-select:none}
+.akb-inv-t th[data-s]{cursor:pointer}.akb-inv-t th[data-s]:hover{color:var(--akb-brand)}
+.akb-inv-t td{padding:6px 10px;border-bottom:1px solid var(--akb-border-light);vertical-align:middle}
+.akb-inv-t tr:hover td{background:rgba(0,0,0,.015)}
+.inv-thumb{width:34px;height:34px;object-fit:cover;border-radius:var(--akb-r-sm);background:var(--akb-bg)}
+.inv-title{font-weight:600;color:var(--akb-text)}.inv-title a{color:inherit;text-decoration:none}.inv-title a:hover{color:var(--akb-brand)}
+.inv-serie{font-size:11px;color:var(--akb-text-muted);margin-top:1px}
+.inv-ed{font-size:12px;color:var(--akb-text-secondary)}
+.inv-stock{display:inline-flex;align-items:center;gap:3px}
+.inv-stock-val{font-weight:700;min-width:24px;text-align:center;cursor:pointer;padding:2px 4px;border-radius:var(--akb-r-sm)}
+.inv-stock-val:hover{background:var(--akb-bg)}
+.inv-pm{width:22px;height:22px;border:1px solid var(--akb-border);border-radius:var(--akb-r-sm);background:var(--akb-surface);cursor:pointer;font-size:14px;line-height:20px;text-align:center;color:var(--akb-text-secondary);padding:0}
+.inv-pm:hover{border-color:var(--akb-brand);color:var(--akb-brand)}
+.inv-no-manage{color:var(--akb-text-muted);font-size:11px}
+.inv-b{display:inline-block;padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:600;line-height:1.6;white-space:nowrap}
+.inv-b-in{background:var(--akb-success-bg);color:var(--akb-success)}.inv-b-out{background:var(--akb-error-bg);color:var(--akb-error)}.inv-b-bo{background:var(--akb-warning-bg);color:#92610e}.inv-b-low{background:#fff3e0;color:#e65100}
+.inv-tog{position:relative;width:34px;height:18px;cursor:pointer;display:inline-block;vertical-align:middle}
+.inv-tog input{opacity:0;width:0;height:0;position:absolute}
+.inv-tog i{position:absolute;inset:0;background:var(--akb-border);border-radius:9px;transition:background 150ms}
+.inv-tog b{position:absolute;top:1px;left:1px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform 150ms;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.inv-tog input:checked~i{background:var(--akb-success)}.inv-tog input:checked~b{transform:translateX(16px)}
+.akb-inv-pg{display:flex;align-items:center;justify-content:space-between;padding:var(--akb-s3) 0;font-size:12px;color:var(--akb-text-secondary)}
+.akb-inv-pg-btns{display:flex;gap:3px}
+.pg-btn{min-width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--akb-border);border-radius:var(--akb-r-sm);background:var(--akb-surface);cursor:pointer;font-size:12px}
+.pg-btn:hover{border-color:var(--akb-brand);color:var(--akb-brand)}.pg-btn.on{background:var(--akb-brand);color:#fff;border-color:var(--akb-brand)}.pg-btn:disabled{opacity:.3;cursor:default}
+.inv-empty{text-align:center;padding:40px;color:var(--akb-text-muted)}
+.inv-load{text-align:center;padding:30px;color:var(--akb-text-muted)}
+@keyframes inv-flash{0%{background:var(--akb-success-bg)}100%{background:transparent}}
+.inv-flash td{animation:inv-flash .6s ease}.inv-saving{opacity:.4;pointer-events:none}
+.inv-restock-input{width:50px;height:26px;padding:0 4px;border:1px solid var(--akb-success);border-radius:var(--akb-r-sm);font-size:13px;text-align:center;background:#f6fff6}
+.inv-restock-input:focus{outline:none;box-shadow:0 0 0 2px rgba(0,163,42,.2)}
+.akb-inv-footer{margin-top:var(--akb-s3);display:flex;gap:var(--akb-s2)}
+
+/* mesa-07 F-01: Ocultar columna SKU/Editorial en mobile para evitar overflow horizontal
+   en viewports <600px. El overflow-x:auto en .akb-inv-wrap es la primera línea de defensa;
+   este hide es segunda línea para tablas muy anchas con muchas columnas. */
+@media (max-width:599px){
+  .akb-inv-col-sku{display:none}
+  .akb-inv-t td:nth-child(4){display:none}
+}
+
+/* mesa-08 F-04: Stock CTA color --aki-red → --aki-red-bright
+   Ratio medido: --aki-red-bright (#FF2233) sobre blanco = 4.93:1 PASS AA.
+   --aki-red (#D90010) = 3.56:1 FAIL. Solo aplica a CTAs de acción de stock,
+   NO al branding general (--aki-red sigue siendo correcto para brand). */
+.akb-inv-stock-cta,
+.aki-bis-btn {
+  /* mesa-05 F-03: min-height 44px (WCAG 2.5.8 Touch Target Minimum) */
+  min-height: 44px;
+  /* mesa-08 F-04: color brightened for WCAG AA compliance */
+  color: var(--aki-red-bright, #FF2233);
+  border-color: var(--aki-red-bright, #FF2233);
+}
+
+/* BIS form button: legacy inline styles override via specificity */
+.aki-bis-widget .aki-bis-btn {
+  /* mesa-05 F-03: 44px touch target (was 10px 18px = ~38px total) */
+  min-height: 44px;
+  padding: 10px 18px;
+  /* mesa-08 F-04: --aki-red-bright instead of #D90010 */
+  color: var(--aki-red-bright, #FF2233);
+  border-color: var(--aki-red-bright, #FF2233);
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+}
