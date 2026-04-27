@@ -1,0 +1,263 @@
+/**
+ * Akibara MercadoLibre — Admin panel styles
+ * Extraído de module.php para cacheo HTTP y minificación LiteSpeed (DT-10).
+ */
+
+.akb-ml-notice-gap { margin-bottom: 16px; }
+.akb-ml-layout { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; align-items: flex-start; }
+.akb-ml-config { flex: 1; min-width: 340px; }
+.akb-ml-grid-2 { display: flex; gap: 12px; margin-bottom: 4px; }
+.akb-ml-grid-2 .akb-field,
+.akb-ml-grid-3 .akb-field { flex: 1; }
+.akb-ml-token-row { display: flex; gap: 6px; align-items: center; }
+.akb-ml-token-input { flex: 1; }
+.akb-ml-token-toggle {
+	background: #1E1E22;
+	border: 1px solid #2A2A2E;
+	border-radius: 6px;
+	padding: 6px 10px;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	color: #A0A0A0;
+	flex-shrink: 0;
+}
+.akb-ml-code-inline {
+	user-select: all;
+	background: #f0f0f0;
+	color: #333;
+	padding: 1px 5px;
+	border-radius: 3px;
+}
+.akb-ml-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.akb-ml-formula-note { margin: 4px 0 12px; }
+.akb-ml-formula-tip { color: #FFB020; }
+.akb-ml-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+.akb-ml-link-btn { background: #FFE600; color: #333333; border-color: #FFE600; text-decoration: none; font-weight: 700; }
+.akb-ml-test-result { margin-top: 10px; display: none; }
+.akb-ml-side { flex: 1; min-width: 280px; max-width: 400px; display: flex; flex-direction: column; gap: 16px; }
+.akb-ml-webhook-box {
+	background: #0a0a0c;
+	border: 1px solid #2A2A2E;
+	border-radius: 6px;
+	padding: 10px;
+	font-family: monospace;
+	font-size: 11px;
+	word-break: break-all;
+	color: #D90010;
+}
+.akb-ml-webhook-help { margin-top: 8px; }
+
+/* Filtros y buscadores */
+.akb-ml-filters {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+	align-items: center;
+	justify-content: space-between;
+}
+.akb-ml-filters__left,
+.akb-ml-filters__right { display: flex; gap: 8px; align-items: center; }
+.akb-ml-filters__left { flex-wrap: wrap; }
+.akb-ml-input-search { max-width: 220px; }
+.akb-ml-input-editorial,
+.akb-ml-input-serie { max-width: 160px; }
+.akb-ml-input-filter { max-width: 220px; }
+.akb-ml-btn-bulk { display: none; }
+.akb-ml-btn-publish-all { background: #28a745; border-color: #28a745; }
+.akb-ml-results-info { font-size: 12px; color: #A0A0A0; }
+.akb-ml-per-page { width: auto; padding: 4px 8px; font-size: 12px; }
+
+/* Tabla de productos */
+.akb-ml-table-wrap { overflow-x: auto; }
+.akb-ml-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.akb-ml-table thead tr { border-bottom: 1px solid #2A2A2E; }
+.akb-ml-table th { padding: 8px 6px; }
+.akb-ml-table th:nth-child(1),
+.akb-ml-table th:nth-child(2),
+.akb-ml-table th:nth-child(6),
+.akb-ml-table th:nth-child(7),
+.akb-ml-table th:nth-child(8) { text-align: left; }
+.akb-ml-table th:nth-child(3),
+.akb-ml-table th:nth-child(4),
+.akb-ml-table th:nth-child(5) { text-align: right; }
+.akb-ml-table-empty { text-align: center; padding: 24px; color: #A0A0A0; }
+
+/* Paginación */
+.akb-ml-pagination {
+	margin-top: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	flex-wrap: wrap;
+}
+.akb-ml-card-gap { margin-top: 16px; }
+
+/* Panel de preguntas ML */
+.akb-ml-q-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+.akb-ml-q-title { margin: 0; }
+.akb-ml-q-badge {
+	display: none;
+	background: #D90010;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	border-radius: 10px;
+	padding: 2px 7px;
+	margin-left: 6px;
+	vertical-align: middle;
+}
+.akb-ml-q-actions { display: flex; gap: 8px; align-items: center; }
+.akb-ml-q-filter { width: auto; padding: 4px 10px; font-size: 13px; }
+
+/* Placeholders / loaders / empty states */
+.akb-ml-q-placeholder,
+.akb-ml-q-loading,
+.akb-ml-q-empty,
+.akb-ml-products-loading,
+.akb-ml-products-empty { text-align: center; color: #A0A0A0; }
+.akb-ml-q-placeholder,
+.akb-ml-products-loading { padding: 24px; font-size: 13px; }
+.akb-ml-products-empty,
+.akb-ml-q-empty { padding: 32px; }
+.akb-ml-q-empty { display: none; }
+.akb-ml-link-id { font-size: 10px; color: #A0A0A0; }
+
+/* Filas de la tabla */
+.akb-ml-row { border-bottom: 1px solid #1E1E22; }
+.akb-ml-row td { padding: 7px 6px; }
+.akb-ml-row__product { display: flex; align-items: center; gap: 8px; }
+.akb-ml-row__thumb { width: 34px; height: 34px; object-fit: cover; border-radius: 3px; }
+.akb-ml-row__num,
+.akb-ml-row__price,
+.akb-ml-row__calc { text-align: right; }
+.akb-ml-row__calc { font-weight: 600; }
+.akb-ml-row__sync { font-size: 11px; color: #A0A0A0; }
+.akb-ml-action-btn { font-size: 11px; padding: 3px 8px; }
+
+/* Edición in-line de precio */
+.akb-ml-price-edit { cursor: pointer; border-bottom: 1px dashed currentColor; }
+.akb-ml-price-edit--calc { color: #D90010; }
+.akb-ml-price-edit--override { color: #FFB020; }
+
+/* Botones de paginación */
+.akb-ml-page-ellipsis { padding: 0 4px; color: #555; line-height: 32px; }
+.akb-ml-page-btn {
+	min-width: 32px;
+	height: 32px;
+	padding: 0 8px;
+	margin: 0;
+	font-size: 13px;
+	border-radius: 4px;
+	border: 1px solid #2A2A2E;
+	background: #1E1E22;
+	color: #F5F5F5;
+	transition: background .15s;
+	cursor: pointer;
+}
+.akb-ml-page-btn:hover { background: #2A2A2E; }
+.akb-ml-page-btn--active {
+	border-color: #D90010;
+	background: #D90010;
+	color: #fff;
+	font-weight: 600;
+	cursor: default;
+}
+.akb-ml-page-btn--disabled {
+	border: 1px solid #1E1E22;
+	background: transparent;
+	color: #555;
+	cursor: default;
+}
+
+/* Barra de progreso del bulk publish */
+.akb-ml-progress { margin-top: 12px; }
+.akb-ml-progress__track {
+	background: #1E1E22;
+	border: 1px solid #2A2A2E;
+	border-radius: 6px;
+	overflow: hidden;
+	height: 28px;
+}
+.akb-ml-progress__bar {
+	background: #28a745;
+	height: 100%;
+	width: 0;
+	transition: width .3s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	color: #fff;
+	font-weight: 600;
+}
+.akb-ml-progress__text {
+	margin-top: 6px;
+	font-size: 12px;
+	color: #A0A0A0;
+	text-align: center;
+}
+
+/* Tarjetas de preguntas ML */
+.akb-ml-q-card {
+	border: 1px solid #2A2A2E;
+	border-radius: 8px;
+	padding: 14px;
+	margin-bottom: 12px;
+	background: #161618;
+}
+.akb-ml-q-card--unanswered { border-color: #D90010; }
+.akb-ml-q-meta {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 6px;
+}
+.akb-ml-q-meta-left { font-size: 11px; color: #A0A0A0; }
+.akb-ml-q-meta-left strong { color: #F5F5F5; }
+.akb-ml-q-item-link { font-size: 11px; color: #A0A0A0; text-decoration: none; }
+.akb-ml-q-text { margin: 0 0 6px; font-size: 14px; color: #F5F5F5; font-weight: 500; }
+.akb-ml-q-answer {
+	margin-top: 8px;
+	padding: 8px 12px;
+	background: #0D0D0F;
+	border-left: 3px solid #28a745;
+	border-radius: 0 4px 4px 0;
+	font-size: 12px;
+	color: #A0A0A0;
+}
+.akb-ml-q-answer strong { color: #28a745; }
+.akb-ml-q-answer-time { color: #555; }
+.akb-ml-q-compose { margin-top: 8px; }
+.akb-ml-q-textarea {
+	width: 100%;
+	background: #0D0D0F;
+	border: 1px solid #2A2A2E;
+	border-radius: 4px;
+	padding: 8px;
+	color: #F5F5F5;
+	font-size: 13px;
+	resize: vertical;
+	box-sizing: border-box;
+}
+.akb-ml-q-compose-actions { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.akb-ml-q-send { padding: 4px 12px; font-size: 12px; }
+.akb-ml-q-template { padding: 4px 8px; font-size: 11px; }
+.akb-ml-q-answer-sent {
+	padding: 8px 12px;
+	background: #0D0D0F;
+	border-left: 3px solid #28a745;
+	border-radius: 0 4px 4px 0;
+	font-size: 12px;
+	color: #28a745;
+}
