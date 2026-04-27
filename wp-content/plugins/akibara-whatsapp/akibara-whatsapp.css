@@ -1,0 +1,145 @@
+/* ==========================================================================
+   AKIBARA WHATSAPP v1.3.0 — Floating Button Only
+   ========================================================================== */
+
+.akibara-wa {
+  --wa-green: #25D366;
+  --wa-green-dark: #128C7E;
+  --wa-bg: #111111;
+  --wa-btn-size: 56px;
+  --wa-offset: 20px;
+
+  position: fixed;
+  z-index: 350; /* between overlay(300) and modal(400) */
+  bottom: var(--wa-offset);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.akibara-wa--right { right: var(--wa-offset); }
+.akibara-wa--left  { left: var(--wa-offset); }
+
+.akibara-wa[aria-hidden="true"] .akibara-wa__btn {
+  pointer-events: none;
+}
+
+/* ── Floating button ───────────────────────────────────────── */
+.akibara-wa__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--wa-btn-size);
+  height: var(--wa-btn-size);
+  border-radius: 50%;
+  border: 2px solid var(--wa-green);
+  background: var(--wa-bg);
+  color: var(--wa-green);
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.25);
+  transition: opacity 0.4s ease,
+              transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              background 0.3s ease;
+  opacity: 0;
+  transform: scale(0.5) translateY(20px);
+}
+
+.akibara-wa__btn.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  animation: akiWaPulseGlow 3s ease-in-out infinite 2s;
+}
+
+.akibara-wa__btn:hover {
+  background: var(--wa-green);
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 6px 28px rgba(37, 211, 102, 0.45);
+  animation: none;
+}
+
+.akibara-wa__btn:active {
+  transform: scale(0.95);
+}
+
+.akibara-wa__btn:focus-visible {
+  outline: 2px solid var(--wa-green);
+  outline-offset: 3px;
+}
+
+/* Pulse ring */
+.akibara-wa__pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--wa-green);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.akibara-wa__btn.is-visible .akibara-wa__pulse {
+  animation: akiWaRing 3s ease-out infinite 3s;
+}
+
+.akibara-wa__btn:hover .akibara-wa__pulse {
+  animation: none;
+  opacity: 0;
+}
+
+/* Icon */
+.akibara-wa__icon {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.akibara-wa__btn:hover .akibara-wa__icon {
+  transform: rotate(-8deg) scale(1.05);
+}
+
+/* ── Animations ────────────────────────────────────────────── */
+@keyframes akiWaPulseGlow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.25), 0 0 0 0 rgba(37, 211, 102, 0); }
+  50%      { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35), 0 0 12px 3px rgba(37, 211, 102, 0.15); }
+}
+
+@keyframes akiWaRing {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .akibara-wa {
+    --wa-btn-size: 52px;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 768px) {
+  body.single-product .akibara-wa {
+    bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+body.woocommerce-checkout .akibara-wa {
+  bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  body.woocommerce-checkout .akibara-wa {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .akibara-wa__btn {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .akibara-wa__btn.is-visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  .akibara-wa__pulse { display: none; }
+}
