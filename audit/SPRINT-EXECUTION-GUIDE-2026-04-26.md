@@ -1,8 +1,26 @@
 # SPRINT EXECUTION GUIDE Akibara
 
-**Fecha:** 2026-04-26
+**Fecha:** 2026-04-26 (last updated 2026-04-27)
 **Para:** Alejandro Vargas (solo dev)
 **Cómo se usa:** copy-paste cada prompt en una **nueva conversación de Claude Desktop** cuando arranques el sprint correspondiente. Las memorias auto-cargan + Claude lee files autoritativos del repo.
+
+---
+
+## ⚠️ POLICY OBLIGATORIA — Living docs update continuo
+
+**Memoria activa:** `project_living_docs_update_policy.md`
+
+Este guide + BACKLOG + CLEANUP-PLAN + AUDIT-SUMMARY son **living docs**. **TODOS los agentes** (main session + 22 mesa-NN-* + cells) DEBEN mantenerlos updated en tiempo real:
+
+- Item BACKLOG/CLEAN marcado DONE → Edit surgical inmediatamente con `✅ DONE YYYY-MM-DD (commit XXX)` + esfuerzo real
+- Lección aprendida aplicable a futuros sprints → append a sección correspondiente
+- Decisión arquitectónica nueva → AUDIT-SUMMARY tabla decisiones
+- Memoria nueva creada → MEMORY.md index
+- Prompt con error/gap → refinar + nota "Updated YYYY-MM-DD: razón"
+
+**Workflow:** Edit surgical → commit pequeño + frecuente → push inmediato (NO acumular). Otros agentes en sesiones paralelas necesitan el update.
+
+**Sprint X.5 closeout:** mesa-23 PM verifica que TODO esté al día (catch-up si gaps), antes de cerrar sprint.
 
 ---
 
@@ -482,11 +500,61 @@ Avísame para approve RFCs APPROVED + merge a Core + LambdaTest issues.
 
 # Sprint 4 — PARALELO Cell C + Cell D + Cell H medium
 
-**Pre-requisito:** Sprint 3.5 DONE + Sentry 24h verde.
+**Pre-requisito:** Sprint 3.5 DONE + Sentry 24h verde + **CATCH-UP living docs Sprint 1-3.5 ejecutado** (ver pre-step abajo).
 
-**Esfuerzo:** 35h equivalente → ~1 semana.
+**Esfuerzo:** 35h equivalente → ~1 semana + 1-2h catch-up.
 
-## PROMPT a pegar en Claude Desktop nueva conversación
+## ⚠️ PRE-STEP OBLIGATORIO — Catch-up living docs Sprint 1-3.5
+
+Detectado 2026-04-27: las sesiones de Sprint 1, 2, 3, 3.5 NO updatearon BACKLOG/CLEANUP-PLAN/AUDIT-SUMMARY con DONE marks. Antes de arrancar Sprint 4, hacer catch-up:
+
+```
+Pre-Sprint 4 catch-up. Lee:
+- audit/sprint-1/PROGRESS.md (qué se hizo Sprint 1)
+- audit/sprint-2/cell-core/HANDOFF.md
+- audit/sprint-3/cell-{a,b,h}/HANDOFF.md
+- audit/sprint-3.5/RETROSPECTIVE.md
+- audit/sprint-3.5/SPRINT-4-READINESS.md
+- git log --oneline para extraer commit hashes per item
+
+Lanza mesa-23-pm-sprint-planner para:
+
+1. Update BACKLOG-2026-04-26.md:
+   - Para cada item ejecutado en Sprint 1/2/3/3.5: marcar ✅ DONE YYYY-MM-DD (commit XXX)
+   - Agregar esfuerzo real cuando esté disponible
+   - Mantener DoD original como referencia
+
+2. Update CLEANUP-PLAN-2026-04-26.md:
+   - Para cada CLEAN-NN ejecutado: marcar ✅ DONE + LOC reales + backup path
+   - CLEAN items NO ejecutados quedan PENDING
+
+3. Update audit/AUDIT-SUMMARY-2026-04-26.md:
+   - Stats finales table: Sprint 1/2/3/3.5 DONE con fecha y commit
+   - Mover items resueltos de "DEFERRED" a "DONE"
+   - Update P0/P1/P2/P3 ratio post-resolutions
+
+4. Update audit/SPRINT-EXECUTION-GUIDE-2026-04-26.md:
+   - Sprint 1/2/3/3.5 secciones: marcar Status: ✅ DONE YYYY-MM-DD + lecciones aprendidas
+   - Lecciones de Sprint 3.5 RETROSPECTIVE.md → sección "Lecciones aprendidas" del Sprint correspondiente
+   - Si emergieron failure modes → tabla Failure modes
+
+5. Commit + push:
+   docs(audit): catch-up living docs Sprint 1-3.5 retroactive
+   - BACKLOG: X items marked DONE (Sprint 1/2/3/3.5)
+   - CLEANUP-PLAN: Y CLEAN items DONE
+   - AUDIT-SUMMARY: stats + decisions updated
+   - SPRINT-EXECUTION-GUIDE: Sprint 1-3.5 marked DONE + lecciones
+
+Esfuerzo target: 1-2h.
+
+Reporta: items en gap, items que quedaron pendientes, recomendación arrancar Sprint 4 sí/no.
+```
+
+**Tu tarea catch-up:** ~10 min revisar el commit final del catch-up antes de arrancar Sprint 4.
+
+---
+
+## PROMPT a pegar en Claude Desktop nueva conversación (POST catch-up)
 
 ```
 Sprint 4 PARALELO (Cells C + D + H). Lee:
