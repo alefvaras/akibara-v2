@@ -130,6 +130,12 @@ run_core_checks() {
   check_http "mi-cuenta"          "$PROD_URL/mi-cuenta/" "200"
   check_http "xmlrpc deny"        "$PROD_URL/xmlrpc.php" "403"
   check_http "REST users hidden"  "$PROD_URL/wp-json/wp/v2/users" "404"
+
+  # Sprint 3 endpoints (F-03 closeout): detectan fatal post-deploy en endpoints
+  # de Cell A (preventas/encargos). 200 = OK, 302 = redirect a login también OK.
+  check_http "encargos page"      "$PROD_URL/encargos/"                    "200"
+  check_http "mis-reservas page"  "$PROD_URL/mis-reservas/"                "200|302"
+  check_http "akibara REST health" "$PROD_URL/wp-json/akibara/v1/health"   "200"
 }
 
 # Security defenses (B-S1-SEC-03/05 verifications)
