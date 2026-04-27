@@ -50,6 +50,25 @@ if ( ! defined( 'AKB_PREVENTAS_DB_VERSION' ) ) {
     define( 'AKB_PREVENTAS_DB_VERSION', '1.0' );
 }
 
+// ─── PSR-4 autoloader (Akibara\Preventas\* → src/*) ─────────────────────────
+if ( ! defined( 'AKB_PREVENTAS_AUTOLOADER_REGISTERED' ) ) {
+    define( 'AKB_PREVENTAS_AUTOLOADER_REGISTERED', true );
+
+    spl_autoload_register(
+        static function ( string $class ): void {
+            $prefix = 'Akibara\\Preventas\\';
+            if ( strpos( $class, $prefix ) !== 0 ) {
+                return;
+            }
+            $relative = substr( $class, strlen( $prefix ) );
+            $file     = AKB_PREVENTAS_DIR . 'src/' . str_replace( '\\', '/', $relative ) . '.php';
+            if ( is_readable( $file ) ) {
+                require_once $file;
+            }
+        }
+    );
+}
+
 // ─── WooCommerce HPOS + Checkout Blocks compatibility ────────────────────────
 // Group wrap: declare_compatibility hooks must be registered before WC init.
 if ( ! function_exists( 'akb_preventas_declare_wc_compat' ) ) {
@@ -73,55 +92,21 @@ if ( ! function_exists( 'akb_preventas_declare_wc_compat' ) ) {
 
 } // end group wrap
 
-// ─── Bootstrap on akibara_core_init (Sprint 2 HANDOFF §6) ───────────────────
-// Group wrap: all bootstrap functions + hook registration.
-if ( ! function_exists( 'akb_preventas_init' ) ) {
+// ─── Bootstrap via AddonContract (post-INCIDENT-01 — type-safe registration) ─
+// Plugin class is at src/Plugin.php (loaded via PSR-4 autoloader above).
+// Bootstrap::register_addon() wraps init() in per-addon try/catch; if this
+// addon throws, Core auto-disables it and other addons + site stay UP.
+if ( ! function_exists( 'akb_preventas_register' ) ) {
 
-    /**
-     * Main init: fires on akibara_core_init (priority 10, after core priority 5).
-     * Registers services and modules into the core Bootstrap.
-     *
-     * @param \Akibara\Core\Bootstrap $bootstrap Core bootstrap singleton.
-     */
-    function akb_preventas_init( \Akibara\Core\Bootstrap $bootstrap ): void {
-        if ( ! class_exists( 'WooCommerce' ) ) {
-            return;
+    function akb_preventas_register(): void {
+        if ( ! class_exists( '\Akibara\Core\Bootstrap' ) ) {
+            return; // akibara-core not active — nothing to register against.
         }
-
-        // Register repository with ServiceLocator.
-        $bootstrap->services()->register(
-            'preventas.repository',
-            new \Akibara\Preventas\Repository\PreorderRepository()
-        );
-
-        // Declare module to ModuleRegistry.
-        $bootstrap->modules()->declare_module( 'akibara-preventas', AKB_PREVENTAS_VERSION, 'addon' );
-
-        // Load class files.
-        akb_preventas_load_classes();
-
-        // Init subsystems.
-        Akibara_Reserva_Product::class;     // autoloaded via PSR-4 + includes.
-        Akibara_Reserva_Cart::init();
-        Akibara_Reserva_Orders::init();
-        Akibara_Reserva_Editor::init();
-        Akibara_Reserva_Frontend::init();
-        Akibara_Reserva_Admin::init();
-        Akibara_Reserva_Cron::init();
-        Akibara_Reserva_Stock::init();
-        Akibara_Reserva_MyAccount::init();
-        Akibara_Reserva_Email_Queue::init();
-
-        // Run idempotent migration (admin only to avoid frontend overhead).
-        if ( is_admin() ) {
-            Akibara_Reserva_Migration::maybe_unify_types();
-        }
-
-        // Load modules.
-        akb_preventas_load_modules();
+        \Akibara\Core\Bootstrap::instance()->register_addon( new \Akibara\Preventas\Plugin() );
     }
 
-    add_action( 'akibara_core_init', 'akb_preventas_init', 10 );
+    // Priority 10 = after core's plugins_loaded:5 init. Bootstrap is initialized.
+    add_action( 'plugins_loaded', 'akb_preventas_register', 10 );
 
 } // end group wrap
 
