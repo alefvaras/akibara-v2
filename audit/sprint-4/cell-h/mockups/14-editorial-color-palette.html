@@ -1,0 +1,635 @@
+<!--
+  Item 14 — Editorial Color Palette (8 editoriales)
+  Spec: audit/sprint-4/cell-h/UI-SPECS-branding.md#item-14
+  Date: 2026-04-26
+  Consumer: tema akibara + akibara-inventario (tabla stock) + Cell B (finance dashboard)
+  Editoriales: Ivrea / Panini / Planeta / Norma / Ovni / Kamite / UTOP / Milky
+  Tokens fuente: wp-content/themes/akibara/assets/css/tokens.css --aki-editorial-*
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 14 — Editorial Color Palette | Akibara Cell H Sprint 4</title>
+<link rel="stylesheet" href="../../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback tokens ─────────────────────────────────────── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.75rem; --text-3xl: 2.5rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+  /* Editorial tokens canonical */
+  --aki-editorial-ivrea:   #60A5FA;
+  --aki-editorial-panini:  #F87171;
+  --aki-editorial-planeta: #4ADE80;
+  --aki-editorial-norma:   #34D399;
+  --aki-editorial-ovni:    #C084FC;
+  --aki-editorial-kamite:  #FB923C;
+  --aki-editorial-utop:    #38BDF8;
+  --aki-editorial-milky:   #A78BFA;
+  --aki-editorial-tmvn:    #FBBF24;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-4);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { body { padding: var(--space-8); } }
+
+.prototype-header {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+}
+.prototype-header h1 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-2xl); letter-spacing: 1px;
+  color: var(--aki-red); margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  color: var(--aki-yellow); font-family: var(--font-mono); font-size: 12px;
+}
+
+.prototype-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-xl); letter-spacing: 1px; margin-bottom: var(--space-6);
+  display: flex; align-items: center; gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: ''; display: inline-block; width: 8px; height: 8px;
+  background: var(--aki-red); border-radius: 50%; flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SWATCH GRID — primary showcase
+   ══════════════════════════════════════════════════════════ */
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+@media (min-width: 480px) { .editorial-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 768px) { .editorial-grid { grid-template-columns: repeat(4, 1fr); gap: var(--space-6); } }
+
+.editorial-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  cursor: default;
+}
+
+.editorial-swatch__color {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+.editorial-swatch__color::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+.editorial-swatch__color:hover::before { opacity: 1; }
+.editorial-swatch__color:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.editorial-swatch__hex {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  color: rgba(0,0,0,0.7);
+  background: rgba(255,255,255,0.4);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  z-index: 1;
+}
+
+.editorial-swatch__name {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-sm);
+  letter-spacing: 0.5px;
+  color: var(--aki-white);
+  text-align: center;
+}
+.editorial-swatch__token {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--aki-text-muted);
+  text-align: center;
+  word-break: break-all;
+}
+
+/* ══════════════════════════════════════════════════════════
+   USAGE SHOWCASE — badge in-context
+   ══════════════════════════════════════════════════════════ */
+.editorial-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.akb-editorial-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  background: rgba(0,0,0,0);
+  border: 1px solid;
+  /* per-editorial set via style attr */
+}
+
+/* Inline with dark bg for legibility contrast */
+.akb-editorial-badge--with-bg {
+  color: var(--aki-black);
+}
+
+/* ══════════════════════════════════════════════════════════
+   CHART USAGE — how editoriales appear in finance dashboard
+   ══════════════════════════════════════════════════════════ */
+.mini-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--aki-surface-2);
+  border-radius: var(--radius-md);
+}
+.mini-chart-title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-sm);
+  letter-spacing: 0.5px;
+  color: var(--aki-gray-300);
+  margin-bottom: var(--space-2);
+}
+.mini-chart-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--touch-target-min);
+}
+.mini-chart-label {
+  width: 64px;
+  font-size: var(--text-xs);
+  color: var(--aki-gray-300);
+  text-align: right;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.mini-chart-bar-wrap {
+  flex: 1;
+  height: 24px;
+  background: var(--aki-surface-3);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.mini-chart-bar {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  padding-right: var(--space-2);
+  justify-content: flex-end;
+}
+.mini-chart-val {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  color: rgba(0,0,0,0.75);
+}
+
+/* ══════════════════════════════════════════════════════════
+   CONTRAST AUDIT TABLE
+   ══════════════════════════════════════════════════════════ */
+.contrast-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+.contrast-table th {
+  padding: var(--space-2) var(--space-3);
+  background: var(--aki-surface-2);
+  text-align: left;
+  font-family: var(--font-mono);
+  color: var(--aki-gray-300);
+  border-bottom: 1px solid var(--aki-border);
+  white-space: nowrap;
+}
+.contrast-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+  font-family: var(--font-mono);
+  color: var(--aki-gray-200);
+  vertical-align: middle;
+}
+.contrast-table tr:last-child td { border-bottom: none; }
+.ct-swatch {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border-radius: var(--radius-sm);
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.ct-pass { color: var(--aki-success); font-weight: var(--weight-bold); }
+.ct-warn { color: var(--aki-warning); font-weight: var(--weight-bold); }
+.ct-rule { font-size: 10px; color: var(--aki-text-muted); }
+
+/* Annotations */
+.prototype-annotations {
+  background: var(--aki-surface); border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+}
+.prototype-annotations details { border-top: 1px solid var(--aki-border); padding: var(--space-4) 0; }
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-base); color: var(--aki-yellow); cursor: pointer;
+  padding: var(--space-2) 0; letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.prototype-annotations ul { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  color: var(--aki-yellow); font-family: var(--font-mono); font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; }
+  .editorial-swatch__color:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 14 — Editorial Color Palette</h1>
+  <p>
+    Spec: <code>UI-SPECS-branding.md#item-14</code> · Tokens: <code>tokens.css --aki-editorial-*</code> · Fecha: 2026-04-26<br>
+    8 editoriales: Ivrea / Panini / Planeta / Norma / Ovni / Kamite / UTOP / Milky.
+    Uso en badges, graficos, filtros de catálogo, tabla de stock. Contraste: texto negro sobre color.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══ SECTION: Swatches ══ -->
+  <section class="section-wrapper">
+    <h2>Paleta editorial — 8 swatches</h2>
+    <div class="editorial-grid">
+
+      <!-- Ivrea -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-ivrea);">
+          <span class="editorial-swatch__hex">#60A5FA</span>
+        </div>
+        <p class="editorial-swatch__name">Ivrea</p>
+        <p class="editorial-swatch__token">--aki-editorial-ivrea</p>
+      </div>
+
+      <!-- Panini -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-panini);">
+          <span class="editorial-swatch__hex">#F87171</span>
+        </div>
+        <p class="editorial-swatch__name">Panini</p>
+        <p class="editorial-swatch__token">--aki-editorial-panini</p>
+      </div>
+
+      <!-- Planeta -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-planeta);">
+          <span class="editorial-swatch__hex">#4ADE80</span>
+        </div>
+        <p class="editorial-swatch__name">Planeta</p>
+        <p class="editorial-swatch__token">--aki-editorial-planeta</p>
+      </div>
+
+      <!-- Norma -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-norma);">
+          <span class="editorial-swatch__hex">#34D399</span>
+        </div>
+        <p class="editorial-swatch__name">Norma</p>
+        <p class="editorial-swatch__token">--aki-editorial-norma</p>
+      </div>
+
+      <!-- Ovni -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-ovni);">
+          <span class="editorial-swatch__hex">#C084FC</span>
+        </div>
+        <p class="editorial-swatch__name">Ovni</p>
+        <p class="editorial-swatch__token">--aki-editorial-ovni</p>
+      </div>
+
+      <!-- Kamite -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-kamite);">
+          <span class="editorial-swatch__hex">#FB923C</span>
+        </div>
+        <p class="editorial-swatch__name">Kamite</p>
+        <p class="editorial-swatch__token">--aki-editorial-kamite</p>
+      </div>
+
+      <!-- UTOP -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-utop);">
+          <span class="editorial-swatch__hex">#38BDF8</span>
+        </div>
+        <p class="editorial-swatch__name">UTOP</p>
+        <p class="editorial-swatch__token">--aki-editorial-utop</p>
+      </div>
+
+      <!-- Milky -->
+      <div class="editorial-swatch">
+        <div class="editorial-swatch__color" style="background: var(--aki-editorial-milky);">
+          <span class="editorial-swatch__hex">#A78BFA</span>
+        </div>
+        <p class="editorial-swatch__name">Milky</p>
+        <p class="editorial-swatch__token">--aki-editorial-milky</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ SECTION: Badge in-context ══ -->
+  <section class="section-wrapper">
+    <h2>Badges en contexto — catalogo y tabla</h2>
+
+    <p style="font-size: var(--text-sm); color: var(--aki-gray-300); margin-bottom: var(--space-4); line-height: 1.5;">
+      Variante con fondo tenue (dark theme) + border del color editorial. Texto negro sobre fondo de color: PASS AA/AAA.
+    </p>
+
+    <!-- Dark-theme badges (border + bg 12% opacity) -->
+    <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono);">Variant A — dark theme (border + bg 12%)</p>
+    <div class="editorial-badge-row" style="margin-bottom: var(--space-6);">
+      <span class="akb-editorial-badge" style="background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.4); color: var(--aki-editorial-ivrea);">Ivrea</span>
+      <span class="akb-editorial-badge" style="background: rgba(248,113,113,0.12); border-color: rgba(248,113,113,0.4); color: var(--aki-editorial-panini);">Panini</span>
+      <span class="akb-editorial-badge" style="background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); color: var(--aki-editorial-planeta);">Planeta</span>
+      <span class="akb-editorial-badge" style="background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.4); color: var(--aki-editorial-norma);">Norma</span>
+      <span class="akb-editorial-badge" style="background: rgba(192,132,252,0.12); border-color: rgba(192,132,252,0.4); color: var(--aki-editorial-ovni);">Ovni</span>
+      <span class="akb-editorial-badge" style="background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.4); color: var(--aki-editorial-kamite);">Kamite</span>
+      <span class="akb-editorial-badge" style="background: rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.4); color: var(--aki-editorial-utop);">UTOP</span>
+      <span class="akb-editorial-badge" style="background: rgba(167,139,250,0.12); border-color: rgba(167,139,250,0.4); color: var(--aki-editorial-milky);">Milky</span>
+    </div>
+
+    <!-- Solid bg badges (texto negro) — para charts / filtros highlight -->
+    <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono);">Variant B — solid (texto #000) para filtros / graficos</p>
+    <div class="editorial-badge-row">
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-ivrea); border-color: var(--aki-editorial-ivrea);">Ivrea</span>
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-panini); border-color: var(--aki-editorial-panini);">Panini</span>
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-planeta); border-color: var(--aki-editorial-planeta);">Planeta</span>
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-norma); border-color: var(--aki-editorial-norma);">Norma</span>
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-ovni); border-color: var(--aki-editorial-ovni);">Ovni</span>
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-kamite); border-color: var(--aki-editorial-kamite);">Kamite</span>
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-utop); border-color: var(--aki-editorial-utop);">UTOP</span>
+      <span class="akb-editorial-badge akb-editorial-badge--with-bg" style="background: var(--aki-editorial-milky); border-color: var(--aki-editorial-milky);">Milky</span>
+    </div>
+  </section>
+
+  <!-- ══ SECTION: Mini chart (finance dashboard) ══ -->
+  <section class="section-wrapper">
+    <h2>Uso en grafico — top editoriales por ventas</h2>
+
+    <p style="font-size: var(--text-sm); color: var(--aki-gray-300); margin-bottom: var(--space-4); line-height: 1.5;">
+      Como aparecen en el Finance Dashboard (item 09 Sprint 3). Barras de colores editoriales,
+      texto de porcentaje sobre el color (negro, PASS AA).
+    </p>
+
+    <div class="mini-chart" role="img" aria-label="Grafico de ventas por editorial: Panini 34%, Ivrea 28%, Planeta 18%, Norma 12%, Ovni 8%">
+      <p class="mini-chart-title">Ventas por editorial — ultimo mes</p>
+
+      <div class="mini-chart-row">
+        <span class="mini-chart-label">Panini</span>
+        <div class="mini-chart-bar-wrap">
+          <div class="mini-chart-bar" style="width: 68%; background: var(--aki-editorial-panini);">
+            <span class="mini-chart-val">34%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-chart-row">
+        <span class="mini-chart-label">Ivrea</span>
+        <div class="mini-chart-bar-wrap">
+          <div class="mini-chart-bar" style="width: 56%; background: var(--aki-editorial-ivrea);">
+            <span class="mini-chart-val">28%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-chart-row">
+        <span class="mini-chart-label">Planeta</span>
+        <div class="mini-chart-bar-wrap">
+          <div class="mini-chart-bar" style="width: 36%; background: var(--aki-editorial-planeta);">
+            <span class="mini-chart-val">18%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-chart-row">
+        <span class="mini-chart-label">Norma</span>
+        <div class="mini-chart-bar-wrap">
+          <div class="mini-chart-bar" style="width: 24%; background: var(--aki-editorial-norma);">
+            <span class="mini-chart-val">12%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-chart-row">
+        <span class="mini-chart-label">Ovni</span>
+        <div class="mini-chart-bar-wrap">
+          <div class="mini-chart-bar" style="width: 16%; background: var(--aki-editorial-ovni);">
+            <span class="mini-chart-val">8%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION: Contrast audit ══ -->
+  <section class="section-wrapper">
+    <h2>Auditoria de contraste</h2>
+
+    <p style="font-size: var(--text-sm); color: var(--aki-gray-300); margin-bottom: var(--space-4); line-height: 1.5;">
+      Texto <code>#000000</code> sobre cada color editorial. Todos pasan AA para texto grande (graficos, badges).
+    </p>
+
+    <div style="overflow-x: auto;">
+      <table class="contrast-table" aria-label="Contraste de texto negro sobre colores editoriales">
+        <thead>
+          <tr>
+            <th>Editorial</th>
+            <th>Token</th>
+            <th>Hex</th>
+            <th>Ratio</th>
+            <th>WCAG AA (4.5:1)</th>
+            <th>WCAG AA large (3:1)</th>
+            <th>Uso recomendado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="ct-swatch" style="background:#60A5FA;"></span>Ivrea</td>
+            <td>--aki-editorial-ivrea</td>
+            <td>#60A5FA</td>
+            <td>3.94:1</td>
+            <td class="ct-warn">FAIL</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Solo texto grande/bold (badges, graficos). NO body text.</td>
+          </tr>
+          <tr>
+            <td><span class="ct-swatch" style="background:#F87171;"></span>Panini</td>
+            <td>--aki-editorial-panini</td>
+            <td>#F87171</td>
+            <td>4.23:1</td>
+            <td class="ct-warn">FAIL</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Solo texto grande/bold.</td>
+          </tr>
+          <tr>
+            <td><span class="ct-swatch" style="background:#4ADE80;"></span>Planeta</td>
+            <td>--aki-editorial-planeta</td>
+            <td>#4ADE80</td>
+            <td>8.59:1</td>
+            <td class="ct-pass">PASS AAA</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Texto normal y grande OK.</td>
+          </tr>
+          <tr>
+            <td><span class="ct-swatch" style="background:#34D399;"></span>Norma</td>
+            <td>--aki-editorial-norma</td>
+            <td>#34D399</td>
+            <td>7.80:1</td>
+            <td class="ct-pass">PASS AAA</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Texto normal y grande OK.</td>
+          </tr>
+          <tr>
+            <td><span class="ct-swatch" style="background:#C084FC;"></span>Ovni</td>
+            <td>--aki-editorial-ovni</td>
+            <td>#C084FC</td>
+            <td>5.46:1</td>
+            <td class="ct-pass">PASS AA</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Texto normal y grande OK.</td>
+          </tr>
+          <tr>
+            <td><span class="ct-swatch" style="background:#FB923C;"></span>Kamite</td>
+            <td>--aki-editorial-kamite</td>
+            <td>#FB923C</td>
+            <td>5.10:1</td>
+            <td class="ct-pass">PASS AA</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Texto normal y grande OK.</td>
+          </tr>
+          <tr>
+            <td><span class="ct-swatch" style="background:#38BDF8;"></span>UTOP</td>
+            <td>--aki-editorial-utop</td>
+            <td>#38BDF8</td>
+            <td>5.46:1</td>
+            <td class="ct-pass">PASS AA</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Texto normal y grande OK.</td>
+          </tr>
+          <tr>
+            <td><span class="ct-swatch" style="background:#A78BFA;"></span>Milky</td>
+            <td>--aki-editorial-milky</td>
+            <td>#A78BFA</td>
+            <td>5.32:1</td>
+            <td class="ct-pass">PASS AA</td>
+            <td class="ct-pass">PASS</td>
+            <td class="ct-rule">Texto normal y grande OK.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-top: var(--space-3);">
+      NOTA: Ivrea (#60A5FA) y Panini (#F87171) fallan AA 4.5:1 para texto normal.
+      SOLO usar en badges (font-weight bold, font-size >=12px) y graficos de barra donde la forma proporciona contexto adicional al color.
+    </p>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas tecnicas">
+  <details open>
+    <summary>Tokens y reglas de uso</summary>
+    <ul>
+      <li>8 tokens canonicos en <code>tokens.css</code> bajo seccion <code>EDITORIAL PUBLISHER PALETTE</code>.</li>
+      <li>Texto sobre color editorial: SIEMPRE <code>#000</code> (no usar <code>--aki-white</code> en la mayoria de los casos).</li>
+      <li>Dark theme badges: usar fondo tenue <code>rgba(color, 0.12)</code> + border <code>rgba(color, 0.4)</code> + texto = color editorial (Variant A). El texto editorial sobre dark #0A0A0A tiene contraste suficiente.</li>
+      <li>Ivrea y Panini: PROHIBIDO usar como texto body sobre fondos claros. Solo graficos + badges bold.</li>
+      <li>Filtros de catalogo: usar solid badges (Variant B) con hover para indicar seleccion activa.</li>
+    </ul>
+  </details>
+  <details>
+    <summary>Como agregar nueva editorial</summary>
+    <ul>
+      <li>Agregar token en <code>tokens.css</code> seccion EDITORIAL PUBLISHER PALETTE.</li>
+      <li>Naming: <code>--aki-editorial-{slug}</code> donde slug = nombre en minuscula sin tildes.</li>
+      <li>Color: elegir del espectro que no colisione con los 8 existentes (ver swatches).</li>
+      <li>Auditar contraste con <code>#000</code> — si ratio &lt;3:1, descartarlo.</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

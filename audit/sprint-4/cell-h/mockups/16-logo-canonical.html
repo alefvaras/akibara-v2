@@ -1,0 +1,680 @@
+<!--
+  Item 16 — Logo Canonical Reference (Manga Crimson v3)
+  Spec: audit/sprint-4/cell-h/UI-SPECS-branding.md#item-16
+  Date: 2026-04-26
+  Consumer: Cell H Design Ops — referencia para uso del logo en todos los contextos
+  Content: sizing guide / clearspace / variants (dark / light / monochrome / horizontal / stacked)
+  NOTE: Logo real es asset SVG/PNG del cliente. Este mockup usa placeholder SVG con la estructura correcta.
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 16 — Logo Canonical | Akibara Cell H Sprint 4</title>
+<link rel="stylesheet" href="../../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700; --aki-yellow-dark: #C8960C;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-100: #F5F5F5; --aki-gray-200: #E0E0E0;
+  --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.75rem; --text-3xl: 2.5rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-4);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { body { padding: var(--space-8); } }
+
+.prototype-header {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+}
+.prototype-header h1 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-2xl); letter-spacing: 1px; color: var(--aki-red); margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2);
+  border-radius: var(--radius-sm); color: var(--aki-yellow);
+  font-family: var(--font-mono); font-size: 12px;
+}
+
+.prototype-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-xl); letter-spacing: 1px; margin-bottom: var(--space-6);
+  display: flex; align-items: center; gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: ''; display: inline-block; width: 8px; height: 8px;
+  background: var(--aki-red); border-radius: 50%; flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOGO PLACEHOLDER SVG — estructura correcta, arte placeholder
+   ══════════════════════════════════════════════════════════ */
+.logo-placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* El logo real tiene: wordmark "AKIBARA" + tagline "MANGA" */
+}
+.logo-mark {
+  /* Marca grafica (katana/libro/A estilizada) */
+  display: block;
+  flex-shrink: 0;
+}
+.logo-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  line-height: 1;
+}
+.logo-wordmark__primary {
+  font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--aki-white);
+}
+.logo-wordmark__secondary {
+  font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--aki-red);
+}
+
+/* ══ DISPLAY SURFACES ══ */
+.logo-surface {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  padding: var(--space-8) var(--space-10);
+  position: relative;
+}
+.logo-surface--dark { background: var(--aki-black); }
+.logo-surface--dark-2 { background: var(--aki-surface-2); }
+.logo-surface--red { background: var(--aki-red); }
+.logo-surface--topbar { background: #8B0000; } /* --aki-topbar-bg */
+.logo-surface--light { background: var(--aki-gray-100); }
+.logo-surface--white { background: var(--aki-white); }
+.logo-surface--photo {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+}
+
+.logo-surface-label {
+  position: absolute;
+  bottom: var(--space-2);
+  left: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.logo-surface--light .logo-surface-label,
+.logo-surface--white .logo-surface-label { color: rgba(0,0,0,0.3); }
+
+/* VARIANTS grid */
+.variants-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+@media (min-width: 640px) {
+  .variants-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ══ CLEARSPACE DEMO ══ */
+.clearspace-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  background: var(--aki-surface-2);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+.clearspace-zone {
+  position: relative;
+  border: 2px dashed rgba(255,215,0,0.4);
+  padding: var(--space-6);
+  border-radius: var(--radius-sm);
+}
+.clearspace-zone::before {
+  content: 'X clearspace (= height de la M)';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--aki-yellow);
+  opacity: 0.7;
+}
+.clearspace-arrows {
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+}
+/* Arrow lines annotation */
+.cs-line {
+  position: absolute;
+  background: rgba(255,215,0,0.3);
+}
+.cs-line-top    { top: 0; left: 50%; width: 1px; height: 100%; transform: none; display: none; }
+.cs-label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(255,215,0,0.6);
+  white-space: nowrap;
+}
+.cs-label-top    { top: -16px; right: 0; }
+.cs-label-left   { top: 50%; left: -32px; transform: translateY(-50%) rotate(-90deg); }
+.cs-label-right  { top: 50%; right: -32px; transform: translateY(-50%) rotate(90deg); }
+.cs-label-bottom { bottom: -16px; right: 0; }
+
+/* ══ SIZING TABLE ══ */
+.sizing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+}
+.sizing-table th {
+  padding: var(--space-2) var(--space-3);
+  background: var(--aki-surface-2);
+  text-align: left;
+  color: var(--aki-gray-300);
+  border-bottom: 1px solid var(--aki-border);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sizing-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+  color: var(--aki-gray-200);
+  vertical-align: middle;
+}
+.sizing-table tr:last-child td { border-bottom: none; }
+.sizing-table .td-ok { color: var(--aki-success); font-weight: var(--weight-bold); }
+.sizing-table .td-warn { color: var(--aki-warning); }
+.sizing-table .td-no { color: var(--aki-error); }
+
+/* MINI logo size previews */
+.logo-size-demo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px;
+  background: var(--aki-black);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+}
+
+/* ══ FORBIDDEN ══ */
+.forbidden-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+@media (min-width: 640px) { .forbidden-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.forbidden-item {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.forbidden-overlay {
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--aki-error);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+.forbidden-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, transparent calc(50% - 1px), var(--aki-error) calc(50% - 1px), var(--aki-error) calc(50% + 1px), transparent calc(50% + 1px));
+}
+.forbidden-label {
+  position: absolute;
+  bottom: var(--space-2); left: 50%; transform: translateX(-50%);
+  background: var(--aki-error);
+  color: var(--aki-white);
+  font-size: 10px; font-family: var(--font-mono);
+  padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  white-space: nowrap;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+/* Annotations */
+.prototype-annotations {
+  background: var(--aki-surface); border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+}
+.prototype-annotations details { border-top: 1px solid var(--aki-border); padding: var(--space-4) 0; }
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-base); color: var(--aki-yellow); cursor: pointer;
+  padding: var(--space-2) 0; letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.prototype-annotations ul { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  color: var(--aki-yellow); font-family: var(--font-mono); font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 16 — Logo Canonical Reference</h1>
+  <p>
+    Spec: <code>UI-SPECS-branding.md#item-16</code> · Sistema: Manga Crimson v3 · Fecha: 2026-04-26<br>
+    Guia de uso del logo: sizing, clearspace, variantes de color, usos prohibidos.
+    El logo real es SVG/PNG del cliente — este mockup define las reglas de uso para implementadores.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══ SECTION: Variantes de color ══ -->
+  <section class="section-wrapper">
+    <h2>Variantes de color — 6 superficies</h2>
+
+    <div class="variants-grid">
+
+      <!-- Dark (canonical) -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.5px;">
+          V1 — Dark (canonical)
+        </p>
+        <div class="logo-surface logo-surface--dark" style="border: 1px solid var(--aki-border);">
+          <div class="logo-placeholder">
+            <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+              <rect width="40" height="40" rx="4" fill="#D90010"/>
+              <text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact, Arial Narrow, sans-serif" font-size="22" font-weight="bold">A</text>
+            </svg>
+            <div class="logo-wordmark">
+              <span class="logo-wordmark__primary" style="font-size: 22px;">AKIBARA</span>
+              <span class="logo-wordmark__secondary" style="font-size: 11px;">MANGA</span>
+            </div>
+          </div>
+          <span class="logo-surface-label">#0A0A0A — canonical</span>
+        </div>
+      </div>
+
+      <!-- Surface-2 dark -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.5px;">
+          V2 — Surface-2
+        </p>
+        <div class="logo-surface logo-surface--dark-2" style="border: 1px solid var(--aki-border);">
+          <div class="logo-placeholder">
+            <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+              <rect width="40" height="40" rx="4" fill="#D90010"/>
+              <text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact, Arial Narrow, sans-serif" font-size="22" font-weight="bold">A</text>
+            </svg>
+            <div class="logo-wordmark">
+              <span class="logo-wordmark__primary" style="font-size: 22px;">AKIBARA</span>
+              <span class="logo-wordmark__secondary" style="font-size: 11px;">MANGA</span>
+            </div>
+          </div>
+          <span class="logo-surface-label">#1A1A1A</span>
+        </div>
+      </div>
+
+      <!-- Topbar red -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.5px;">
+          V3 — Topbar rojo oscuro
+        </p>
+        <div class="logo-surface logo-surface--topbar">
+          <div class="logo-placeholder">
+            <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+              <rect width="40" height="40" rx="4" fill="rgba(255,255,255,0.15)"/>
+              <text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact, Arial Narrow, sans-serif" font-size="22" font-weight="bold">A</text>
+            </svg>
+            <div class="logo-wordmark">
+              <span class="logo-wordmark__primary" style="font-size: 22px; color: white;">AKIBARA</span>
+              <span class="logo-wordmark__secondary" style="font-size: 11px; color: rgba(255,215,0,0.9);">MANGA</span>
+            </div>
+          </div>
+          <span class="logo-surface-label">#8B0000 (topbar-bg)</span>
+        </div>
+      </div>
+
+      <!-- Light bg -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.5px;">
+          V4 — Fondo claro (OG, emails)
+        </p>
+        <div class="logo-surface logo-surface--light" style="border: 1px solid var(--aki-border-aa);">
+          <div class="logo-placeholder">
+            <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+              <rect width="40" height="40" rx="4" fill="#D90010"/>
+              <text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact, Arial Narrow, sans-serif" font-size="22" font-weight="bold">A</text>
+            </svg>
+            <div class="logo-wordmark">
+              <span class="logo-wordmark__primary" style="font-size: 22px; color: #0A0A0A;">AKIBARA</span>
+              <span class="logo-wordmark__secondary" style="font-size: 11px; color: #D90010;">MANGA</span>
+            </div>
+          </div>
+          <span class="logo-surface-label" style="color: rgba(0,0,0,0.3);">#F5F5F5</span>
+        </div>
+      </div>
+
+      <!-- Monochrome white -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.5px;">
+          V5 — Monocromo blanco
+        </p>
+        <div class="logo-surface logo-surface--red">
+          <div class="logo-placeholder">
+            <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+              <rect width="40" height="40" rx="4" fill="rgba(255,255,255,0.2)"/>
+              <text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact, Arial Narrow, sans-serif" font-size="22" font-weight="bold">A</text>
+            </svg>
+            <div class="logo-wordmark">
+              <span class="logo-wordmark__primary" style="font-size: 22px; color: white;">AKIBARA</span>
+              <span class="logo-wordmark__secondary" style="font-size: 11px; color: rgba(255,255,255,0.8);">MANGA</span>
+            </div>
+          </div>
+          <span class="logo-surface-label">mono / fondo rojo</span>
+        </div>
+      </div>
+
+      <!-- Photo bg -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.5px;">
+          V6 — Sobre foto (hero)
+        </p>
+        <div class="logo-surface logo-surface--photo">
+          <div class="logo-placeholder">
+            <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+              <rect width="40" height="40" rx="4" fill="#D90010"/>
+              <text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact, Arial Narrow, sans-serif" font-size="22" font-weight="bold">A</text>
+            </svg>
+            <div class="logo-wordmark">
+              <span class="logo-wordmark__primary" style="font-size: 22px; color: white; text-shadow: 0 1px 4px rgba(0,0,0,0.8);">AKIBARA</span>
+              <span class="logo-wordmark__secondary" style="font-size: 11px;">MANGA</span>
+            </div>
+          </div>
+          <span class="logo-surface-label">con text-shadow si fondo variable</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ SECTION: Clearspace ══ -->
+  <section class="section-wrapper">
+    <h2>Clearspace — zona de exclusion</h2>
+
+    <p style="font-size: var(--text-sm); color: var(--aki-gray-300); margin-bottom: var(--space-6); line-height: 1.5;">
+      La zona de clearspace alrededor del logo es igual a la altura de la letra "M" del wordmark.
+      Ningun elemento (texto, imagen, borde) puede entrar en esta zona.
+    </p>
+
+    <div style="display: flex; align-items: center; justify-content: center; padding: var(--space-8); background: var(--aki-surface-2); border-radius: var(--radius-md); position: relative; overflow: hidden;">
+
+      <!-- Clearspace box -->
+      <div style="position: relative; padding: 32px;">
+        <!-- Dashed clearspace border -->
+        <div style="position: absolute; inset: 0; border: 2px dashed rgba(255,215,0,0.4); border-radius: var(--radius-sm); pointer-events: none;"></div>
+
+        <!-- Clearspace labels -->
+        <div style="position: absolute; top: 6px; left: 50%; transform: translateX(-50%); font-size: 9px; font-family: var(--font-mono); color: rgba(255,215,0,0.6); white-space: nowrap;">X</div>
+        <div style="position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); font-size: 9px; font-family: var(--font-mono); color: rgba(255,215,0,0.6); white-space: nowrap;">X</div>
+        <div style="position: absolute; left: 6px; top: 50%; transform: translateY(-50%); font-size: 9px; font-family: var(--font-mono); color: rgba(255,215,0,0.6);">X</div>
+        <div style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: 9px; font-family: var(--font-mono); color: rgba(255,215,0,0.6);">X</div>
+
+        <!-- Logo dentro del clearspace -->
+        <div class="logo-placeholder">
+          <svg class="logo-mark" width="48" height="48" viewBox="0 0 40 40" aria-hidden="true">
+            <rect width="40" height="40" rx="4" fill="#D90010"/>
+            <text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact, Arial Narrow, sans-serif" font-size="22" font-weight="bold">A</text>
+          </svg>
+          <div class="logo-wordmark">
+            <span class="logo-wordmark__primary" style="font-size: 26px;">AKIBARA</span>
+            <span class="logo-wordmark__secondary" style="font-size: 13px;">MANGA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-top: var(--space-4); font-family: var(--font-mono);">
+      X = altura de la "M" en el wordmark. En uso digital: min 8px. En impresion: min 5mm.
+    </p>
+  </section>
+
+  <!-- ══ SECTION: Sizing ══ -->
+  <section class="section-wrapper">
+    <h2>Sizing guide — minimos y contextos</h2>
+
+    <div style="overflow-x: auto;">
+      <table class="sizing-table" aria-label="Guia de tamaño minimo del logo por contexto">
+        <thead>
+          <tr>
+            <th>Contexto</th>
+            <th>Ancho minimo</th>
+            <th>Preview</th>
+            <th>Estado</th>
+            <th>Nota</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Header desktop</td>
+            <td>140px</td>
+            <td>
+              <div class="logo-size-demo">
+                <svg width="18" height="18" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="4" fill="#D90010"/><text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact" font-size="22">A</text></svg>
+                <span style="font-family: var(--font-heading); font-size: 14px; color: white; letter-spacing: 2px;">AKIBARA</span>
+              </div>
+            </td>
+            <td class="td-ok">OK</td>
+            <td>Con wordmark</td>
+          </tr>
+          <tr>
+            <td>Header mobile</td>
+            <td>100px</td>
+            <td>
+              <div class="logo-size-demo">
+                <svg width="14" height="14" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="4" fill="#D90010"/><text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact" font-size="22">A</text></svg>
+                <span style="font-family: var(--font-heading); font-size: 11px; color: white; letter-spacing: 2px;">AKIBARA</span>
+              </div>
+            </td>
+            <td class="td-ok">OK</td>
+            <td>Con wordmark reducido</td>
+          </tr>
+          <tr>
+            <td>Favicon (tab)</td>
+            <td>32px</td>
+            <td>
+              <div class="logo-size-demo">
+                <svg width="32" height="32" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="4" fill="#D90010"/><text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact" font-size="22">A</text></svg>
+              </div>
+            </td>
+            <td class="td-ok">OK</td>
+            <td>Solo icono/marca</td>
+          </tr>
+          <tr>
+            <td>Email header</td>
+            <td>120px</td>
+            <td>
+              <div class="logo-size-demo">
+                <svg width="16" height="16" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="4" fill="#D90010"/><text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact" font-size="22">A</text></svg>
+                <span style="font-family: impact; font-size: 12px; color: white; letter-spacing: 2px;">AKIBARA</span>
+              </div>
+            </td>
+            <td class="td-ok">OK</td>
+            <td>Max-width 600px email, logo ~120px</td>
+          </tr>
+          <tr>
+            <td>OG / Social</td>
+            <td>200px</td>
+            <td style="color: var(--aki-text-muted);">1200×630px canvas</td>
+            <td class="td-ok">OK</td>
+            <td>Con tagline + URL</td>
+          </tr>
+          <tr>
+            <td>Menos de 80px</td>
+            <td>—</td>
+            <td>
+              <div class="logo-size-demo">
+                <svg width="40" height="16" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="4" fill="#D90010"/><text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact" font-size="22">A</text></svg>
+              </div>
+            </td>
+            <td class="td-warn">EVITAR</td>
+            <td>Wordmark ilegible bajo 80px; usar solo icono</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ SECTION: Usos prohibidos ══ -->
+  <section class="section-wrapper">
+    <h2>Usos prohibidos</h2>
+
+    <div class="forbidden-grid">
+
+      <!-- Stretch -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase;">NO: Deformar</p>
+        <div class="forbidden-item">
+          <div class="logo-surface logo-surface--dark" style="border: 1px solid var(--aki-border); padding: var(--space-6);">
+            <div class="logo-placeholder" style="transform: scaleX(1.5);" aria-hidden="true">
+              <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="4" fill="#D90010"/><text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact" font-size="22">A</text></svg>
+              <div class="logo-wordmark"><span class="logo-wordmark__primary" style="font-size: 20px;">AKIBARA</span><span class="logo-wordmark__secondary" style="font-size: 10px;">MANGA</span></div>
+            </div>
+          </div>
+          <div class="forbidden-overlay"></div>
+          <span class="forbidden-label">NO stretch</span>
+        </div>
+      </div>
+
+      <!-- Wrong color -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase;">NO: Color incorrecto</p>
+        <div class="forbidden-item">
+          <div class="logo-surface logo-surface--dark" style="border: 1px solid var(--aki-border); padding: var(--space-6);">
+            <div class="logo-placeholder" aria-hidden="true">
+              <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="4" fill="#3B82F6"/><text x="20" y="28" text-anchor="middle" fill="white" font-family="Impact" font-size="22">A</text></svg>
+              <div class="logo-wordmark"><span class="logo-wordmark__primary" style="font-size: 20px; color: #3B82F6;">AKIBARA</span><span class="logo-wordmark__secondary" style="font-size: 10px; color: #3B82F6;">MANGA</span></div>
+            </div>
+          </div>
+          <div class="forbidden-overlay"></div>
+          <span class="forbidden-label">NO color libre</span>
+        </div>
+      </div>
+
+      <!-- Low contrast -->
+      <div>
+        <p style="font-size: 10px; font-family: var(--font-mono); color: var(--aki-text-muted); margin-bottom: var(--space-2); text-transform: uppercase;">NO: Bajo contraste</p>
+        <div class="forbidden-item">
+          <div class="logo-surface" style="background: #D90010; border: 1px solid var(--aki-border); padding: var(--space-6);">
+            <div class="logo-placeholder" aria-hidden="true">
+              <svg class="logo-mark" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="4" fill="#BB000D"/><text x="20" y="28" text-anchor="middle" fill="#FF2020" font-family="Impact" font-size="22">A</text></svg>
+              <div class="logo-wordmark"><span class="logo-wordmark__primary" style="font-size: 20px; color: #BB000D;">AKIBARA</span><span class="logo-wordmark__secondary" style="font-size: 10px; color: #BB000D;">MANGA</span></div>
+            </div>
+          </div>
+          <div class="forbidden-overlay"></div>
+          <span class="forbidden-label">NO bajo contraste</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas de implementacion">
+  <details open>
+    <summary>Reglas de implementacion</summary>
+    <ul>
+      <li>Logo fuente: SVG vector en <code>wp-content/themes/akibara/assets/images/logo.svg</code>. Siempre usar SVG — NO PNG en header.</li>
+      <li>Usar <code>width</code> CSS, NO <code>width</code>/<code>height</code> hardcoded en el <code>img</code> tag (permite escalar sin deformar).</li>
+      <li>Alt text en header: <code>alt="Akibara Manga"</code> (nombre de la tienda, NO "logo").</li>
+      <li>En email: usar PNG 2x exportado desde SVG. Max-width 140px en tabla email.</li>
+      <li>Favicon: <code>favicon.ico</code> (32px) + <code>apple-touch-icon.png</code> (180px) + <code>favicon.svg</code> (browsers modernos).</li>
+    </ul>
+  </details>
+  <details>
+    <summary>Estructura de archivos logo</summary>
+    <ul>
+      <li><code>assets/images/logo.svg</code> — version principal oscura (wordmark horizontal)</li>
+      <li><code>assets/images/logo-light.svg</code> — para fondos claros (OG/emails)</li>
+      <li><code>assets/images/logo-mono.svg</code> — version monocromo blanco</li>
+      <li><code>assets/images/logo-icon.svg</code> — solo la marca grafica (sin wordmark)</li>
+      <li><code>assets/images/favicon.svg</code> — favicon moderno</li>
+    </ul>
+  </details>
+  <details>
+    <summary>Contraste logo sobre superficies</summary>
+    <ul>
+      <li>Wordmark blanco (#FFF) sobre #0A0A0A: 19.56:1 AAA</li>
+      <li>Wordmark blanco (#FFF) sobre #8B0000: 5.92:1 PASS AA</li>
+      <li>Wordmark negro (#000) sobre #F5F5F5: 19.07:1 AAA</li>
+      <li>Wordmark negro (#000) sobre foto: requiere text-shadow o pill blanco detras</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

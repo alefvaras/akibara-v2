@@ -1,0 +1,945 @@
+<!--
+  Item 11 — Stock Alerts Table (admin)
+  Spec: audit/sprint-4/cell-h/UI-SPECS-inventario.md#item-11
+  Date: 2026-04-26
+  Consumer: Cell C — akibara-inventario / modules/inventory/
+  States: mobile 1col stack / desktop overflow-x table
+  Screens: mobile-first (375px base → 768px → 1024px)
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 11 — Stock Alerts Table | Akibara Cell H Sprint 4</title>
+<link rel="stylesheet" href="../../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback tokens ─────────────────────────────────────── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-on-success: #000000; --aki-on-warning: #000000; --aki-on-info: #000000;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.75rem; --text-3xl: 2.5rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-4);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { body { padding: var(--space-8); } }
+
+.prototype-header {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+}
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+@media (min-width: 768px) { .section-wrapper { padding: var(--space-6); } }
+.section-wrapper h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── PANEL TOOLBAR ─────────────────────────────────────── */
+.akb-stock-panel {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+}
+
+.akb-stock-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--aki-border);
+}
+@media (min-width: 640px) {
+  .akb-stock-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.akb-stock-toolbar__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  letter-spacing: 0.5px;
+  color: var(--aki-white);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.akb-stock-toolbar__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--space-2);
+  background: var(--aki-error);
+  color: var(--aki-white);
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+}
+
+.akb-stock-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.akb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  min-height: var(--touch-target-min);
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-base), color var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.akb-btn:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.akb-btn--primary {
+  background: var(--aki-red);
+  color: var(--aki-white);
+}
+.akb-btn--primary:hover { background: var(--aki-red-hover); }
+.akb-btn--ghost {
+  background: transparent;
+  color: var(--aki-gray-300);
+  border: 1px solid var(--aki-border-aa);
+}
+.akb-btn--ghost:hover {
+  background: var(--aki-surface-3);
+  color: var(--aki-white);
+}
+
+/* ── FILTER BAR ─────────────────────────────────────────── */
+.akb-stock-filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--aki-border);
+}
+@media (min-width: 640px) {
+  .akb-stock-filters {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+  }
+}
+
+.akb-stock-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.akb-filter-label {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  white-space: nowrap;
+}
+
+.akb-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-1) var(--space-3);
+  min-height: var(--touch-target-min);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-body);
+  border: 1px solid var(--aki-border-aa);
+  background: transparent;
+  color: var(--aki-gray-300);
+  cursor: pointer;
+  transition: background var(--transition-base), border-color var(--transition-base), color var(--transition-base);
+  white-space: nowrap;
+}
+.akb-filter-btn:hover { background: var(--aki-surface-3); color: var(--aki-white); }
+.akb-filter-btn:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.akb-filter-btn[aria-pressed="true"] {
+  background: rgba(217,0,16,0.15);
+  border-color: var(--aki-red);
+  color: var(--aki-red-bright);
+}
+.akb-filter-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ── TABLE WRAPPER — overflow-x mobile ─────────────────── */
+.akb-stock-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── MOBILE CARD VIEW (< 640px) ─────────────────────────── */
+.akb-stock-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+@media (min-width: 640px) {
+  .akb-stock-card-list { display: none; }
+}
+
+.akb-stock-card {
+  background: var(--aki-surface-3);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.akb-stock-card--critical { border-left: 3px solid var(--aki-error); }
+.akb-stock-card--warning  { border-left: 3px solid var(--aki-warning); }
+.akb-stock-card--info     { border-left: 3px solid var(--aki-info); }
+
+.akb-stock-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.akb-stock-card__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--aki-white);
+  line-height: 1.3;
+}
+.akb-stock-card__sku {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+.akb-stock-card__meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1) var(--space-4);
+}
+.akb-stock-card__meta-item { display: flex; flex-direction: column; gap: 2px; }
+.akb-stock-card__meta-key {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--aki-text-muted);
+}
+.akb-stock-card__meta-val {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--aki-white);
+  font-family: var(--font-mono);
+}
+.akb-stock-card__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* ── TABLE (>= 640px) ───────────────────────────────────── */
+.akb-stock-table {
+  display: none;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  min-width: 720px;
+}
+@media (min-width: 640px) {
+  .akb-stock-table { display: table; }
+}
+
+.akb-stock-table thead tr {
+  background: var(--aki-surface-3);
+  border-bottom: 2px solid var(--aki-border);
+}
+.akb-stock-table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  letter-spacing: 1px;
+  color: var(--aki-gray-300);
+  white-space: nowrap;
+}
+.akb-stock-table th button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+.akb-stock-table th button:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.sort-arrow { color: var(--aki-text-muted); font-size: 10px; }
+.sort-arrow--asc { color: var(--aki-yellow); }
+
+.akb-stock-table tbody tr {
+  border-bottom: 1px solid var(--aki-border);
+  transition: background var(--transition-base);
+}
+.akb-stock-table tbody tr:hover { background: var(--aki-surface-3); }
+.akb-stock-table td {
+  padding: var(--space-3) var(--space-4);
+  vertical-align: middle;
+}
+
+.akb-stock-table tbody tr.row--critical { border-left: 3px solid var(--aki-error); }
+.akb-stock-table tbody tr.row--warning  { border-left: 3px solid var(--aki-warning); }
+.akb-stock-table tbody tr.row--info     { border-left: 3px solid var(--aki-info); }
+
+/* Stock level pill */
+.stock-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.stock-pill--critical { background: rgba(255,59,59,0.15); color: var(--aki-error); border: 1px solid rgba(255,59,59,0.3); }
+.stock-pill--warning  { background: rgba(245,158,11,0.15); color: var(--aki-warning); border: 1px solid rgba(245,158,11,0.3); }
+.stock-pill--ok       { background: rgba(0,200,83,0.15); color: var(--aki-success); border: 1px solid rgba(0,200,83,0.3); }
+
+.stock-pill__dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.stock-pill--critical .stock-pill__dot { background: var(--aki-error); }
+.stock-pill--warning  .stock-pill__dot { background: var(--aki-warning); }
+.stock-pill--ok       .stock-pill__dot { background: var(--aki-success); }
+
+/* Badges */
+.akb-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.akb-badge--editorial {
+  background: rgba(255,215,0,0.12);
+  color: var(--aki-yellow);
+}
+
+/* SKU cell */
+.cell-sku {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+
+/* Product title */
+.cell-product {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 240px;
+}
+.cell-product__name {
+  font-weight: var(--weight-semibold);
+  color: var(--aki-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cell-product__sub {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+
+/* Stock number */
+.cell-stock {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-base);
+}
+.cell-stock--critical { color: var(--aki-error); }
+.cell-stock--warning  { color: var(--aki-warning); }
+.cell-stock--ok       { color: var(--aki-success); }
+
+/* Action buttons in table */
+.table-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.akb-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--aki-border-aa);
+  background: transparent;
+  color: var(--aki-gray-300);
+  cursor: pointer;
+  font-size: 18px;
+  transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base);
+}
+.akb-icon-btn:hover { background: var(--aki-surface-3); color: var(--aki-white); border-color: var(--aki-white); }
+.akb-icon-btn:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.akb-icon-btn--edit:hover   { color: var(--aki-info); border-color: var(--aki-info); }
+.akb-icon-btn--notify:hover { color: var(--aki-yellow); border-color: var(--aki-yellow); }
+
+/* Empty + loading states */
+.akb-stock-empty {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  color: var(--aki-text-muted);
+}
+.akb-stock-empty__icon { font-size: 48px; display: block; margin-bottom: var(--space-4); }
+.akb-stock-empty__msg { font-size: var(--text-base); margin-bottom: var(--space-2); }
+
+/* Pagination */
+.akb-stock-pagination {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4);
+  border-top: 1px solid var(--aki-border);
+}
+@media (min-width: 640px) {
+  .akb-stock-pagination {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+.akb-pagination-info {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+.akb-pagination-btns {
+  display: flex;
+  gap: var(--space-2);
+}
+.akb-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  border: 1px solid var(--aki-border-aa);
+  background: transparent;
+  color: var(--aki-gray-300);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: background var(--transition-base);
+}
+.akb-page-btn:hover { background: var(--aki-surface-3); color: var(--aki-white); }
+.akb-page-btn[aria-current="page"] {
+  background: var(--aki-red);
+  border-color: var(--aki-red);
+  color: var(--aki-white);
+}
+.akb-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.akb-page-btn:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+
+/* Annotations */
+.prototype-annotations {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.prototype-annotations details { border-top: 1px solid var(--aki-border); padding: var(--space-4) 0; }
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.prototype-annotations ul { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  color: var(--aki-yellow); font-family: var(--font-mono); font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2); padding: var(--space-4); border-radius: var(--radius-sm); overflow-x: auto; margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 11 — Stock Alerts Table</h1>
+  <p>
+    Spec: <code>UI-SPECS-inventario.md#item-11</code> · Consumer: Cell C
+    (<code>akibara-inventario/modules/inventory/</code>) · Fecha: 2026-04-26<br>
+    Layout: 1col card stack en mobile &lt;640px · overflow-x scroll table en &ge;640px.
+    Sortable columns, 3 severity levels, pagination.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══ SECTION: Panel completo ══ -->
+  <section class="section-wrapper">
+    <h2>Panel Stock Critico — estado por defecto</h2>
+    <div class="akb-stock-panel" role="region" aria-label="Panel de stock critico">
+
+      <!-- Toolbar -->
+      <div class="akb-stock-toolbar">
+        <div class="akb-stock-toolbar__title">
+          <span>Stock Critico</span>
+          <span class="akb-stock-toolbar__badge" aria-label="14 productos con alerta de stock">14</span>
+        </div>
+        <div class="akb-stock-toolbar__actions">
+          <button class="akb-btn akb-btn--ghost" type="button" aria-label="Exportar tabla a CSV">
+            Exportar CSV
+          </button>
+          <button class="akb-btn akb-btn--primary" type="button" aria-label="Notificar a proveedores">
+            Notificar todos
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="akb-stock-filters" role="group" aria-label="Filtrar por nivel de alerta">
+        <span class="akb-filter-label">Filtrar:</span>
+        <div class="akb-stock-filter-group">
+          <button class="akb-filter-btn" type="button" aria-pressed="true">
+            <span class="akb-filter-dot" style="background: var(--aki-error);" aria-hidden="true"></span>
+            Critico (0)
+          </button>
+          <button class="akb-filter-btn" type="button" aria-pressed="false">
+            <span class="akb-filter-dot" style="background: var(--aki-warning);" aria-hidden="true"></span>
+            Bajo (0)
+          </button>
+          <button class="akb-filter-btn" type="button" aria-pressed="false">
+            <span class="akb-filter-dot" style="background: var(--aki-info);" aria-hidden="true"></span>
+            Preventa (0)
+          </button>
+          <button class="akb-filter-btn" type="button" aria-pressed="false">
+            Todos
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile: card list (< 640px) -->
+      <ul class="akb-stock-card-list" aria-label="Productos con alerta de stock">
+
+        <li class="akb-stock-card akb-stock-card--critical">
+          <div class="akb-stock-card__header">
+            <div>
+              <div class="akb-stock-card__title">Berserk Deluxe Edition Vol. 14</div>
+              <div class="akb-stock-card__sku">SKU: AKB-BD-014</div>
+            </div>
+            <span class="stock-pill stock-pill--critical">
+              <span class="stock-pill__dot" aria-hidden="true"></span>Critico
+            </span>
+          </div>
+          <div class="akb-stock-card__meta">
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Stock actual</span>
+              <span class="akb-stock-card__meta-val cell-stock--critical">1</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Umbral</span>
+              <span class="akb-stock-card__meta-val">5</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Editorial</span>
+              <span class="akb-stock-card__meta-val">Panini</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Suscritos BIS</span>
+              <span class="akb-stock-card__meta-val">12</span>
+            </div>
+          </div>
+          <div class="akb-stock-card__actions">
+            <button class="akb-btn akb-btn--ghost" type="button" style="flex: 1; font-size: 0.75rem;" aria-label="Editar stock de Berserk Deluxe Vol 14">Editar stock</button>
+            <button class="akb-btn akb-btn--primary" type="button" style="flex: 1; font-size: 0.75rem;" aria-label="Notificar suscriptores de Berserk Deluxe Vol 14">Notificar (12)</button>
+          </div>
+        </li>
+
+        <li class="akb-stock-card akb-stock-card--warning">
+          <div class="akb-stock-card__header">
+            <div>
+              <div class="akb-stock-card__title">One Piece Vol. 105</div>
+              <div class="akb-stock-card__sku">SKU: AKB-OP-105</div>
+            </div>
+            <span class="stock-pill stock-pill--warning">
+              <span class="stock-pill__dot" aria-hidden="true"></span>Bajo
+            </span>
+          </div>
+          <div class="akb-stock-card__meta">
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Stock actual</span>
+              <span class="akb-stock-card__meta-val cell-stock--warning">4</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Umbral</span>
+              <span class="akb-stock-card__meta-val">10</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Editorial</span>
+              <span class="akb-stock-card__meta-val">Ivrea</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Suscritos BIS</span>
+              <span class="akb-stock-card__meta-val">7</span>
+            </div>
+          </div>
+          <div class="akb-stock-card__actions">
+            <button class="akb-btn akb-btn--ghost" type="button" style="flex: 1; font-size: 0.75rem;" aria-label="Editar stock de One Piece Vol 105">Editar stock</button>
+            <button class="akb-btn akb-btn--primary" type="button" style="flex: 1; font-size: 0.75rem;" aria-label="Notificar suscriptores de One Piece Vol 105">Notificar (7)</button>
+          </div>
+        </li>
+
+        <li class="akb-stock-card akb-stock-card--info">
+          <div class="akb-stock-card__header">
+            <div>
+              <div class="akb-stock-card__title">Jujutsu Kaisen Vol. 26</div>
+              <div class="akb-stock-card__sku">SKU: AKB-JJK-026</div>
+            </div>
+            <span class="stock-pill stock-pill--warning">
+              <span class="stock-pill__dot" aria-hidden="true"></span>Preventa
+            </span>
+          </div>
+          <div class="akb-stock-card__meta">
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Stock actual</span>
+              <span class="akb-stock-card__meta-val">0</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Preventa</span>
+              <span class="akb-stock-card__meta-val">Si</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Editorial</span>
+              <span class="akb-stock-card__meta-val">Ivrea</span>
+            </div>
+            <div class="akb-stock-card__meta-item">
+              <span class="akb-stock-card__meta-key">Suscritos BIS</span>
+              <span class="akb-stock-card__meta-val">28</span>
+            </div>
+          </div>
+          <div class="akb-stock-card__actions">
+            <button class="akb-btn akb-btn--ghost" type="button" style="flex: 1; font-size: 0.75rem;" aria-label="Editar Jujutsu Kaisen Vol 26">Editar</button>
+            <button class="akb-btn akb-btn--primary" type="button" style="flex: 1; font-size: 0.75rem;" aria-label="Ver preventa de Jujutsu Kaisen Vol 26">Ver preventa</button>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Desktop: overflow-x table (>= 640px) -->
+      <div class="akb-stock-table-wrap">
+        <table class="akb-stock-table" aria-label="Tabla de stock critico con 14 productos">
+          <thead>
+            <tr>
+              <th scope="col">
+                <button type="button" aria-label="Ordenar por producto">
+                  Producto <span class="sort-arrow sort-arrow--asc" aria-hidden="true">&#9650;</span>
+                </button>
+              </th>
+              <th scope="col">SKU</th>
+              <th scope="col">
+                <button type="button" aria-label="Ordenar por stock actual">
+                  Stock <span class="sort-arrow" aria-hidden="true">&#9650;</span>
+                </button>
+              </th>
+              <th scope="col">Umbral</th>
+              <th scope="col">Nivel</th>
+              <th scope="col">Editorial</th>
+              <th scope="col">
+                <button type="button" aria-label="Ordenar por suscritos BIS">
+                  BIS <span class="sort-arrow" aria-hidden="true">&#9650;</span>
+                </button>
+              </th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row critico -->
+            <tr class="row--critical">
+              <td>
+                <div class="cell-product">
+                  <span class="cell-product__name">Berserk Deluxe Edition Vol. 14</span>
+                  <span class="cell-product__sub">Tomo unico · 400 pag.</span>
+                </div>
+              </td>
+              <td><span class="cell-sku">AKB-BD-014</span></td>
+              <td><span class="cell-stock cell-stock--critical">1</span></td>
+              <td><span class="cell-sku">5</span></td>
+              <td><span class="stock-pill stock-pill--critical"><span class="stock-pill__dot" aria-hidden="true"></span>Critico</span></td>
+              <td><span class="akb-badge akb-badge--editorial">Panini</span></td>
+              <td><span class="cell-sku">12</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="akb-icon-btn akb-icon-btn--edit" type="button" aria-label="Editar stock de Berserk Deluxe Vol 14" title="Editar stock">&#9998;</button>
+                  <button class="akb-icon-btn akb-icon-btn--notify" type="button" aria-label="Notificar 12 suscriptores de Berserk Deluxe Vol 14" title="Notificar suscriptores BIS">&#9993;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Row warning -->
+            <tr class="row--warning">
+              <td>
+                <div class="cell-product">
+                  <span class="cell-product__name">One Piece Vol. 105</span>
+                  <span class="cell-product__sub">Shonen · Ivrea Argentina</span>
+                </div>
+              </td>
+              <td><span class="cell-sku">AKB-OP-105</span></td>
+              <td><span class="cell-stock cell-stock--warning">4</span></td>
+              <td><span class="cell-sku">10</span></td>
+              <td><span class="stock-pill stock-pill--warning"><span class="stock-pill__dot" aria-hidden="true"></span>Bajo</span></td>
+              <td><span class="akb-badge akb-badge--editorial">Ivrea</span></td>
+              <td><span class="cell-sku">7</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="akb-icon-btn akb-icon-btn--edit" type="button" aria-label="Editar stock de One Piece Vol 105" title="Editar stock">&#9998;</button>
+                  <button class="akb-icon-btn akb-icon-btn--notify" type="button" aria-label="Notificar 7 suscriptores de One Piece Vol 105" title="Notificar suscriptores BIS">&#9993;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Row preventa (info border) -->
+            <tr class="row--info">
+              <td>
+                <div class="cell-product">
+                  <span class="cell-product__name">Jujutsu Kaisen Vol. 26</span>
+                  <span class="cell-product__sub">Shonen · Preventa activa</span>
+                </div>
+              </td>
+              <td><span class="cell-sku">AKB-JJK-026</span></td>
+              <td><span class="cell-stock">0</span></td>
+              <td><span class="cell-sku">—</span></td>
+              <td><span class="stock-pill" style="background:rgba(59,130,246,0.15); color: var(--aki-info); border: 1px solid rgba(59,130,246,0.3);">
+                <span class="stock-pill__dot" style="background: var(--aki-info);" aria-hidden="true"></span>Preventa
+              </span></td>
+              <td><span class="akb-badge akb-badge--editorial">Ivrea</span></td>
+              <td><span class="cell-sku">28</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="akb-icon-btn akb-icon-btn--edit" type="button" aria-label="Editar Jujutsu Kaisen Vol 26" title="Editar">&#9998;</button>
+                  <button class="akb-icon-btn" type="button" aria-label="Ver preventa de Jujutsu Kaisen Vol 26" title="Ver preventa" style="color: var(--aki-info);">&#128279;</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Row ok (for contrast) -->
+            <tr>
+              <td>
+                <div class="cell-product">
+                  <span class="cell-product__name">Chainsaw Man Vol. 14</span>
+                  <span class="cell-product__sub">Seinen · Panini</span>
+                </div>
+              </td>
+              <td><span class="cell-sku">AKB-CSM-014</span></td>
+              <td><span class="cell-stock cell-stock--ok">24</span></td>
+              <td><span class="cell-sku">5</span></td>
+              <td><span class="stock-pill stock-pill--ok"><span class="stock-pill__dot" aria-hidden="true"></span>OK</span></td>
+              <td><span class="akb-badge akb-badge--editorial">Panini</span></td>
+              <td><span class="cell-sku">0</span></td>
+              <td>
+                <div class="table-actions">
+                  <button class="akb-icon-btn akb-icon-btn--edit" type="button" aria-label="Editar stock de Chainsaw Man Vol 14" title="Editar stock">&#9998;</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="akb-stock-pagination" aria-label="Paginacion tabla stock">
+        <span class="akb-pagination-info">Mostrando 1–10 de 14 productos</span>
+        <div class="akb-pagination-btns">
+          <button class="akb-page-btn" type="button" aria-label="Pagina anterior" disabled>&#9664;</button>
+          <button class="akb-page-btn" type="button" aria-current="page" aria-label="Pagina 1">1</button>
+          <button class="akb-page-btn" type="button" aria-label="Pagina 2">2</button>
+          <button class="akb-page-btn" type="button" aria-label="Pagina siguiente">&#9654;</button>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ══ SECTION: empty state ══ -->
+  <section class="section-wrapper">
+    <h2>Empty state — sin alertas</h2>
+    <div class="akb-stock-panel">
+      <div class="akb-stock-toolbar">
+        <div class="akb-stock-toolbar__title">Stock Critico</div>
+      </div>
+      <div class="akb-stock-empty" role="status" aria-live="polite">
+        <span class="akb-stock-empty__icon" aria-hidden="true">&#9989;</span>
+        <p class="akb-stock-empty__msg">Todo el stock esta sobre los umbrales definidos.</p>
+        <p style="font-size: var(--text-sm); color: var(--aki-text-muted);">Revisando periodicamente segun las reglas en <code>wp_akb_stock_rules</code>.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas tecnicas para Cell C">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-error</code> — fila/pill critico (border-left + text + dot)</li>
+      <li><code>--aki-warning</code> — fila/pill bajo stock. Texto sobre: <code>--aki-on-warning #000</code> AAA</li>
+      <li><code>--aki-info</code> — fila preventa. <code>--aki-on-info #000</code> 5.71:1 PASS AA</li>
+      <li><code>--aki-success</code> + <code>--aki-on-success #000</code> — pill OK (sin fila a mostrar en produccion)</li>
+      <li><code>--aki-border-aa</code> — inputs, botones ghost, icon buttons</li>
+      <li><code>--touch-target-min</code> 44px — todos los botones de accion</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell C</summary>
+    <pre><code>.akb-stock-panel          /* contenedor principal del widget */
+.akb-stock-toolbar        /* barra titulo + acciones (responsive flex) */
+.akb-stock-filters        /* filtros por nivel */
+.akb-filter-btn[aria-pressed] /* toggle activo con accesibilidad */
+/* Mobile (<640px): */
+.akb-stock-card-list      /* ul de cards apiladas */
+.akb-stock-card           /* li individual */
+.akb-stock-card--critical | --warning | --info   /* border-left color */
+/* Desktop (>=640px): */
+.akb-stock-table-wrap     /* overflow-x auto */
+.akb-stock-table          /* table display: none en mobile / table en desktop */
+tbody tr.row--critical | .row--warning | .row--info  /* border-left color */
+.stock-pill               /* nivel de stock pill */
+.stock-pill--critical | --warning | --ok
+.akb-icon-btn             /* 44px icon action button */
+.akb-icon-btn--edit | --notify</code></pre>
+  </details>
+  <details>
+    <summary>Responsive breakpoints</summary>
+    <ul>
+      <li><strong>&lt;640px</strong>: Card list visible, table display:none. Overflow-x irrelevante.</li>
+      <li><strong>&ge;640px</strong>: Table visible (min-width 720px dentro de overflow-x:auto). Card list display:none.</li>
+      <li>El wrapper <code>.akb-stock-table-wrap</code> actua como contenedor de scroll horizontal en mobile intermedio (375–640px).</li>
+    </ul>
+  </details>
+  <details>
+    <summary>A11y rules</summary>
+    <ul>
+      <li>Color NO unico diferenciador — border-left + pill texto + label siempre en conjunto.</li>
+      <li>Filtros como <code>aria-pressed</code> toggle buttons (no checkbox ocultos).</li>
+      <li><code>role="region"</code> + <code>aria-label</code> en el panel contenedor.</li>
+      <li>Botones de sort: <code>aria-label</code> describe la columna y la accion.</li>
+      <li>Empty state con <code>role="status"</code> para lectores de pantalla.</li>
+      <li>Pagination: <code>aria-current="page"</code> en pagina activa, <code>nav aria-label</code>.</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

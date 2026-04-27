@@ -1,0 +1,734 @@
+<!--
+  Item 12 — Back-in-Stock Form (frontend, producto agotado)
+  Spec: audit/sprint-4/cell-h/UI-SPECS-inventario.md#item-12
+  Date: 2026-04-26
+  Consumer: Cell C — akibara-inventario/modules/back-in-stock/
+  States: default / focus / loading / success / error-invalid / error-duplicate
+  Touch target: 44px min. Color CTA: --aki-red-bright (Cell H fix mesa-08).
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 12 — Back-in-Stock Form | Akibara Cell H Sprint 4</title>
+<link rel="stylesheet" href="../../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback tokens ─────────────────────────────────────── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-on-success: #000000; --aki-on-warning: #000000; --aki-on-info: #000000;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-glow-red: 0 0 20px rgba(217,0,16,0.3);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.75rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-4);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { body { padding: var(--space-8); } }
+
+.prototype-header {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+}
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2);
+  border-radius: var(--radius-sm); color: var(--aki-yellow);
+  font-family: var(--font-mono); font-size: 12px;
+}
+
+.prototype-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+@media (min-width: 768px) {
+  .prototype-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-4);
+  color: var(--aki-white);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.state-label {
+  display: inline-block;
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border-aa);
+  color: var(--aki-gray-300);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PRODUCT CONTEXT (simula el bloque de producto agotado)
+   ══════════════════════════════════════════════════════════ */
+.akb-product-oos-context {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.akb-product-oos-thumb {
+  width: 64px;
+  height: 80px;
+  background: var(--aki-surface-3);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--aki-gray-400);
+  font-family: var(--font-mono);
+}
+.akb-product-oos-info { flex: 1; min-width: 0; }
+.akb-product-oos-title {
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--aki-white);
+  margin-bottom: var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.akb-product-oos-sub {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  margin-bottom: var(--space-2);
+}
+.akb-oos-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  background: rgba(255,59,59,0.15);
+  color: var(--aki-error);
+  border: 1px solid rgba(255,59,59,0.3);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+.akb-oos-badge__dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--aki-error);
+  display: inline-block;
+}
+
+/* ══════════════════════════════════════════════════════════
+   COMPONENT — .akb-bis-form
+   ══════════════════════════════════════════════════════════ */
+.akb-bis-form {
+  background: var(--aki-surface-3);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  position: relative;
+}
+.akb-bis-form--loading { opacity: 0.7; pointer-events: none; }
+
+.akb-bis-form__header {
+  margin-bottom: var(--space-3);
+}
+.akb-bis-form__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  letter-spacing: 0.5px;
+  color: var(--aki-white);
+  margin-bottom: var(--space-1);
+}
+.akb-bis-form__subtitle {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  line-height: 1.4;
+}
+
+/* Form row: input + button inline (desktop) / stacked (mobile) */
+.akb-bis-form__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+@media (min-width: 480px) {
+  .akb-bis-form__row { flex-direction: row; gap: var(--space-2); }
+}
+
+/* Email input */
+.akb-bis-input-wrap {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.akb-bis-input {
+  width: 100%;
+  min-height: var(--touch-target-min);
+  padding: var(--space-2) var(--space-4);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border-aa);
+  border-radius: var(--radius-md);
+  color: var(--aki-white);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  outline: none;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.akb-bis-input::placeholder { color: var(--aki-text-muted); }
+.akb-bis-input:focus {
+  border-color: var(--aki-red);
+  box-shadow: 0 0 0 3px rgba(217,0,16,0.2);
+}
+.akb-bis-input--error {
+  border-color: var(--aki-error);
+  box-shadow: 0 0 0 3px rgba(255,59,59,0.15);
+}
+.akb-bis-input--error:focus {
+  border-color: var(--aki-error);
+}
+
+/* Submit button */
+.akb-bis-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target-min);
+  padding: 0 var(--space-5);
+  background: var(--aki-red-bright);
+  color: var(--aki-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background var(--transition-base), transform var(--transition-base);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.akb-bis-submit:hover { background: var(--aki-red); }
+.akb-bis-submit:active { transform: scale(0.98); }
+.akb-bis-submit:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.akb-bis-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.akb-bis-submit--loading { gap: var(--space-2); }
+
+/* Loading spinner inline */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: var(--aki-white);
+  border-radius: 50%;
+  animation: spin 600ms linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; border-top-color: var(--aki-white); opacity: 0.7; }
+}
+
+/* Feedback messages */
+.akb-bis-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+.akb-bis-feedback--error {
+  background: rgba(255,59,59,0.1);
+  border: 1px solid rgba(255,59,59,0.3);
+  color: var(--aki-error);
+}
+.akb-bis-feedback--success {
+  background: rgba(0,200,83,0.1);
+  border: 1px solid rgba(0,200,83,0.3);
+  color: var(--aki-success);
+}
+.akb-bis-feedback--warning {
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  color: var(--aki-warning);
+}
+.akb-bis-feedback__icon { font-size: 16px; flex-shrink: 0; line-height: 1.4; }
+
+/* Privacy note */
+.akb-bis-privacy {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  line-height: 1.4;
+}
+.akb-bis-privacy a {
+  color: var(--aki-gray-300);
+  text-decoration: underline;
+}
+.akb-bis-privacy a:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+
+/* Error below input */
+.akb-input-error-msg {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--aki-error);
+}
+
+/* SUCCESS full-replacement */
+.akb-bis-success-state {
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+.akb-bis-success-state__icon {
+  font-size: 40px;
+  display: block;
+}
+.akb-bis-success-state__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  color: var(--aki-success);
+  letter-spacing: 0.5px;
+}
+.akb-bis-success-state__msg {
+  font-size: var(--text-sm);
+  color: var(--aki-gray-300);
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+/* Annotations */
+.prototype-annotations {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-top: var(--space-8);
+}
+.prototype-annotations details { border-top: 1px solid var(--aki-border); padding: var(--space-4) 0; }
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-base); color: var(--aki-yellow); cursor: pointer;
+  padding: var(--space-2) 0; letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.prototype-annotations ul { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  color: var(--aki-yellow); font-family: var(--font-mono); font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2); padding: var(--space-4); border-radius: var(--radius-sm);
+  overflow-x: auto; margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  .akb-bis-submit:active { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 12 — Back-in-Stock Form</h1>
+  <p>
+    Spec: <code>UI-SPECS-inventario.md#item-12</code> · Consumer: Cell C
+    (<code>akibara-inventario/modules/back-in-stock/</code>) · Fecha: 2026-04-26<br>
+    CTA color: <code>--aki-red-bright #FF2020</code> (fix mesa-08). Touch target: 44px.
+    6 estados: default / focus / loading / success / error-invalid / error-duplicate.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══ STATE: Default ══ -->
+  <section class="section-wrapper">
+    <h2>Estado: Default</h2>
+    <span class="state-label">Estado inicial — campo vacio</span>
+
+    <div class="akb-product-oos-context">
+      <div class="akb-product-oos-thumb" aria-hidden="true">IMG 4:5</div>
+      <div class="akb-product-oos-info">
+        <div class="akb-product-oos-title">Berserk Deluxe Ed. Vol. 14</div>
+        <div class="akb-product-oos-sub">Panini · $34.990</div>
+        <span class="akb-oos-badge">
+          <span class="akb-oos-badge__dot" aria-hidden="true"></span>
+          Agotado
+        </span>
+      </div>
+    </div>
+
+    <div class="akb-bis-form" data-state="default">
+      <div class="akb-bis-form__header">
+        <p class="akb-bis-form__title">Avisame cuando llegue</p>
+        <p class="akb-bis-form__subtitle">Te notificamos al email cuando vuelva a estar disponible.</p>
+      </div>
+      <form class="akb-bis-form__row" onsubmit="return false;" novalidate>
+        <div class="akb-bis-input-wrap">
+          <label for="bis-email-default" class="sr-only">Tu email</label>
+          <input
+            id="bis-email-default"
+            class="akb-bis-input"
+            type="email"
+            name="email"
+            placeholder="tu@email.com"
+            autocomplete="email"
+            aria-required="true"
+            aria-describedby="bis-privacy-default"
+          >
+        </div>
+        <button class="akb-bis-submit" type="submit" aria-label="Registrarme para recibir aviso cuando Berserk Deluxe Vol 14 vuelva a stock">
+          Avisame
+        </button>
+      </form>
+      <p class="akb-bis-privacy" id="bis-privacy-default">
+        Solo te enviamos un email cuando el producto vuelva. Sin spam.
+        <a href="/privacidad">Politica de privacidad</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ STATE: Focus ══ -->
+  <section class="section-wrapper">
+    <h2>Estado: Focus activo</h2>
+    <span class="state-label">Input con foco — ring rojo 3px</span>
+
+    <div class="akb-product-oos-context">
+      <div class="akb-product-oos-thumb" aria-hidden="true">IMG 4:5</div>
+      <div class="akb-product-oos-info">
+        <div class="akb-product-oos-title">Berserk Deluxe Ed. Vol. 14</div>
+        <div class="akb-product-oos-sub">Panini · $34.990</div>
+        <span class="akb-oos-badge"><span class="akb-oos-badge__dot" aria-hidden="true"></span>Agotado</span>
+      </div>
+    </div>
+
+    <div class="akb-bis-form">
+      <div class="akb-bis-form__header">
+        <p class="akb-bis-form__title">Avisame cuando llegue</p>
+        <p class="akb-bis-form__subtitle">Te notificamos al email cuando vuelva a estar disponible.</p>
+      </div>
+      <div class="akb-bis-form__row">
+        <div class="akb-bis-input-wrap">
+          <label for="bis-email-focus" class="sr-only">Tu email</label>
+          <input
+            id="bis-email-focus"
+            class="akb-bis-input"
+            type="email"
+            value="usuario@"
+            style="border-color: var(--aki-red); box-shadow: 0 0 0 3px rgba(217,0,16,0.2);"
+            aria-required="true"
+            readonly
+          >
+        </div>
+        <button class="akb-bis-submit" type="button">Avisame</button>
+      </div>
+      <p class="akb-bis-privacy">Solo te enviamos un email cuando el producto vuelva. Sin spam.</p>
+    </div>
+  </section>
+
+  <!-- ══ STATE: Loading ══ -->
+  <section class="section-wrapper">
+    <h2>Estado: Cargando</h2>
+    <span class="state-label">Post-submit — AJAX en curso</span>
+
+    <div class="akb-product-oos-context">
+      <div class="akb-product-oos-thumb" aria-hidden="true">IMG 4:5</div>
+      <div class="akb-product-oos-info">
+        <div class="akb-product-oos-title">Berserk Deluxe Ed. Vol. 14</div>
+        <div class="akb-product-oos-sub">Panini · $34.990</div>
+        <span class="akb-oos-badge"><span class="akb-oos-badge__dot" aria-hidden="true"></span>Agotado</span>
+      </div>
+    </div>
+
+    <div class="akb-bis-form akb-bis-form--loading" aria-busy="true">
+      <div class="akb-bis-form__header">
+        <p class="akb-bis-form__title">Avisame cuando llegue</p>
+        <p class="akb-bis-form__subtitle">Te notificamos al email cuando vuelva a estar disponible.</p>
+      </div>
+      <div class="akb-bis-form__row">
+        <div class="akb-bis-input-wrap">
+          <label for="bis-email-loading" class="sr-only">Tu email</label>
+          <input
+            id="bis-email-loading"
+            class="akb-bis-input"
+            type="email"
+            value="usuario@ejemplo.com"
+            readonly
+            aria-required="true"
+          >
+        </div>
+        <button class="akb-bis-submit akb-bis-submit--loading" type="button" disabled aria-label="Registrando...">
+          <span class="spinner" role="progressbar" aria-label="Cargando" aria-hidden="true"></span>
+          Registrando...
+        </button>
+      </div>
+      <p class="akb-bis-privacy">Solo te enviamos un email cuando el producto vuelva. Sin spam.</p>
+    </div>
+  </section>
+
+  <!-- ══ STATE: Success ══ -->
+  <section class="section-wrapper">
+    <h2>Estado: Exito</h2>
+    <span class="state-label">Form reemplazado por confirmacion</span>
+
+    <div class="akb-product-oos-context">
+      <div class="akb-product-oos-thumb" aria-hidden="true">IMG 4:5</div>
+      <div class="akb-product-oos-info">
+        <div class="akb-product-oos-title">Berserk Deluxe Ed. Vol. 14</div>
+        <div class="akb-product-oos-sub">Panini · $34.990</div>
+        <span class="akb-oos-badge"><span class="akb-oos-badge__dot" aria-hidden="true"></span>Agotado</span>
+      </div>
+    </div>
+
+    <div class="akb-bis-form" role="status" aria-live="polite" aria-label="Registro exitoso">
+      <div class="akb-bis-success-state">
+        <span class="akb-bis-success-state__icon" aria-hidden="true" style="color: var(--aki-success);">&#10003;</span>
+        <p class="akb-bis-success-state__title">Te avisamos cuando llegue</p>
+        <p class="akb-bis-success-state__msg">
+          Mandamos un email a <strong>usuario@ejemplo.com</strong> cuando Berserk Deluxe Vol. 14 vuelva a estar disponible.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ STATE: Error email invalido ══ -->
+  <section class="section-wrapper">
+    <h2>Estado: Error — email invalido</h2>
+    <span class="state-label">Validacion client/server-side</span>
+
+    <div class="akb-product-oos-context">
+      <div class="akb-product-oos-thumb" aria-hidden="true">IMG 4:5</div>
+      <div class="akb-product-oos-info">
+        <div class="akb-product-oos-title">Berserk Deluxe Ed. Vol. 14</div>
+        <div class="akb-product-oos-sub">Panini · $34.990</div>
+        <span class="akb-oos-badge"><span class="akb-oos-badge__dot" aria-hidden="true"></span>Agotado</span>
+      </div>
+    </div>
+
+    <div class="akb-bis-form">
+      <div class="akb-bis-form__header">
+        <p class="akb-bis-form__title">Avisame cuando llegue</p>
+        <p class="akb-bis-form__subtitle">Te notificamos al email cuando vuelva a estar disponible.</p>
+      </div>
+      <div class="akb-bis-form__row" style="align-items: flex-start;">
+        <div class="akb-bis-input-wrap">
+          <label for="bis-email-err-invalid" class="sr-only">Tu email</label>
+          <input
+            id="bis-email-err-invalid"
+            class="akb-bis-input akb-bis-input--error"
+            type="email"
+            value="noesun@"
+            autocomplete="email"
+            aria-required="true"
+            aria-invalid="true"
+            aria-describedby="bis-err-invalid-msg"
+          >
+          <span id="bis-err-invalid-msg" class="akb-input-error-msg" role="alert">
+            Ingresa un email valido (ej: tu@email.com)
+          </span>
+        </div>
+        <button class="akb-bis-submit" type="button" style="margin-top: 0;">Avisame</button>
+      </div>
+      <p class="akb-bis-privacy">Solo te enviamos un email cuando el producto vuelva. Sin spam.</p>
+    </div>
+  </section>
+
+  <!-- ══ STATE: Error duplicado ══ -->
+  <section class="section-wrapper">
+    <h2>Estado: Error — ya registrado</h2>
+    <span class="state-label">Rate limit / suscripcion duplicada</span>
+
+    <div class="akb-product-oos-context">
+      <div class="akb-product-oos-thumb" aria-hidden="true">IMG 4:5</div>
+      <div class="akb-product-oos-info">
+        <div class="akb-product-oos-title">Berserk Deluxe Ed. Vol. 14</div>
+        <div class="akb-product-oos-sub">Panini · $34.990</div>
+        <span class="akb-oos-badge"><span class="akb-oos-badge__dot" aria-hidden="true"></span>Agotado</span>
+      </div>
+    </div>
+
+    <div class="akb-bis-form">
+      <div class="akb-bis-form__header">
+        <p class="akb-bis-form__title">Avisame cuando llegue</p>
+        <p class="akb-bis-form__subtitle">Te notificamos al email cuando vuelva a estar disponible.</p>
+      </div>
+      <div class="akb-bis-form__row">
+        <div class="akb-bis-input-wrap">
+          <label for="bis-email-err-dup" class="sr-only">Tu email</label>
+          <input
+            id="bis-email-err-dup"
+            class="akb-bis-input"
+            type="email"
+            value="usuario@ejemplo.com"
+            autocomplete="email"
+            aria-required="true"
+            aria-describedby="bis-err-dup-msg"
+          >
+        </div>
+        <button class="akb-bis-submit" type="button">Avisame</button>
+      </div>
+      <div class="akb-bis-feedback akb-bis-feedback--warning" id="bis-err-dup-msg" role="alert">
+        <span class="akb-bis-feedback__icon" aria-hidden="true">&#9888;</span>
+        <span>Ya tienes registrado ese email para este producto. Te avisamos cuando llegue.</span>
+      </div>
+      <p class="akb-bis-privacy">Solo te enviamos un email cuando el producto vuelva. Sin spam.</p>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas tecnicas para Cell C">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-red-bright #FF2020</code> — CTA button background (fix mesa-08 F-04, 4.6:1 PASS AA)</li>
+      <li><code>--aki-red</code> — focus border input + focus ring</li>
+      <li><code>--aki-error #FF3B3B</code> — error inline bajo input + border error</li>
+      <li><code>--aki-success #00C853</code> — icono success. Texto: <code>--aki-on-success #000</code> NO aplica (texto success es --aki-success sobre dark surface)</li>
+      <li><code>--aki-warning</code> — feedback duplicado. Texto: <code>--aki-on-warning #000</code></li>
+      <li><code>--aki-border-aa</code> — border input default</li>
+      <li><code>--touch-target-min 44px</code> — input + button ambos min-height 44px</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell C</summary>
+    <pre><code>.akb-bis-form                  /* contenedor form */
+.akb-bis-form--loading         /* pointer-events none + opacity 0.7 durante AJAX */
+.akb-bis-form__header          /* titulo + subtitulo */
+.akb-bis-form__row             /* flex stacked en mobile / inline en >=480px */
+.akb-bis-input                 /* email input */
+.akb-bis-input--error          /* border error + box-shadow */
+.akb-input-error-msg           /* inline error bajo el input */
+.akb-bis-submit                /* CTA --aki-red-bright */
+.akb-bis-submit--loading       /* con spinner inline */
+.akb-bis-feedback              /* mensaje global post-submit */
+.akb-bis-feedback--error | --success | --warning
+.akb-bis-success-state         /* reemplaza form en exito */
+.akb-bis-privacy               /* nota legal */
+/* Contexto producto: */
+.akb-product-oos-context
+.akb-oos-badge</code></pre>
+  </details>
+  <details>
+    <summary>PHP binding (Cell C)</summary>
+    <pre><code>// back-in-stock/module.php — shortcode [akb_bis_form product_id="123"]
+// o hook woocommerce_single_product_summary prioridad 31 (post price)
+//
+// $product = wc_get_product($product_id);
+// if (!$product || $product->is_in_stock()) return;
+//
+// AJAX: wp_ajax_nopriv_akb_bis_subscribe
+//   POST: { product_id, email, nonce }
+//   Response: { success: bool, code: 'ok'|'invalid_email'|'duplicate'|'rate_limit' }
+//
+// Rate limit: BackInStockRepository::is_rate_limited($ip) — 3 subs/hora por IP
+// Table: wp_akb_back_in_stock_subs (columnas: id, product_id, email, status, subscribed_at)</code></pre>
+  </details>
+  <details>
+    <summary>A11y rules</summary>
+    <ul>
+      <li>Label <code>for</code> siempre presente — SR-only via <code>.sr-only</code> (visualmente oculto, accesible).</li>
+      <li><code>aria-required="true"</code> en input email.</li>
+      <li><code>aria-invalid="true"</code> + <code>aria-describedby</code> apuntando al error msg en estado error.</li>
+      <li>Error inline bajo input: <code>role="alert"</code> para lectura inmediata.</li>
+      <li>Feedback global: <code>role="alert"</code>.</li>
+      <li>Success state: <code>role="status" aria-live="polite"</code>.</li>
+      <li>Loading: <code>aria-busy="true"</code> en form + button <code>disabled</code>.</li>
+      <li>Spinner: <code>role="progressbar"</code> con aria-label — NO depende solo del giro visual.</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>
