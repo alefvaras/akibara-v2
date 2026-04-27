@@ -79,4 +79,13 @@ final class Bootstrap {
 	public function modules(): ModuleRegistry {
 		return $this->modules;
 	}
+
+	/**
+	 * Check si init() ya corrió. Útil para `akb_core_initialized()` helper.
+	 *
+	 * @return bool
+	 */
+	public function is_initialized(): bool {
+		return $this->initialized;
+	}
 }

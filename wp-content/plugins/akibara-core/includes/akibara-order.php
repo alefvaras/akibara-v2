@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 // Guard: cargar SOLO si plugin akibara legacy (V10) o akibara-core están active.
 // Sprint 2 Cell Core Phase 1 — file relocated desde plugins/akibara/ a plugins/akibara-core/.
-if ( ! defined( 'AKIBARA_V10_LOADED' ) && ! defined( 'AKIBARA_CORE_LOADED' ) ) {
+if ( ! defined( 'AKIBARA_V10_LOADED' ) && ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 	return;
 }
 

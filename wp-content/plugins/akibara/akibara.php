@@ -51,14 +51,14 @@ require_once AKIBARA_DIR . 'includes/helpers/ajax.php';
 // Sprint 2 Cell Core Phase 1 (2026-04-27): si akibara-core plugin loaded,
 // estos 4 modules ya cargaron desde plugins/akibara-core/. Skip duplicate require.
 require_once AKIBARA_DIR . 'includes/akibara-core.php'; // internal file, NO related a plugin akibara-core/
-if ( ! defined( 'AKIBARA_CORE_LOADED' ) ) {
+if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 	// Migrated to plugin akibara-core/ Phase 1 — load aquí solo si akibara-core no active.
 	require_once AKIBARA_DIR . 'includes/akibara-category-urls.php';
 	require_once AKIBARA_DIR . 'includes/akibara-search.php';
 	require_once AKIBARA_DIR . 'includes/akibara-order.php';
 }
 require_once AKIBARA_DIR . 'includes/class-akibara-email-template.php';
-if ( ! defined( 'AKIBARA_CORE_LOADED' ) ) {
+if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 	// Migrated to plugin akibara-core/ Phase 1.
 	// Testing mode: redirige wp_mail a alejandro.fvaras@gmail.com si AKIBARA_EMAIL_TESTING_MODE=true.
 	// Noop en prod (constante no definida). Ver includes/akibara-email-safety.php.
@@ -384,7 +384,7 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 
 	// Sprint 2 Cell Core Phase 1 — customer-edit-address + address-autocomplete migrados a plugin akibara-core/.
 	// Si akibara-core loaded, skip registry registration (modules already loaded desde plugin akibara-core/).
-	if ( ! defined( 'AKIBARA_CORE_LOADED' ) ) {
+	if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 		Akibara_Module_Registry::register(
 			'customer-edit-address',
 			array(
@@ -479,7 +479,7 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 	// image-normalize removido 2026-04-20
 	require_once AKIBARA_DIR . 'modules/product-badges/module.php';
 	// Sprint 2 Cell Core Phase 1 — customer-edit-address + address-autocomplete migrados a plugin akibara-core/.
-	if ( ! defined( 'AKIBARA_CORE_LOADED' ) ) {
+	if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 		require_once AKIBARA_DIR . 'modules/customer-edit-address/module.php';
 		require_once AKIBARA_DIR . 'modules/address-autocomplete/module.php';
 	}

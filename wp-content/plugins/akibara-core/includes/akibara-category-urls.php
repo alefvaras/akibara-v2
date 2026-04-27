@@ -9,6 +9,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Guard: cargar SOLO si plugin akibara legacy (V10) o akibara-core están active.
+// Sprint 2 Cell Core Phase 1.
+if ( ! defined( 'AKIBARA_V10_LOADED' ) && ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
+	return;
+}
+
+// Idempotent: skip si module ya loaded por otro path.
+if ( defined( 'AKB_CORE_CATEGORY_URLS_LOADED' ) ) {
+	return;
+}
+define( 'AKB_CORE_CATEGORY_URLS_LOADED', '1.0.0' );
 /**
  * Registra las rewrite rules de WP para cada slug de product_cat.
  * Se ejecuta en init > 5 (después de que WC registre la taxonomía).

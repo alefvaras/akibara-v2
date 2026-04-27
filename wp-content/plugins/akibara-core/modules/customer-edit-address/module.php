@@ -17,6 +17,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Guard: cargar SOLO si plugin akibara legacy (V10) o akibara-core están active.
+// Sprint 2 Cell Core Phase 1.
+if ( ! defined( 'AKIBARA_V10_LOADED' ) && ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
+	return;
+}
+
+// Idempotent: skip si module ya loaded por otro path.
+if ( defined( 'AKB_CORE_CEA_LOADED' ) ) {
+	return;
+}
+define( 'AKB_CORE_CEA_LOADED', '1.0.0' );
 /**
  * Estados en los que el cliente puede editar la dirección.
  */

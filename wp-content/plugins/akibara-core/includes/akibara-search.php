@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 // Guard: cargar SOLO si plugin akibara legacy (V10) o akibara-core están active.
 // Sprint 2 Cell Core Phase 1 — file relocated desde plugins/akibara/ a plugins/akibara-core/.
-if ( ! defined( 'AKIBARA_V10_LOADED' ) && ! defined( 'AKIBARA_CORE_LOADED' ) ) {
+if ( ! defined( 'AKIBARA_V10_LOADED' ) && ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 	return;
 }
 if ( defined( 'AKB_SEARCH_LOADED' ) ) {
@@ -39,7 +39,7 @@ function akb_sinonimos(): array {
 	if ( $m !== null ) {
 		return $m;
 	}
-	$m = require AKIBARA_DIR . 'data/sinonimos.php';
+	$m = require AKIBARA_CORE_DIR . 'data/sinonimos.php';
 	return $m;
 }
 
@@ -940,7 +940,7 @@ function akb_admin_page(): void {
 				<tr><td>FULLTEXT ft_searchable</td><td><?php echo $ft_ok ? '<span class="akb-badge akb-badge--active">OK</span>' : '<span class="akb-badge akb-badge--error">Recrear tabla</span>'; ?></td></tr>
 				<tr><td>Productos indexados</td><td><strong><?php echo number_format( $indexed ); ?> / <?php echo number_format( $total ); ?></strong></td></tr>
 				<tr><td>Version cache</td><td><code><?php echo (int) akb_cache_version(); ?></code></td></tr>
-				<tr><td>Endpoint SHORTINIT</td><td><code><?php echo esc_html( plugins_url( 'search.php', AKIBARA_FILE ) ); ?></code></td></tr>
+				<tr><td>Endpoint SHORTINIT</td><td><code><?php echo esc_html( plugins_url( 'search.php', AKIBARA_CORE_FILE ) ); ?></code></td></tr>
 				<tr><td>Fallback REST</td><td><code><?php echo esc_html( rest_url( 'akibara/v1/search' ) ); ?></code></td></tr>
 			</tbody>
 		</table>
@@ -1045,7 +1045,7 @@ add_action(
 	'wp_footer',
 	function () {
 		$min  = AKB_MIN_CHARS;
-		$si   = esc_url( plugins_url( 'search.php', AKIBARA_FILE ) );
+		$si   = esc_url( plugins_url( 'search.php', AKIBARA_CORE_FILE ) );
 		$rest = esc_url( rest_url( 'akibara/v1/search' ) );
 		$ajax = esc_url( admin_url( 'admin-ajax.php' ) );
 		$home = esc_url( home_url( '/' ) );
