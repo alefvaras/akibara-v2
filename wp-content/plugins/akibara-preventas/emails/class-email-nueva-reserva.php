@@ -5,7 +5,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class Akibara_Email_Nueva_Reserva extends WC_Email {
+class AKB_Preventas_Email_Nueva_Reserva extends WC_Email {
 
 	public function __construct() {
 		$this->id             = 'akb_nueva_reserva';
@@ -56,4 +56,4 @@ class Akibara_Email_Nueva_Reserva extends WC_Email {
 	}
 }
 
-return new Akibara_Email_Nueva_Reserva();
+return new AKB_Preventas_Email_Nueva_Reserva();

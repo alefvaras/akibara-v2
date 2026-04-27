@@ -5,7 +5,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class Akibara_Email_Cancelada extends WC_Email {
+class AKB_Preventas_Email_Cancelada extends WC_Email {
 
 	public function __construct() {
 		$this->id             = 'akb_reserva_cancelada';
@@ -55,4 +55,4 @@ class Akibara_Email_Cancelada extends WC_Email {
 	}
 }
 
-return new Akibara_Email_Cancelada();
+return new AKB_Preventas_Email_Cancelada();
