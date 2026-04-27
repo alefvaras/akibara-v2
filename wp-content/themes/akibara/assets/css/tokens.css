@@ -40,7 +40,7 @@
   --aki-on-success: #000000;
   --aki-on-warning: #000000;
   --aki-on-gray-400: #000000;
-  --aki-on-info: #FFFFFF;       /* #3B82F6 con #FFF: 4.97:1 PASS AA */
+  --aki-on-info: #000000;       /* #3B82F6 con #000: 5.71:1 PASS AA. NO usar #FFFFFF (3.68:1 FAIL — fix mesa-08 F-03 sweep 2026-04-27) */
 
   /* ── NEUTRAL / SURFACE (dark theme) ──────────────────────────── */
   --aki-black: #0A0A0A;
