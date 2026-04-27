@@ -443,6 +443,40 @@ else
   fi
 fi
 
+# ─── 8. Cell Core deployment gate (F-pivot, REDESIGN.md 2026-04-27) ─────────
+# Verifica que mu-plugin akibara-00-core-bootstrap.php está presente en staging.
+# Sin este file, AKIBARA_CORE_PLUGIN_LOADED no se define → fatal redeclare en
+# legacy plugin akibara/akibara.php. mesa-15 voto F: este gate es REQUIRED.
+echo ""
+echo "${C_DIM}── Cell Core deployment smoke (F-pivot gate) ───────${C_OFF}"
+
+MU_PLUGIN_REL="wp-content/mu-plugins/akibara-00-core-bootstrap.php"
+MU_PLUGIN_FILE="$STAGING_PATH/$MU_PLUGIN_REL"
+CORE_PLUGIN_REL="wp-content/plugins/akibara-core/akibara-core.php"
+CORE_PLUGIN_FILE="$STAGING_PATH/$CORE_PLUGIN_REL"
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  echo "DRY: ssh $PROD_HOST → verify $MU_PLUGIN_REL + $CORE_PLUGIN_REL exist"
+else
+  MU_EXISTS=$(ssh "$PROD_HOST" "test -f '$MU_PLUGIN_FILE' && echo YES || echo NO" 2>/dev/null || echo ERROR)
+  CORE_EXISTS=$(ssh "$PROD_HOST" "test -f '$CORE_PLUGIN_FILE' && echo YES || echo NO" 2>/dev/null || echo ERROR)
+
+  if [[ "$MU_EXISTS" == "YES" ]]; then
+    echo "${C_OK}✓ mu-plugin akibara-00-core-bootstrap.php presente${C_OFF}"
+  else
+    echo "${C_FAIL}❌ mu-plugin akibara-00-core-bootstrap.php FALTA${C_OFF}"
+    echo "${C_FAIL}   Path esperado: $MU_PLUGIN_FILE${C_OFF}"
+    echo "${C_FAIL}   Sin este file → fatal redeclare al activar akibara-core${C_OFF}"
+    echo "${C_FAIL}   Restore: rsync wp-content/mu-plugins/akibara-00-core-bootstrap.php → staging${C_OFF}"
+  fi
+
+  if [[ "$CORE_EXISTS" == "YES" ]]; then
+    echo "${C_OK}✓ plugin akibara-core/akibara-core.php deployed${C_OFF}"
+  else
+    echo "${C_WARN}⚠️  plugin akibara-core no deployed en staging (esperado pre-Sprint 2 close)${C_OFF}"
+  fi
+fi
+
 echo ""
 echo "${C_OK}═══════════════════════════════════════════════════${C_OFF}"
 echo "${C_OK}✓ sync-staging COMPLETED · $(date +%H:%M:%S)${C_OFF}"
