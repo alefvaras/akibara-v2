@@ -9,11 +9,13 @@
 
 ## 0. CONTEXT
 
-Sprint 2 Cell Core Phase 1 quedó **paused mid-deploy** (2026-04-27 ~11:40 UTC-4) tras un fatal `Cannot redeclare function akb_sinonimos()` al intentar `wp plugin activate akibara-core` en staging. PR #1 (`feat/sprint-2-setup-cell-core-phase1`) tenía 8/8 GHA jobs PASS y 9 P0/P1 fixes aprobados por 3-mesa adversarial review previo, pero el deploy físico falló.
+Sprint 2 Cell Core Phase 1 quedó **paused mid-deploy** (2026-04-27 ~11:40 UTC-4) tras un fatal `Cannot redeclare function akb_sinonimos()` al intentar `wp plugin activate akibara-core` en staging. PR #1 (`feat/sprint-2-setup-cell-core-phase1`) tenía 8/8 GHA jobs PASS y 9 P0/P1 fixes aprobados por 3-mesa adversarial review previo.
 
 **Trigger del redesign:** investigación reveló que el mu-plugin loader `akibara-00-core-bootstrap.php` estaba REMOVIDO de staging (movido a `/tmp/`) ANTES de la activación. El usuario eligió Opción 3 (redesign workshop con timebox 1h) sobre Opción 1 (debug + continue) y Opción 2 (defer Cell Core).
 
-**Outcome esperado:** approach final + plan de re-deploy o decisión de defer Sprint 2.
+**ESTADO REAL DESCUBIERTO 2026-04-27 ~12:30 UTC-4:** PR #1 fue **MERGEADO** a main el 2026-04-27T15:30:51Z (= 11:30 UTC-4) — 10 minutos ANTES de que la sesión previa pausara y escribiera HANDOFF. El HANDOFF dice "PR #1 ready (8/8 GHA green)" pero NO se actualizó para reflejar que el merge ocurrió. Main contiene ahora el architecture C (mu-plugin loader) SIN el F-pivot defensive layer. Si se deploya main hoy, el fatal redeclare se reproduce. **Este F-pivot work va en un PR #2 nuevo.**
+
+**Outcome esperado:** approach final + plan de re-deploy del F-pivot fix vía PR #2 → main → staging → prod.
 
 ---
 
@@ -144,8 +146,9 @@ bin/wp-ssh --staging eval 'require WP_PLUGIN_DIR . "/akibara-core/includes/akiba
 
 | Item | Estado tras F-pivot |
 |---|---|
-| **PR #1 status** | Sigue vivo. 3 commits adicionales sobre los 5 existentes (3a86150 → 5efc127 → +3) |
-| **Sprint 2 cierre** | Sprint 2 cierra ~2026-04-29 (vs 2026-04-28 original). Delay +1 día absorbible. |
+| **PR #1 status** | ✅ MERGED 2026-04-27T15:30:51Z (descubrimiento post-redesign workshop). Main contiene arquitectura C sin F-pivot. |
+| **PR #2 status** | 🟡 NEW PR para F-pivot fix (3 commits: REDESIGN.md + 6 PHP files + smoke gate). |
+| **Sprint 2 cierre** | Sprint 2 cierra cuando PR #2 merged + smoke staging green + smoke prod green + 24h Sentry watch. |
 | **B-S2-INFRA-01** | ✅ DONE (staging.akibara.cl operational) |
 | **B-S2-SETUP-01** | ✅ DONE (GHA 8/8 verde + Playwright @critical + pre-commit hooks) |
 | **B-S2-CELLCORE-01** Phase 1 | 🟡 IN PROGRESS — F implementación + smoke staging + 24h Sentry watch + deploy prod + smoke prod 20/20 + 24h Sentry watch + merge PR #1 |
