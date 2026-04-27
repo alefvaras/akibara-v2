@@ -81,7 +81,38 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 	 * Si `akb_is_module_enabled()` existe (mu-plugin), delegamos en él;
 	 * si no, default true para preservar comportamiento legacy.
 	 */
-	$akb_enabled = static function ( string $key ): bool {
+	// ─── Sprint 3 migration: detect modules claimed by addon plugins ────────
+	// (post-INCIDENT-01, 2026-04-27): cuando akibara-marketing o akibara-preventas
+	// están activos, sus módulos toman over y el legacy debe NO registrar (causaría
+	// fatal redeclare). Check via active_plugins option (set en DB, disponible al
+	// file include time de cualquier plugin, antes de plugins_loaded hook).
+	$akb_active_plugins  = get_option( 'active_plugins', array() );
+	$akb_marketing_owned = in_array( 'akibara-marketing/akibara-marketing.php', $akb_active_plugins, true );
+	$akb_preventas_owned = in_array( 'akibara-preventas/akibara-preventas.php', $akb_active_plugins, true );
+
+	// Modules migrated to akibara-marketing addon (skip if marketing active).
+	$akb_marketing_modules = array(
+		'descuentos', 'descuentos-tramos', 'banner', 'popup', 'brevo',
+		'review-request', 'review-incentive', 'referrals',
+		'marketing-campaigns', 'finance-dashboard', 'cart-abandoned',
+		'customer-milestones', 'welcome-discount',
+	);
+
+	// Modules migrated to akibara-preventas addon (skip if preventas active).
+	$akb_preventas_modules = array( 'next-volume', 'series-notify', 'editorial-notify' );
+
+	$akb_enabled = static function ( string $key ) use (
+		$akb_marketing_owned, $akb_preventas_owned,
+		$akb_marketing_modules, $akb_preventas_modules
+	): bool {
+		// Skip migrated modules — addon plugin owns the module post-Sprint-3.
+		if ( $akb_marketing_owned && in_array( $key, $akb_marketing_modules, true ) ) {
+			return false;
+		}
+		if ( $akb_preventas_owned && in_array( $key, $akb_preventas_modules, true ) ) {
+			return false;
+		}
+		// Default behavior: delegate to mu-plugin if available, else enabled.
 		if ( function_exists( 'akb_is_module_enabled' ) ) {
 			return (bool) akb_is_module_enabled( $key );
 		}
