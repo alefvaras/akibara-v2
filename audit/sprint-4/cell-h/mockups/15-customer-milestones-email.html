@@ -1,0 +1,541 @@
+<!--
+  Item 15 — Customer Milestones Email Template
+  Spec: audit/sprint-4/cell-h/UI-SPECS-branding.md#item-15
+  Date: 2026-04-26
+  Consumer: akibara-marketing / Email via Brevo SMTP
+  Variants: primer-pedido / 5-pedidos / vip
+  Layout: email-safe table layout. Dark theme compatible. Max-width 600px.
+  NOTA: email templates NO usan CSS variables (client compat) — hex hardcoded con comentario de token equivalente.
+  Guard activo: akibara-email-testing-guard redirige todo email a alejandro.fvaras@gmail.com.
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 15 — Customer Milestones Email | Akibara Cell H Sprint 4</title>
+<link rel="stylesheet" href="../../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Preview wrapper (no parte del email real) ─── */
+:root {
+  --aki-red: #D90010; --aki-yellow: #FFD700;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A;
+  --aki-border: #2A2A2E; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-2: 8px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
+  --radius-md: 4px; --radius-lg: 8px;
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.75rem;
+  --weight-normal: 400; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { body { padding: 32px; } }
+
+.preview-header {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: 24px;
+  margin-bottom: 32px;
+  border-radius: 4px;
+}
+.preview-header h1 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: 1.75rem; letter-spacing: 1px; color: var(--aki-red); margin-bottom: 8px;
+}
+.preview-header p { color: var(--aki-gray-300); font-size: 0.875rem; line-height: 1.5; }
+.preview-header code {
+  background: var(--aki-surface-2); padding: 2px 8px; border-radius: 2px;
+  color: var(--aki-yellow); font-family: var(--font-mono); font-size: 12px;
+}
+
+.preview-section {
+  margin-bottom: 48px;
+}
+.preview-section h2 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: 1.25rem; letter-spacing: 1px; color: var(--aki-white);
+  margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--aki-border);
+  display: flex; align-items: center; gap: 8px;
+}
+.preview-section h2::before {
+  content: ''; display: inline-block; width: 8px; height: 8px;
+  background: var(--aki-red); border-radius: 50%;
+}
+.preview-label {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--aki-surface-2); border: 1px solid var(--aki-border-aa);
+  color: var(--aki-gray-300); padding: 2px 8px; border-radius: 2px;
+  display: inline-block; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.email-chrome {
+  background: #1A1A1A;
+  border: 1px solid #2A2A2E;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.email-chrome__bar {
+  background: #222222;
+  border-bottom: 1px solid #2A2A2E;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.email-chrome__dots { display: flex; gap: 6px; }
+.email-chrome__dot {
+  width: 12px; height: 12px; border-radius: 50%;
+}
+.email-chrome__subject {
+  font-size: 12px; color: #B0B0B0;
+  font-family: var(--font-mono);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.email-chrome__body {
+  padding: 0;
+}
+
+/* ════════════════════════════════════════════════════════
+   EMAIL TEMPLATE — table layout (email-safe)
+   NO usar CSS variables — hex hardcoded con comentario token
+   ════════════════════════════════════════════════════════ */
+.email-root {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #0D0D0F; /* --aki-email-bg */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  color: #FFFFFF; /* --aki-white */
+}
+</style>
+</head>
+<body>
+
+<header class="preview-header">
+  <h1>Item 15 — Customer Milestones Email</h1>
+  <p>
+    Spec: <code>UI-SPECS-branding.md#item-15</code> · Consumer: akibara-marketing via Brevo SMTP · Fecha: 2026-04-26<br>
+    3 variantes: primer pedido / 5 pedidos / VIP. Email-safe table layout. Dark theme.
+    Guard activo: <code>akibara-email-testing-guard</code> — todos los emails van a alejandro.fvaras@gmail.com.
+  </p>
+</header>
+
+<!-- ══ VARIANTE 1: Primer pedido ══ -->
+<section class="preview-section">
+  <h2>Variante 1 — Primer pedido</h2>
+  <span class="preview-label">Trigger: customer first completed order</span>
+
+  <div class="email-chrome">
+    <div class="email-chrome__bar">
+      <div class="email-chrome__dots">
+        <div class="email-chrome__dot" style="background:#FF5F57;"></div>
+        <div class="email-chrome__dot" style="background:#FFBD2E;"></div>
+        <div class="email-chrome__dot" style="background:#28CA41;"></div>
+      </div>
+      <span class="email-chrome__subject">Asunto: Bienvenido a la tribu, {{first_name}} — tu primer manga ya viene</span>
+    </div>
+    <div class="email-chrome__body">
+      <!-- EMAIL HTML — table-based, email-safe -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0F; /* --aki-email-bg */">
+        <tr>
+          <td align="center" style="padding: 0;">
+            <table role="presentation" class="email-root" cellpadding="0" cellspacing="0">
+
+              <!-- TOPBAR -->
+              <tr>
+                <td style="background:#8B0000; /* --aki-topbar-bg */ padding: 8px 24px; text-align:center;">
+                  <span style="font-size:12px; color:#FFFFFF; font-family: Arial, sans-serif; letter-spacing:2px; text-transform:uppercase;">AKIBARA MANGA</span>
+                </td>
+              </tr>
+
+              <!-- HEADER HERO -->
+              <tr>
+                <td style="background:#161618; /* --aki-email-surface */ border-bottom: 3px solid #D90010; /* --aki-red */ padding: 40px 32px 32px; text-align:center;">
+                  <!-- Logo placeholder -->
+                  <div style="width:80px; height:80px; background:#D90010; border-radius:50%; margin:0 auto 24px; display:flex; align-items:center; justify-content:center; font-size:32px; line-height:80px; text-align:center;">
+                    &#127891;
+                  </div>
+                  <h1 style="font-family: Impact, 'Arial Narrow', Arial, sans-serif; /* --font-heading approx */
+                             font-size:28px; color:#FFD700; /* --aki-yellow */ letter-spacing:2px; text-transform:uppercase;
+                             margin:0 0 8px; line-height:1.1;">
+                    Bienvenido a la tribu
+                  </h1>
+                  <p style="font-size:16px; color:#E0E0E0; /* --aki-gray-200 */ margin:0; line-height:1.5;">
+                    {{first_name}}, tu primer pedido en Akibara ya esta en camino.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- MILESTONE BODY -->
+              <tr>
+                <td style="background:#0D0D0F; padding:32px 32px 24px;">
+                  <!-- Milestone badge -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td align="center">
+                        <div style="display:inline-block; background:#161618; /* --aki-email-surface */
+                                   border:2px solid #FFD700; /* --aki-yellow */ border-radius:8px;
+                                   padding:16px 32px; text-align:center;">
+                          <div style="font-size:36px; margin-bottom:8px; line-height:1;">&#127381;</div>
+                          <div style="font-family: Impact, 'Arial Narrow', Arial, sans-serif;
+                                     font-size:20px; color:#FFD700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px;">
+                            Primer Pedido
+                          </div>
+                          <div style="font-size:13px; color:#B0B0B0; /* --aki-gray-300 */">
+                            Logro desbloqueado
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p style="font-size:15px; color:#E0E0E0; line-height:1.7; margin:0 0 20px;">
+                    Hola <strong style="color:#FFFFFF;">{{first_name}}</strong>,
+                  </p>
+                  <p style="font-size:15px; color:#E0E0E0; line-height:1.7; margin:0 0 20px;">
+                    Gracias por tu primer pedido en Akibara. Eres parte de la comunidad manga mas activa de Chile.
+                    Preparamos tu pedido con cuidado para que llegue en perfectas condiciones.
+                  </p>
+
+                  <!-- Order summary box -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                         style="background:#161618; border:1px solid #2A2A2E; /* --aki-border */ border-radius:4px; margin-bottom:24px;">
+                    <tr>
+                      <td style="padding:16px 20px;">
+                        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#8A8A8A; /* --aki-text-muted */ margin-bottom:8px;">
+                          Resumen del pedido
+                        </div>
+                        <div style="font-size:15px; color:#FFFFFF; margin-bottom:4px;">
+                          Pedido <strong>#{{order_number}}</strong>
+                        </div>
+                        <div style="font-size:13px; color:#B0B0B0;">{{order_date}}</div>
+                        <div style="border-top:1px solid #2A2A2E; margin:12px 0;"></div>
+                        <div style="font-size:15px; color:#FFFFFF;">
+                          Total: <strong style="color:#FFD700;">${{order_total}}</strong>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- CTA -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td align="center">
+                        <a href="{{order_url}}"
+                           style="display:inline-block; background:#D90010; /* --aki-red */ color:#FFFFFF;
+                                  font-family: Impact, 'Arial Narrow', Arial, sans-serif;
+                                  font-size:14px; font-weight:bold; text-transform:uppercase;
+                                  letter-spacing:1px; padding:14px 32px; border-radius:4px;
+                                  text-decoration:none; min-width:200px; text-align:center;">
+                          Ver mi pedido
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p style="font-size:14px; color:#8A8A8A; line-height:1.5; text-align:center;">
+                    Ante cualquier consulta, escribe a
+                    <a href="mailto:hola@akibara.cl" style="color:#FF2020; /* --aki-red-bright */ text-decoration:underline;">hola@akibara.cl</a>
+                    o por <a href="https://wa.me/56944242844" style="color:#25D366; text-decoration:underline;">WhatsApp</a>.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- FOOTER -->
+              <tr>
+                <td style="background:#161618; border-top:1px solid #2A2A2E; padding:20px 32px; text-align:center;">
+                  <p style="font-size:12px; color:#6A6A6A; /* --aki-border-aa */ margin:0 0 8px;">
+                    Akibara · Santiago, Chile · <a href="{{unsubscribe_url}}" style="color:#6A6A6A; text-decoration:underline;">Cancelar suscripcion</a>
+                  </p>
+                  <p style="font-size:11px; color:#6A6A6A; margin:0;">
+                    Recibiste este email porque realizaste una compra en akibara.cl
+                  </p>
+                </td>
+              </tr>
+
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VARIANTE 2: 5 pedidos ══ -->
+<section class="preview-section">
+  <h2>Variante 2 — 5 pedidos completados</h2>
+  <span class="preview-label">Trigger: customer order count reaches 5</span>
+
+  <div class="email-chrome">
+    <div class="email-chrome__bar">
+      <div class="email-chrome__dots">
+        <div class="email-chrome__dot" style="background:#FF5F57;"></div>
+        <div class="email-chrome__dot" style="background:#FFBD2E;"></div>
+        <div class="email-chrome__dot" style="background:#28CA41;"></div>
+      </div>
+      <span class="email-chrome__subject">Asunto: {{first_name}}, llevas 5 pedidos — regalo para ti</span>
+    </div>
+    <div class="email-chrome__body">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0F;">
+        <tr>
+          <td align="center">
+            <table role="presentation" class="email-root" cellpadding="0" cellspacing="0">
+              <!-- TOPBAR -->
+              <tr>
+                <td style="background:#8B0000; padding:8px 24px; text-align:center;">
+                  <span style="font-size:12px; color:#FFFFFF; letter-spacing:2px; text-transform:uppercase; font-family:Arial, sans-serif;">AKIBARA MANGA</span>
+                </td>
+              </tr>
+              <!-- HERO -->
+              <tr>
+                <td style="background:#161618; border-bottom:3px solid #00C853; /* --aki-success */ padding:40px 32px 32px; text-align:center;">
+                  <div style="font-size:48px; margin-bottom:16px; line-height:1;">&#11088;</div>
+                  <h1 style="font-family:Impact, 'Arial Narrow', Arial, sans-serif;
+                             font-size:28px; color:#00C853; letter-spacing:2px; text-transform:uppercase;
+                             margin:0 0 8px; line-height:1.1;">
+                    5 pedidos completados
+                  </h1>
+                  <p style="font-size:16px; color:#E0E0E0; margin:0; line-height:1.5;">
+                    {{first_name}}, eres de los nuestros.
+                  </p>
+                </td>
+              </tr>
+              <!-- BODY -->
+              <tr>
+                <td style="background:#0D0D0F; padding:32px 32px 24px;">
+
+                  <!-- Milestone stars -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td align="center">
+                        <div style="display:inline-block; background:#161618;
+                                   border:2px solid #00C853; border-radius:8px;
+                                   padding:20px 32px; text-align:center;">
+                          <div style="font-family:Impact, 'Arial Narrow', Arial, sans-serif;
+                                     font-size:48px; color:#00C853; letter-spacing:1px; line-height:1; margin-bottom:4px;">
+                            &#215;5
+                          </div>
+                          <div style="font-size:13px; color:#B0B0B0;">pedidos completados</div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p style="font-size:15px; color:#E0E0E0; line-height:1.7; margin:0 0 16px;">
+                    Hola <strong style="color:#FFFFFF;">{{first_name}}</strong>, llevas 5 pedidos con nosotros.
+                    Como agradecimiento, te regalamos un cupon de descuento para tu proxima compra:
+                  </p>
+
+                  <!-- Coupon box -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td align="center">
+                        <div style="background:#161618; border:2px dashed #FFD700; border-radius:4px; padding:20px 24px; text-align:center; display:inline-block;">
+                          <div style="font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#8A8A8A; margin-bottom:6px; font-family:Arial, sans-serif;">
+                            Cupon de descuento
+                          </div>
+                          <div style="font-family:'Courier New', Courier, monospace; font-size:26px; font-weight:bold; color:#FFD700; letter-spacing:4px; margin-bottom:6px;">
+                            LECTOR5
+                          </div>
+                          <div style="font-size:13px; color:#B0B0B0; font-family:Arial, sans-serif;">
+                            10% en tu proximo pedido · Valido 30 dias
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- CTA -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td align="center">
+                        <a href="https://akibara.cl/tienda"
+                           style="display:inline-block; background:#D90010; color:#FFFFFF;
+                                  font-family:Impact, 'Arial Narrow', Arial, sans-serif;
+                                  font-size:14px; font-weight:bold; text-transform:uppercase;
+                                  letter-spacing:1px; padding:14px 32px; border-radius:4px;
+                                  text-decoration:none; text-align:center;">
+                          Ir a la tienda
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p style="font-size:14px; color:#8A8A8A; line-height:1.5; text-align:center;">
+                    Consultas:
+                    <a href="mailto:hola@akibara.cl" style="color:#FF2020; text-decoration:underline;">hola@akibara.cl</a>
+                  </p>
+                </td>
+              </tr>
+              <!-- FOOTER -->
+              <tr>
+                <td style="background:#161618; border-top:1px solid #2A2A2E; padding:20px 32px; text-align:center;">
+                  <p style="font-size:12px; color:#6A6A6A; margin:0 0 8px; font-family:Arial, sans-serif;">
+                    Akibara · Santiago, Chile · <a href="{{unsubscribe_url}}" style="color:#6A6A6A; text-decoration:underline;">Cancelar suscripcion</a>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VARIANTE 3: VIP ══ -->
+<section class="preview-section">
+  <h2>Variante 3 — VIP (10+ pedidos)</h2>
+  <span class="preview-label">Trigger: customer order count reaches 10</span>
+
+  <div class="email-chrome">
+    <div class="email-chrome__bar">
+      <div class="email-chrome__dots">
+        <div class="email-chrome__dot" style="background:#FF5F57;"></div>
+        <div class="email-chrome__dot" style="background:#FFBD2E;"></div>
+        <div class="email-chrome__dot" style="background:#28CA41;"></div>
+      </div>
+      <span class="email-chrome__subject">Asunto: {{first_name}}, eres VIP Akibara</span>
+    </div>
+    <div class="email-chrome__body">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0F;">
+        <tr>
+          <td align="center">
+            <table role="presentation" class="email-root" cellpadding="0" cellspacing="0">
+              <!-- TOPBAR special: gold gradient -->
+              <tr>
+                <td style="background: linear-gradient(90deg, #8B0000 0%, #C8960C 50%, #8B0000 100%); padding:8px 24px; text-align:center;">
+                  <span style="font-size:12px; color:#FFFFFF; letter-spacing:2px; text-transform:uppercase; font-family:Arial, sans-serif;">
+                    AKIBARA MANGA · VIP
+                  </span>
+                </td>
+              </tr>
+              <!-- HERO con gold accent -->
+              <tr>
+                <td style="background:#161618; border-bottom:3px solid #FFD700; padding:40px 32px 32px; text-align:center;">
+                  <!-- VIP crown -->
+                  <div style="font-size:56px; margin-bottom:16px; line-height:1;">&#128081;</div>
+                  <h1 style="font-family:Impact, 'Arial Narrow', Arial, sans-serif;
+                             font-size:32px; color:#FFD700; letter-spacing:3px; text-transform:uppercase;
+                             margin:0 0 8px; line-height:1.1;">
+                    Cliente VIP
+                  </h1>
+                  <p style="font-size:16px; color:#E0E0E0; margin:0; line-height:1.5;">
+                    {{first_name}}, llevas {{order_count}} pedidos con nosotros. Gracias.
+                  </p>
+                </td>
+              </tr>
+              <!-- BODY -->
+              <tr>
+                <td style="background:#0D0D0F; padding:32px 32px 24px;">
+
+                  <!-- VIP badge -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td align="center">
+                        <div style="display:inline-block; background:linear-gradient(135deg, #1A1A1A 0%, #222222 100%);
+                                   border:2px solid #FFD700; border-radius:8px;
+                                   padding:20px 32px; text-align:center;">
+                          <div style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:#C8960C; margin-bottom:8px; font-family:Arial, sans-serif;">
+                            Nivel VIP
+                          </div>
+                          <div style="font-family:Impact, 'Arial Narrow', Arial, sans-serif;
+                                     font-size:32px; color:#FFD700; letter-spacing:2px; margin-bottom:8px; line-height:1;">
+                            AKIBARA VIP
+                          </div>
+                          <div style="font-size:13px; color:#B0B0B0; font-family:Arial, sans-serif;">
+                            {{order_count}} pedidos completados
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- VIP benefits -->
+                  <p style="font-size:15px; color:#E0E0E0; line-height:1.7; margin:0 0 16px; font-family:Arial, sans-serif;">
+                    Como cliente VIP de Akibara tienes acceso prioritario a:
+                  </p>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                         style="background:#161618; border:1px solid #2A2A2E; border-radius:4px; margin-bottom:24px;">
+                    <tr>
+                      <td style="padding:20px 24px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td style="padding:8px 0; font-size:14px; color:#E0E0E0; border-bottom:1px solid #2A2A2E; font-family:Arial, sans-serif;">
+                              <strong style="color:#FFD700;">&#9679;</strong>&nbsp; Preventas exclusivas antes de lanzamiento publico
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding:8px 0; font-size:14px; color:#E0E0E0; border-bottom:1px solid #2A2A2E; font-family:Arial, sans-serif;">
+                              <strong style="color:#FFD700;">&#9679;</strong>&nbsp; Descuento VIP permanente — codigo <strong>VIP15</strong> (15%)
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding:8px 0; font-size:14px; color:#E0E0E0; font-family:Arial, sans-serif;">
+                              <strong style="color:#FFD700;">&#9679;</strong>&nbsp; Atencion prioritaria por WhatsApp
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- CTA -->
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                    <tr>
+                      <td align="center">
+                        <a href="https://akibara.cl/tienda"
+                           style="display:inline-block;
+                                  background:linear-gradient(90deg, #8B0000 0%, #D90010 100%);
+                                  color:#FFFFFF;
+                                  font-family:Impact, 'Arial Narrow', Arial, sans-serif;
+                                  font-size:15px; font-weight:bold; text-transform:uppercase;
+                                  letter-spacing:1.5px; padding:16px 40px; border-radius:4px;
+                                  text-decoration:none; text-align:center;">
+                          Explorar novedades VIP
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <p style="font-size:14px; color:#8A8A8A; line-height:1.5; text-align:center; font-family:Arial, sans-serif;">
+                    Consultas VIP: <a href="https://wa.me/56944242844" style="color:#25D366; text-decoration:underline;">WhatsApp prioritario</a>
+                    &nbsp;·&nbsp;
+                    <a href="mailto:hola@akibara.cl" style="color:#FF2020; text-decoration:underline;">hola@akibara.cl</a>
+                  </p>
+                </td>
+              </tr>
+              <!-- FOOTER -->
+              <tr>
+                <td style="background:#161618; border-top:1px solid #2A2A2E; padding:20px 32px; text-align:center;">
+                  <p style="font-size:12px; color:#6A6A6A; margin:0 0 8px; font-family:Arial, sans-serif;">
+                    Akibara · Santiago, Chile · <a href="{{unsubscribe_url}}" style="color:#6A6A6A; text-decoration:underline;">Cancelar suscripcion</a>
+                  </p>
+                  <p style="font-size:11px; color:#6A6A6A; margin:0; font-family:Arial, sans-serif;">
+                    Recibiste este email por tu estado de cliente VIP en akibara.cl
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,685 @@
+<!--
+  Item 13 — WhatsApp Button Placement Variants
+  Spec: audit/sprint-4/cell-h/UI-SPECS-whatsapp.md#item-13
+  Date: 2026-04-26
+  Consumer: Cell D — akibara-whatsapp/akibara-whatsapp.css
+  Variants: float (fixed bottom-right) / inline product / sticky footer mobile
+  Responsive: mobile-first. Current prod: fixed right 20px, bottom 76px mobile (safe-area-inset).
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 13 — WhatsApp Button Variants | Akibara Cell H Sprint 4</title>
+<link rel="stylesheet" href="../../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback tokens ─────────────────────────────────────── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-on-success: #000000; --aki-on-warning: #000000; --aki-on-info: #000000;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.75rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+  /* WhatsApp brand */
+  --wa-green: #25D366;
+  --wa-green-hover: #1DA851;
+  --wa-green-dark: #128C7E;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-4);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { body { padding: var(--space-8); } }
+
+.prototype-header {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+}
+.prototype-header h1 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-2xl); letter-spacing: 1px;
+  color: var(--aki-red); margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2);
+  border-radius: var(--radius-sm); color: var(--aki-yellow);
+  font-family: var(--font-mono); font-size: 12px;
+}
+
+.prototype-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-xl); letter-spacing: 1px; margin-bottom: var(--space-4);
+  display: flex; align-items: center; gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: ''; display: inline-block; width: 8px; height: 8px;
+  background: var(--wa-green); border-radius: 50%; flex-shrink: 0;
+}
+.state-label {
+  display: inline-block; background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border-aa); color: var(--aki-gray-300);
+  padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  font-size: 10px; font-weight: var(--weight-bold); font-family: var(--font-mono);
+  margin-bottom: var(--space-6); text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* ══ WA ICON SVG inline ══ */
+.wa-icon {
+  width: 24px; height: 24px; flex-shrink: 0;
+  display: inline-block;
+}
+.wa-icon--lg { width: 28px; height: 28px; }
+
+/* ══════════════════════════════════════════════════════════
+   VARIANT A — Float button (current prod style)
+   ══════════════════════════════════════════════════════════ */
+
+/* Simulated phone frame for float demo */
+.phone-frame {
+  position: relative;
+  width: 320px;
+  height: 480px;
+  background: var(--aki-surface-2);
+  border: 2px solid var(--aki-border-aa);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin: 0 auto;
+}
+.phone-frame__content {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-4);
+  overflow-y: auto;
+}
+.phone-frame__content h3 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-2);
+}
+.phone-frame__content p {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  margin-bottom: var(--space-2);
+  line-height: 1.5;
+}
+.phone-frame__page-placeholder {
+  height: 160px;
+  background: var(--aki-surface-3);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+
+/* Float button — positioned inside frame */
+.akb-wa-float {
+  position: absolute;
+  bottom: 20px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--wa-green);
+  color: var(--aki-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(37,211,102,0.4), var(--shadow-md);
+  transition: background var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  z-index: 100;
+}
+.akb-wa-float:hover {
+  background: var(--wa-green-hover);
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(37,211,102,0.5), var(--shadow-lg);
+}
+.akb-wa-float:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+/* Float with label (expanded) */
+.akb-wa-float--expanded {
+  width: auto;
+  border-radius: 28px;
+  padding: 0 var(--space-4);
+  gap: var(--space-2);
+  right: 16px;
+  bottom: 20px;
+  white-space: nowrap;
+}
+.akb-wa-float__label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+/* Annotation overlay for float button position */
+.phone-annotation {
+  position: absolute;
+  bottom: 90px;
+  right: 16px;
+  background: rgba(217,0,16,0.8);
+  color: var(--aki-white);
+  font-size: 10px;
+  font-family: var(--font-mono);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.phone-annotation::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 18px;
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(217,0,16,0.8);
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANT B — Inline CTA (producto agotado / single product)
+   ══════════════════════════════════════════════════════════ */
+.akb-wa-inline-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(37,211,102,0.08);
+  border: 1px solid rgba(37,211,102,0.25);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--aki-white);
+  transition: background var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+  min-height: var(--touch-target-min);
+  width: 100%;
+  max-width: 360px;
+}
+.akb-wa-inline-cta:hover {
+  background: rgba(37,211,102,0.14);
+  border-color: rgba(37,211,102,0.5);
+  transform: translateY(-1px);
+}
+.akb-wa-inline-cta:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+.akb-wa-inline-cta__icon-wrap {
+  width: 40px; height: 40px;
+  background: var(--wa-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.akb-wa-inline-cta__text { flex: 1; min-width: 0; }
+.akb-wa-inline-cta__title {
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--aki-white);
+  display: block;
+  margin-bottom: 2px;
+}
+.akb-wa-inline-cta__sub {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  display: block;
+}
+.akb-wa-inline-cta__arrow {
+  color: var(--wa-green);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Inline simple (minimal) */
+.akb-wa-inline-simple {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  min-height: var(--touch-target-min);
+  background: var(--wa-green);
+  color: var(--aki-white);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background var(--transition-base);
+}
+.akb-wa-inline-simple:hover { background: var(--wa-green-hover); }
+.akb-wa-inline-simple:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+/* ══════════════════════════════════════════════════════════
+   VARIANT C — Sticky footer mobile bar
+   ══════════════════════════════════════════════════════════ */
+.sticky-footer-demo {
+  position: relative;
+  width: 320px;
+  height: 420px;
+  background: var(--aki-surface-2);
+  border: 2px solid var(--aki-border-aa);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin: 0 auto;
+}
+.sticky-footer-demo__content {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-4);
+  padding-bottom: 80px;
+  overflow-y: auto;
+}
+
+.akb-wa-sticky-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--aki-surface);
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-3) var(--space-4);
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom, 12px));
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  z-index: var(--z-sticky, 200);
+}
+
+.akb-wa-sticky-bar__main-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target-min);
+  background: var(--wa-green);
+  color: var(--aki-white);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background var(--transition-base);
+}
+.akb-wa-sticky-bar__main-btn:hover { background: var(--wa-green-hover); }
+.akb-wa-sticky-bar__main-btn:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+.akb-wa-sticky-bar__add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target-min);
+  padding: 0 var(--space-3);
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  transition: background var(--transition-base);
+}
+.akb-wa-sticky-bar__add-btn:hover { background: var(--aki-red-hover); }
+.akb-wa-sticky-bar__add-btn:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+/* Dimensions showcase table */
+.dimensions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  margin-top: var(--space-4);
+}
+.dimensions-table th {
+  padding: var(--space-2) var(--space-3);
+  background: var(--aki-surface-2);
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--aki-gray-300);
+  border-bottom: 1px solid var(--aki-border);
+}
+.dimensions-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--aki-gray-200);
+}
+.dimensions-table tr:last-child td { border-bottom: none; }
+.td-highlight { color: var(--aki-yellow); font-weight: var(--weight-bold); }
+
+/* Annotations */
+.prototype-annotations {
+  background: var(--aki-surface); border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+}
+.prototype-annotations details { border-top: 1px solid var(--aki-border); padding: var(--space-4) 0; }
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading); text-transform: uppercase;
+  font-size: var(--text-base); color: var(--aki-yellow); cursor: pointer;
+  padding: var(--space-2) 0; letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+.prototype-annotations ul { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2); border-radius: var(--radius-sm);
+  color: var(--aki-yellow); font-family: var(--font-mono); font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2); padding: var(--space-4); border-radius: var(--radius-sm);
+  overflow-x: auto; margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  .akb-wa-float:hover { transform: none; }
+  .akb-wa-inline-cta:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 13 — WhatsApp Button Variants</h1>
+  <p>
+    Spec: <code>UI-SPECS-whatsapp.md#item-13</code> · Consumer: Cell D
+    (<code>akibara-whatsapp/akibara-whatsapp.css</code>) · Fecha: 2026-04-26<br>
+    3 variantes: Float button (prod actual) · Inline CTA (producto) · Sticky footer mobile.
+    Touch target: 44px en todos. WA brand color: <code>--wa-green #25D366</code>.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══ VARIANT A: Float button ══ -->
+  <section class="section-wrapper">
+    <h2>Variante A — Float button (prod actual)</h2>
+    <span class="state-label">fixed bottom-right · 56px radio · prod: bottom 76px mobile</span>
+
+    <p style="font-size: var(--text-sm); color: var(--aki-gray-300); margin-bottom: var(--space-4); line-height: 1.5;">
+      El boton flotante actual en prod usa <code>position:fixed; right:20px; bottom:76px</code> en mobile
+      (encima del bar de WC). Este mockup simula el comportamiento dentro de un frame de telefono.
+    </p>
+
+    <div style="display: flex; gap: var(--space-6); flex-wrap: wrap; justify-content: center; margin-bottom: var(--space-6);">
+      <!-- Icon only (prod actual) -->
+      <div style="text-align: center;">
+        <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono);">A1 — Icon only (prod actual)</p>
+        <div class="phone-frame" style="height: 340px;">
+          <div class="phone-frame__content">
+            <h3>One Piece Vol. 105</h3>
+            <div class="phone-frame__page-placeholder">Imagen producto</div>
+            <p>Shonen · Ivrea · $14.990</p>
+            <p>Lorem ipsum texto producto descripcion manga.</p>
+          </div>
+          <div class="phone-annotation">bottom: 76px · right: 20px</div>
+          <a
+            href="https://wa.me/56944242844"
+            class="akb-wa-float"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Contactar via WhatsApp"
+          >
+            <!-- WhatsApp SVG -->
+            <svg class="wa-icon--lg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Expanded (label visible) -->
+      <div style="text-align: center;">
+        <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono);">A2 — Expanded (post-delay label)</p>
+        <div class="phone-frame" style="height: 340px;">
+          <div class="phone-frame__content">
+            <h3>One Piece Vol. 105</h3>
+            <div class="phone-frame__page-placeholder">Imagen producto</div>
+            <p>Shonen · Ivrea · $14.990</p>
+          </div>
+          <a
+            href="https://wa.me/56944242844"
+            class="akb-wa-float akb-wa-float--expanded"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Contactar via WhatsApp"
+          >
+            <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            <span class="akb-wa-float__label">Consultar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimensions spec table -->
+    <table class="dimensions-table" aria-label="Especificaciones float button">
+      <thead>
+        <tr>
+          <th>Prop</th>
+          <th>Mobile</th>
+          <th>Desktop</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>bottom</td><td class="td-highlight">76px</td><td class="td-highlight">20px</td><td>Mobile encima WC cart bar</td></tr>
+        <tr><td>right</td><td class="td-highlight">20px</td><td class="td-highlight">20px</td><td>Igual ambos</td></tr>
+        <tr><td>width / height</td><td>56px</td><td>56px</td><td>Touch target OK (56 > 44)</td></tr>
+        <tr><td>safe-area</td><td>env(safe-area-inset-bottom)</td><td>no aplica</td><td>iPhone notch support</td></tr>
+        <tr><td>z-index</td><td>9999</td><td>9999</td><td>Actual prod — encima de todo</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ VARIANT B: Inline CTA ══ -->
+  <section class="section-wrapper">
+    <h2>Variante B — Inline CTA (pagina de producto)</h2>
+    <span class="state-label">Dentro del summary de producto · max-width 360px</span>
+
+    <p style="font-size: var(--text-sm); color: var(--aki-gray-300); margin-bottom: var(--space-4); line-height: 1.5;">
+      Aparece en <code>woocommerce_single_product_summary</code> priority 25 (post-titulo, pre-precio).
+      Dos opciones: rich card o boton simple. Cell D elige cual implementar.
+    </p>
+
+    <!-- Sub-variant: Rich card -->
+    <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono);">B1 — Rich card</p>
+    <a
+      href="https://wa.me/56944242844?text=Hola%2C+consulto+por+One+Piece+Vol.+105"
+      class="akb-wa-inline-cta"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Consultar por One Piece Vol 105 via WhatsApp"
+      style="margin-bottom: var(--space-4);"
+    >
+      <div class="akb-wa-inline-cta__icon-wrap" aria-hidden="true">
+        <svg class="wa-icon" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </div>
+      <div class="akb-wa-inline-cta__text">
+        <span class="akb-wa-inline-cta__title">Consultar por WhatsApp</span>
+        <span class="akb-wa-inline-cta__sub">Disponibilidad, pagos, despacho</span>
+      </div>
+      <span class="akb-wa-inline-cta__arrow" aria-hidden="true">&#8250;</span>
+    </a>
+
+    <!-- Sub-variant: Simple button -->
+    <p style="font-size: var(--text-xs); color: var(--aki-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono);">B2 — Boton simple</p>
+    <a
+      href="https://wa.me/56944242844"
+      class="akb-wa-inline-simple"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Consultar por WhatsApp sobre este producto"
+    >
+      <svg class="wa-icon" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Consultar por WhatsApp
+    </a>
+  </section>
+
+  <!-- ══ VARIANT C: Sticky footer bar ══ -->
+  <section class="section-wrapper">
+    <h2>Variante C — Sticky footer (mobile, pagina producto)</h2>
+    <span class="state-label">position:sticky/fixed bottom · safe-area-inset-bottom · 2 CTAs</span>
+
+    <p style="font-size: var(--text-sm); color: var(--aki-gray-300); margin-bottom: var(--space-4); line-height: 1.5;">
+      Bar pegado al fondo en mobile. Coexiste con el boton float desactivado en esta variante.
+      Safe area: <code>env(safe-area-inset-bottom)</code>. Visible solo en <code>@media (max-width: 767px)</code>.
+    </p>
+
+    <div class="sticky-footer-demo">
+      <div class="sticky-footer-demo__content">
+        <h3 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: var(--space-2);">One Piece Vol. 105</h3>
+        <p style="font-size: 0.75rem; color: var(--aki-text-muted); margin-bottom: var(--space-2);">Shonen · Ivrea Argentina</p>
+        <p style="font-size: 1rem; font-weight: 700; color: var(--aki-white); margin-bottom: var(--space-3);">$14.990</p>
+        <p style="font-size: 0.75rem; color: var(--aki-text-muted); line-height: 1.5;">Descripcion del manga. Texto de ejemplo para mostrar que el contenido scrollea por encima del sticky bar. Paginas adicionales. Editorial Ivrea Argentina.</p>
+      </div>
+      <nav class="akb-wa-sticky-bar" aria-label="Acciones rapidas del producto">
+        <a
+          href="https://wa.me/56944242844"
+          class="akb-wa-sticky-bar__main-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Consultar disponibilidad de One Piece Vol 105 por WhatsApp"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          WhatsApp
+        </a>
+        <a href="/carrito" class="akb-wa-sticky-bar__add-btn" aria-label="Agregar One Piece Vol 105 al carrito">
+          Agregar
+        </a>
+      </nav>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas tecnicas para Cell D">
+  <details open>
+    <summary>Decisiones de diseno</summary>
+    <ul>
+      <li>Float (Variante A): mantener el comportamiento actual — sin cambio de comportamiento per politica.</li>
+      <li>Expanded label (A2): CSS class <code>.akb-wa-float--expanded</code> activable via JS post 3s delay. Opcional.</li>
+      <li>Inline (Variante B): Cell D decide entre rich card (B1) o boton simple (B2). Rich card es mas informativo, simple menos disruptivo.</li>
+      <li>Sticky (Variante C): solo si Cell D quiere reemplazar el float en mobile. NO implementar ambos simultaneamente.</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell D (akibara-whatsapp.css)</summary>
+    <pre><code>/* Float — prod actual */
+.akb-wa-float                   /* boton circular fijo */
+.akb-wa-float--expanded         /* variante label visible */
+.akb-wa-float__label            /* texto label */
+
+/* Inline */
+.akb-wa-inline-cta              /* rich card */
+.akb-wa-inline-cta__icon-wrap
+.akb-wa-inline-cta__text
+.akb-wa-inline-cta__title | __sub | __arrow
+.akb-wa-inline-simple           /* boton simple */
+
+/* Sticky footer */
+.akb-wa-sticky-bar              /* barra bottom */
+.akb-wa-sticky-bar__main-btn   /* boton WA */
+.akb-wa-sticky-bar__add-btn    /* boton agregar al carrito */</code></pre>
+  </details>
+  <details>
+    <summary>A11y rules</summary>
+    <ul>
+      <li>Todos los enlaces tienen <code>aria-label</code> descriptivo con nombre del producto cuando esta disponible.</li>
+      <li><code>rel="noopener noreferrer"</code> en todos los <code>target="_blank"</code>.</li>
+      <li>SVG con <code>aria-hidden="true"</code> — el texto o aria-label del anchor provee el nombre accesible.</li>
+      <li>Touch target 44px minimo en todos los botones/enlaces.</li>
+      <li>Focus ring 3px rojo en todos los elementos interactivos.</li>
+      <li>Sticky bar: <code>nav</code> con <code>aria-label</code>.</li>
+    </ul>
+  </details>
+  <details>
+    <summary>Mensaje WA pre-cargado (Cell D PHP)</summary>
+    <pre><code>// Plugin.php — inject_product_wa_cta()
+$product_name = $product->get_name();
+$message = urlencode("Hola, consulto por {$product_name}");
+$number  = akibara_whatsapp_get_business_number(); // '56944242844'
+$wa_url  = "https://wa.me/{$number}?text={$message}";</code></pre>
+  </details>
+</aside>
+
+</body>
+</html>

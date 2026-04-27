@@ -1,0 +1,401 @@
+<!--
+  Cell H Sprint 4 — Mockups Index
+  Date: 2026-04-26
+  6 prototipos: items 11-16
+  Consumers: Cell C (inventario), Cell D (whatsapp), Cell H Design Ops (branding)
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cell H Sprint 4 — Mockups Index | Akibara</title>
+<link rel="stylesheet" href="../../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.75rem; --text-3xl: 2.5rem;
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-4);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 768px) { body { padding: var(--space-8); } }
+
+.wrap { max-width: 1280px; margin: 0 auto; }
+
+header.page-head {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-8);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+}
+header.page-head h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-3xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-3);
+}
+header.page-head p { color: var(--aki-gray-300); font-size: var(--text-base); line-height: 1.6; max-width: 800px; }
+header.page-head code {
+  background: var(--aki-surface-2); padding: 2px var(--space-2);
+  border-radius: var(--radius-sm); color: var(--aki-yellow);
+  font-family: var(--font-mono); font-size: 12px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.legend-item {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  background: var(--aki-surface-2); padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm); font-size: var(--text-xs); color: var(--aki-gray-200);
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.section-title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  margin: var(--space-8) 0 var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--aki-border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.section-title__pill {
+  font-size: var(--text-xs);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border-aa);
+  color: var(--aki-gray-300);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-weight: var(--weight-normal);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+@media (min-width: 480px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .cards-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.card {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  position: relative;
+  min-height: 200px;
+}
+.card:hover {
+  border-color: var(--aki-red);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.card:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+.card__num {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  color: var(--aki-red);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.card__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-lg);
+  letter-spacing: 0.5px;
+  color: var(--aki-white);
+  line-height: 1.2;
+}
+.card__sub {
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+.card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+.card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+}
+.card__pill--cell-c {
+  background: rgba(0,200,83,0.12);
+  color: var(--aki-success);
+}
+.card__pill--cell-d {
+  background: rgba(37,211,102,0.12);
+  color: #25D366;
+}
+.card__pill--cell-h {
+  background: rgba(255,215,0,0.12);
+  color: var(--aki-yellow);
+}
+
+/* Sprint badge on card */
+.card__sprint-badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  background: rgba(217,0,16,0.1);
+  border: 1px solid rgba(217,0,16,0.2);
+  color: rgba(255,32,32,0.7);
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: var(--weight-bold);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Sprint 3 link nav */
+.sprint3-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--aki-text-muted);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-base), border-color var(--transition-base);
+}
+.sprint3-link:hover { color: var(--aki-white); border-color: var(--aki-border-aa); }
+.sprint3-link:focus-visible { outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset); }
+
+footer.page-foot {
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--aki-border);
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; }
+  .card:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="page-head">
+    <h1>Cell H Sprint 4 — Mockups Index</h1>
+    <p>
+      Seis prototipos del Sprint 4 Cell H. Consumidores: Cell C (akibara-inventario),
+      Cell D (akibara-whatsapp) y Cell H Design Ops (branding).
+      Tokens source of truth: <code>wp-content/themes/akibara/assets/css/tokens.css</code>.
+      Todos los mockups usan tokens canonical con fallback inline.
+      Generados 2026-04-26 en branch <code>feat/theme-design-s4</code>.
+    </p>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background: var(--aki-success);"></span>Cell C — inventario</span>
+      <span class="legend-item"><span class="legend-dot" style="background: #25D366;"></span>Cell D — whatsapp</span>
+      <span class="legend-item"><span class="legend-dot" style="background: var(--aki-yellow);"></span>Cell H — branding</span>
+    </div>
+    <div style="margin-top: var(--space-4);">
+      <a href="../../sprint-3/cell-h/mockups/INDEX.html" class="sprint3-link">
+        &#8592; Sprint 3 mockups (items 01-10)
+      </a>
+    </div>
+  </header>
+
+  <!-- Cell C -->
+  <h2 class="section-title">
+    Cell C · Inventario
+    <span class="section-title__pill">akibara-inventario</span>
+  </h2>
+  <div class="cards-grid">
+
+    <a href="11-stock-alerts.html" class="card">
+      <span class="card__sprint-badge">S4</span>
+      <span class="card__num">11</span>
+      <span class="card__title">Stock Alerts Table</span>
+      <span class="card__sub">
+        Panel admin de stock critico. Mobile-first: card list &lt;640px / overflow-x table &ge;640px.
+        3 severidades (critico/bajo/preventa) + filtros + sort + pagination. ARIA completo.
+      </span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-c">Cell C</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">inventory module</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">overflow-x fix</span>
+      </div>
+    </a>
+
+    <a href="12-back-in-stock-form.html" class="card">
+      <span class="card__sprint-badge">S4</span>
+      <span class="card__num">12</span>
+      <span class="card__title">Back-in-Stock Form</span>
+      <span class="card__sub">
+        Form frontend en producto agotado. 6 estados: default / focus / loading / success / error-invalid / error-duplicate.
+        CTA: --aki-red-bright (fix mesa-08). Touch target 44px. AJAX binding documentado.
+      </span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-c">Cell C</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">back-in-stock module</span>
+        <span class="card__pill" style="background: rgba(255,32,32,0.12); color: var(--aki-red-bright);">--aki-red-bright fix</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Cell D -->
+  <h2 class="section-title">
+    Cell D · WhatsApp
+    <span class="section-title__pill">akibara-whatsapp</span>
+  </h2>
+  <div class="cards-grid">
+
+    <a href="13-whatsapp-button-variants.html" class="card">
+      <span class="card__sprint-badge">S4</span>
+      <span class="card__num">13</span>
+      <span class="card__title">WhatsApp Button Variants</span>
+      <span class="card__sub">
+        3 variantes de placement: Float button circular (prod actual, 56px) /
+        Inline CTA rich card + simple / Sticky footer bar mobile.
+        WA brand color #25D366. safe-area-inset-bottom. Touch target 44px.
+      </span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-d">Cell D</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">akibara-whatsapp.css</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">3 variantes</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Cell H Branding -->
+  <h2 class="section-title">
+    Cell H · Branding &amp; Design Ops
+    <span class="section-title__pill">design system</span>
+  </h2>
+  <div class="cards-grid">
+
+    <a href="14-editorial-color-palette.html" class="card">
+      <span class="card__sprint-badge">S4</span>
+      <span class="card__num">14</span>
+      <span class="card__title">Editorial Color Palette</span>
+      <span class="card__sub">
+        8 editoriales con tokens canonicos: Ivrea / Panini / Planeta / Norma / Ovni / Kamite / UTOP / Milky.
+        Swatches + badges (dark variant A / solid variant B) + grafico de barras + auditoria de contraste WCAG.
+      </span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-h">Cell H</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">--aki-editorial-*</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">8 editoriales</span>
+      </div>
+    </a>
+
+    <a href="15-customer-milestones-email.html" class="card">
+      <span class="card__sprint-badge">S4</span>
+      <span class="card__num">15</span>
+      <span class="card__title">Customer Milestones Email</span>
+      <span class="card__sub">
+        3 templates email: primer pedido / 5 pedidos (cupon LECTOR5 10%) / VIP 10+ pedidos (WELCOME15).
+        Email-safe table layout. Dark theme. Hex hardcoded con comentario de token.
+        Guard activo: email testing guard redirige a alejandro.fvaras@gmail.com.
+      </span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-h">Cell H</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">email-safe tables</span>
+        <span class="card__pill" style="background: rgba(0,200,83,0.12); color: var(--aki-success);">guard activo</span>
+      </div>
+    </a>
+
+    <a href="16-logo-canonical.html" class="card">
+      <span class="card__sprint-badge">S4</span>
+      <span class="card__num">16</span>
+      <span class="card__title">Logo Canonical Reference</span>
+      <span class="card__sub">
+        Manga Crimson v3. Guia de uso: 6 variantes de superficie (dark/topbar/light/red/photo) +
+        clearspace = altura M + sizing table (minimos por contexto) + usos prohibidos (stretch/color libre/bajo contraste).
+      </span>
+      <div class="card__meta">
+        <span class="card__pill card__pill--cell-h">Cell H</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">Manga Crimson v3</span>
+        <span class="card__pill" style="background: var(--aki-surface-2); color: var(--aki-gray-300);">logo guidelines</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer class="page-foot">
+    <p>
+      Cell H — Design Ops Sprint 4 · 2026-04-26 ·
+      Branch: <code style="background: rgba(255,215,0,0.1); color: var(--aki-yellow); padding: 2px 6px; border-radius: 2px;">feat/theme-design-s4</code> ·
+      Specs: <code style="background: rgba(255,215,0,0.1); color: var(--aki-yellow); padding: 2px 6px; border-radius: 2px;">audit/sprint-4/cell-h/UI-SPECS-{inventario,whatsapp,branding}.md</code> ·
+      Tokens: <code style="background: rgba(255,215,0,0.1); color: var(--aki-yellow); padding: 2px 6px; border-radius: 2px;">wp-content/themes/akibara/assets/css/tokens.css</code>
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
