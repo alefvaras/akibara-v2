@@ -1,0 +1,189 @@
+/* ─── Akibara Reservas — Frontend Styles ───────────────────────── */
+
+/* Texto de disponibilidad */
+.akb-availability {
+	font-size: 14px;
+	color: var(--aki-gray-400, #8a8a8a);
+	margin: 8px 0;
+	font-style: italic;
+}
+
+/* ─── My Account: Mis Reservas ─────────────────────────────────── */
+
+.akb-reservas-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.akb-reservas-table th,
+.akb-reservas-table td {
+	padding: 10px 12px;
+	text-align: left;
+	border-bottom: 1px solid var(--aki-border, rgba(255,255,255,.08));
+	font-size: 14px;
+	color: var(--aki-white, #fff);
+}
+
+.akb-reservas-table th {
+	font-weight: 600;
+	background: var(--aki-surface-2, #1a1a1a);
+	color: var(--aki-white, #fff);
+}
+
+.akb-estado {
+	display: inline-block;
+	padding: 3px 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.akb-estado-esperando {
+	background: rgba(255, 193, 7, 0.15);
+	color: #ffc107;
+}
+
+.akb-estado-completada {
+	background: rgba(40, 167, 69, 0.15);
+	color: #4caf50;
+}
+
+.akb-estado-cancelada {
+	background: rgba(217, 0, 16, 0.15);
+	color: #ef5350;
+}
+
+.akb-tipo-badge {
+	display: inline-block;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.akb-tipo-preventa {
+	background: #FFD700;
+	color: #0D0D0F;
+}
+
+/* ─── Countdown Timer ──────────────────────────────────────────── */
+
+.akb-countdown {
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+	border-radius: 8px;
+	padding: 12px 16px;
+	margin: 12px 0;
+	text-align: center;
+}
+
+.akb-countdown-label {
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--aki-gray-400, #8a8a8a);
+	margin-bottom: 6px;
+}
+
+.akb-countdown-timer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+}
+
+.akb-cd-unit {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 48px;
+}
+
+.akb-cd-num {
+	font-size: 24px;
+	font-weight: 700;
+	color: #FFD700;
+	line-height: 1.2;
+	font-variant-numeric: tabular-nums;
+}
+
+.akb-cd-txt {
+	font-size: 10px;
+	color: var(--aki-gray-500, #7a7a7a);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.akb-cd-sep {
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--aki-gray-600, #555);
+	margin-top: -12px;
+}
+
+/* ─── Social Proof ─────────────────────────────────────────────── */
+
+.akb-social-proof {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 12px;
+	background: rgba(255, 107, 53, 0.08);
+	border: 1px solid rgba(255, 107, 53, 0.25);
+	border-radius: 6px;
+	margin: 8px 0;
+	font-size: 13px;
+	color: #ff8c5a;
+}
+
+.akb-sp-icon {
+	font-size: 16px;
+}
+
+.akb-sp-text {
+	font-weight: 600;
+}
+
+/* ─── Shortcode Grid ───────────────────────────────────────────── */
+
+.akb-reservas-grid {
+	margin: 20px 0;
+}
+
+.akb-reservas-grid .woocommerce ul.products {
+	margin: 0;
+}
+
+
+/* ─── Product Card: Countdown mini ──────────────────────────────── */
+.product-card__reserva-countdown {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: rgba(255, 107, 53, 0.08);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    border-radius: 4px;
+    margin: 4px 0 0;
+    font-size: 11px;
+    color: #ff8c5a;
+    line-height: 1.3;
+}
+
+.product-card__reserva-countdown--nofecha {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--aki-gray-400, #8a8a8a);
+}
+
+.product-card__reserva-icon {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.product-card__reserva-text {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
