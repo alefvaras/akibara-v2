@@ -25,6 +25,7 @@ define( 'AKIBARA_ORDER_LOADED', '10.0.0' );
 // CLASE PRINCIPAL
 // ══════════════════════════════════════════════════════════════════
 
+if ( ! class_exists( 'Akibara_Order' ) ) {
 final class Akibara_Order {
 
 	const VERSION      = '10.0';
@@ -746,5 +747,9 @@ final class Akibara_Order {
 		return $cols;
 	}
 } // end class Akibara_Order
+} // end if ! class_exists Akibara_Order
 
-Akibara_Order::init();
+if ( class_exists( 'Akibara_Order' ) && ! did_action( 'akibara_order_inited' ) ) {
+	Akibara_Order::init();
+	do_action( 'akibara_order_inited' );
+}

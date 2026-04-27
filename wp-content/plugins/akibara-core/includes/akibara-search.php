@@ -21,14 +21,35 @@ if ( defined( 'AKB_SEARCH_LOADED' ) ) {
 }
 define( 'AKB_SEARCH_LOADED', '10.0.0' );
 
+// F-pivot defensive guard (mesa-01 vote 2026-04-27): if akb_sinonimos already
+// declared via another load path (legacy plugin akibara/, double-include, etc),
+// skip this module to prevent fatal redeclare. AKB_SEARCH_LOADED above covers
+// file-level dedup; this covers symbol-level dedup. Belt-and-suspenders for the
+// public functions akb_sinonimos + akb_create_index_table that originally caused
+// the Sprint 2 deploy fatal. Visible warning makes load-order issues debuggable.
+if ( function_exists( 'akb_sinonimos' ) || function_exists( 'akb_create_index_table' ) ) {
+	error_log( '[akibara-core] akb_sinonimos/akb_create_index_table already declared — F-pivot guard tripped, possible load order issue. Skipping akibara-core/includes/akibara-search.php.' );
+	return;
+}
+
 if ( ! defined( 'AKB_TABLE' ) ) {
 	define( 'AKB_TABLE', $GLOBALS['wpdb']->prefix . 'akibara_index' );
 }
-define( 'AKB_MIN_CHARS', 2 );
-define( 'AKB_LIMIT', 10 );
-define( 'AKB_CACHE_TTL', 600 );
-define( 'AKB_CDN_TTL', 60 );
-define( 'AKB_CACHE_GROUP', 'akibara_search' );
+if ( ! defined( 'AKB_MIN_CHARS' ) ) {
+	define( 'AKB_MIN_CHARS', 2 );
+}
+if ( ! defined( 'AKB_LIMIT' ) ) {
+	define( 'AKB_LIMIT', 10 );
+}
+if ( ! defined( 'AKB_CACHE_TTL' ) ) {
+	define( 'AKB_CACHE_TTL', 600 );
+}
+if ( ! defined( 'AKB_CDN_TTL' ) ) {
+	define( 'AKB_CDN_TTL', 60 );
+}
+if ( ! defined( 'AKB_CACHE_GROUP' ) ) {
+	define( 'AKB_CACHE_GROUP', 'akibara_search' );
+}
 
 // ══════════════════════════════════════════════════════════════════
 // 0. SINÓNIMOS — fuente única en data/sinonimos.php

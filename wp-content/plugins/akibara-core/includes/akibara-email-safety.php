@@ -39,14 +39,16 @@ define( 'AKB_CORE_EMAIL_SAFETY_LOADED', '1.0.0' );
  * @param string $test_addr Dirección de testing que reemplaza al destinatario real.
  * @return array Args modificados.
  */
-function akibara_email_safety_apply( array $args, string $test_addr ): array {
-	$args['to']      = $test_addr;
-	$args['cc']      = '';
-	$args['bcc']     = '';
-	$args['subject'] = '[TEST] ' . ( $args['subject'] ?? '' );
-	$banner          = '<div style="background:#1a0000;border:2px solid #FF2020;padding:12px 16px;margin:0 0 20px;font-family:monospace;font-size:13px;color:#FF4D4D">⚠️ MODO TESTING — destinatario real reemplazado. Este email NO fue enviado a ningún cliente.</div>';
-	$args['message'] = $banner . ( $args['message'] ?? '' );
-	return $args;
+if ( ! function_exists( 'akibara_email_safety_apply' ) ) {
+	function akibara_email_safety_apply( array $args, string $test_addr ): array {
+		$args['to']      = $test_addr;
+		$args['cc']      = '';
+		$args['bcc']     = '';
+		$args['subject'] = '[TEST] ' . ( $args['subject'] ?? '' );
+		$banner          = '<div style="background:#1a0000;border:2px solid #FF2020;padding:12px 16px;margin:0 0 20px;font-family:monospace;font-size:13px;color:#FF4D4D">⚠️ MODO TESTING — destinatario real reemplazado. Este email NO fue enviado a ningún cliente.</div>';
+		$args['message'] = $banner . ( $args['message'] ?? '' );
+		return $args;
+	}
 }
 
 if ( defined( 'AKIBARA_EMAIL_TESTING_MODE' ) && AKIBARA_EMAIL_TESTING_MODE ) {
