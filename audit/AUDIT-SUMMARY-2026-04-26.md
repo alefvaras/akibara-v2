@@ -83,20 +83,24 @@ Quality gates 17 tools: **GHA + bin/quality-gate.sh local** (Jenkins descartado)
 | **Sprint 3 esfuerzo** | ~60h equiv estimate — real ~10-12h transcript (~77-92h equiv manual, +28% creep Cell B driver) |
 | **Sprint 3.5 status** | ✅ DONE 2026-04-27 (commits 8f1b947 + afdccdd + d97223c + INCIDENT-01 + PRs #9/#10/#11) |
 | **Sprint 3.5 esfuerzo** | ~6-8h estimate — real ~7h (incl. INCIDENT-01 recovery + 2 hotfixes) |
-| **PENDIENTE MOCKUP items** | parcialmente resueltos via 10 HTML/CSS prototypes Cell H |
+| **Sprint 4 status** | ✅ DONE 2026-04-26 (Cells C+D, merges 0f81462 + dcc67f2) — Cell H DEFERIDA Sprint 5 (Haiku context fail) |
+| **Sprint 4 esfuerzo** | ~35h estimate — real ~31h (-11%, AddonContract pattern maduro 4ta aplicación) |
+| **Sprint 4.5 status** | ✅ DONE 2026-04-26 — NO-RFC + RETROSPECTIVE + QA-SMOKE-REPORT en `audit/sprint-4.5/` |
+| **Sprint 4.5 esfuerzo** | ~4-6h estimate — real ~3h (sin RFCs ni LambdaTest baseline) |
+| **PENDIENTE MOCKUP items** | parcialmente resueltos via 10 HTML/CSS prototypes Cell H Sprint 3.5; Cell H Sprint 4 deferida (BIS form mock-10 + WhatsApp placement variants pendientes Sprint 5) |
 | **DOBLE OK destructivos** | 8 items — 6 ejecutados S1, 2 pending (CLEAN-002/013) |
-| **PRs mergeados a main** | 11 PRs (#1-#11) Sprint 1-3.5 secuenciales |
+| **PRs mergeados a main** | 13 mergesets a main (PRs #1-#11 Sprint 1-3.5 secuencial + 2 merges directos Sprint 4 paralelo Cells C+D) |
 
 ### Ratio severidad por sprint
 
-| Severidad | Sprint 1 (DONE) | Sprint 2 (DONE) | Sprint 3 (DONE) | Sprint 3.5 (DONE) | Sprint 4 | Total identificado |
-|---|---|---|---|---|---|---|
-| P0 | 8 (8 ✅) | 4 | 0 | 1 (1 ✅ INCIDENT-01) | (5 prevention) | 13 |
-| P1 | 9 (8 ✅, 1 redistr) | 10 | 8 | 2 (2 ✅) | 4 | 31 |
-| P2 | 4 (3 ✅, 1 redistr) | 7 | 18 | 3 (3 ✅) | 3 | 32 |
-| P3 | 3 (3 ✅) | 2 | 19 | 1 (1 ✅) | 0 | 25 |
+| Severidad | Sprint 1 (DONE) | Sprint 2 (DONE) | Sprint 3 (DONE) | Sprint 3.5 (DONE) | Sprint 4 (DONE) | Sprint 5 | Total identificado |
+|---|---|---|---|---|---|---|---|
+| P0 | 8 (8 ✅) | 4 | 0 | 1 (1 ✅ INCIDENT-01) | (5 prevention ✅) | 0 | 13 |
+| P1 | 9 (8 ✅, 1 redistr) | 10 | 8 | 2 (2 ✅) | 4 (2 ✅, 2 deferred Cell H Sprint 5) | TBD | 31 |
+| P2 | 4 (3 ✅, 1 redistr) | 7 | 18 | 3 (3 ✅) | 3 (1 ✅, 2 deferred Sprint 5) | TBD | 32 |
+| P3 | 3 (3 ✅) | 2 | 19 | 1 (1 ✅) | 0 | TBD | 25 |
 
-**Resoluciones:** Sprint 1+2+3+3.5 cerraron 17 P0 + 22 P1 + 13 P2 + 8 P3. Backlog post-Sprint 3.5 está dominado por items growth-deferred (M1-M4 trigger-driven) + 7 prevention items Sprint 4 INCIDENT-01.
+**Resoluciones:** Sprint 1+2+3+3.5+4 cerraron 17 P0 + 24 P1 + 14 P2 + 8 P3. Backlog post-Sprint 4.5 está dominado por items growth-deferred (M1-M4 trigger-driven) + Cell H mocks Sprint 5 (BIS form, WhatsApp placement) + Sprint 5 mercadolibre extraction.
 
 ---
 

@@ -555,7 +555,18 @@ Avísame para approve RFCs APPROVED + merge a Core + LambdaTest issues.
 
 ---
 
-# Sprint 4 — PARALELO Cell C + Cell D + Cell H medium
+# Sprint 4 — PARALELO Cell C + Cell D + Cell H medium ✅ DONE 2026-04-26 (commits 0f81462 + dcc67f2)
+
+**Status:** ✅ DONE 2026-04-26 — Cell C + D mergeadas a main. Cell H DEFERIDA Sprint 5 (subagent Haiku context fail).
+
+**Esfuerzo real:** ~31h (vs estimate 35h, -11%). AddonContract pattern maduro (4ta aplicación). Ver `audit/sprint-4.5/RETROSPECTIVE.md`.
+
+## Lecciones aprendidas Sprint 4
+- **AddonContract repetible:** pattern desde día 1 en C+D (post-INCIDENT-01 prevention A-07). 0 incidents `plugins_loaded` fatal.
+- **Cell H deferral funcional:** falló Haiku, NO bloqueó C+D. Cell C usó 3 fixes Cell H preexistentes (mesa-07/08/05).
+- **0 RFCs:** scope acotado, decisiones in-cell HANDOFFs suficiente. `audit/sprint-4.5/NO-RFC.md` archivado.
+- **Tests E2E +50%:** de 4 specs a 6 specs @critical (shipping-checkout 6 + whatsapp-button 3 nuevos).
+- **Branch hygiene gap:** commit duplicado `35f86f0` en `feat/akibara-whatsapp` (cosmético). Sprint 5 instructor explícito `git branch --show-current`.
 
 **Pre-requisito:** Sprint 3.5 DONE + Sentry 24h verde + **CATCH-UP living docs Sprint 1-3.5 ejecutado** (ver pre-step abajo).
 
@@ -715,7 +726,21 @@ Avísame destructivos + RFCs + mockups.
 
 ---
 
-# Sprint 4.5 — Lock release
+# Sprint 4.5 — Lock release ✅ DONE 2026-04-26
+
+**Status:** ✅ DONE 2026-04-26 — Lock Release ejecutado. Merges 0f81462 (Cell C) + dcc67f2 (Cell D) a main, push OK.
+
+**Outputs producidos:**
+- `audit/sprint-4.5/NO-RFC.md` (0 RFCs Sprint 4)
+- `audit/sprint-4.5/RETROSPECTIVE.md` (esfuerzo real, lecciones, recomendación Sprint 5)
+- `audit/sprint-4.5/QA-SMOKE-REPORT.md` (PHP lint PASS, AddonContract PASS, 6 tests E2E presentes)
+
+**Esfuerzo real:** ~3h (estimate 4-6h, -25%) — sin RFCs ni LambdaTest baseline (Cell H deferida).
+
+## Lecciones aprendidas Sprint 4.5
+- **NO-RFC valid pattern:** sprint scope acotado puede cerrar sin RFCs. Documentar el "no" es válido.
+- **Lock Release sin Cell H = más rápido:** sin LambdaTest baseline run ni mockup arbitration. Cuando Cell H entrega, Lock Release crece +1-2h.
+- **Sentry T+30 aplica solo post-deploy:** los merges a main no implican deploy a prod. Smoke real es Sprint 5+.
 
 **Pre-requisito:** Sprint 4 cells DONE.
 
