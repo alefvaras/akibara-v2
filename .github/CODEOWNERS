@@ -1,0 +1,101 @@
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║ Akibara CODEOWNERS                                                          ║
+# ║ Sprint 2 condition #3 (mesa-15 PRE-review 2026-04-27)                      ║
+# ║                                                                             ║
+# ║ Lock policy enforcer per ADR 003 (docs/adr/003-plugin-architecture-…)      ║
+# ║ Solo dev hoy: @alefvaras. Cuando entre 2do dev → assign cells per ADR 003. ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+#
+# ─── Cómo funciona en GitHub ───────────────────────────────────────────────
+# 1. Pattern path/glob matching el último match wins (orden importa).
+# 2. Pairs con "Branch protection rules" en Settings → Branches → main:
+#    - "Require pull request reviews before merging" ✓
+#    - "Require review from Code Owners" ✓ ← critical para Lock policy
+#    - "Restrict who can push to matching branches" → solo @alefvaras
+# 3. Sin branch protection enabled, CODEOWNERS es solo informational.
+# 4. Sprint 2 task: enable branch protection en GitHub Settings (post este PR).
+#
+# ─── Lock policy semantica (ADR 003) ───────────────────────────────────────
+# Durante Sprints paralelos 3+4 (Cell A preventas, Cell B marketing+finance,
+# Cell H Design Ops, Cell C inventario, Cell D whatsapp):
+#
+#   • CORE (`wp-content/plugins/akibara-core/`)  → READ-ONLY, RFC required
+#   • THEME (`wp-content/themes/akibara/`)        → READ-ONLY, RFC required
+#
+# Modificación de paths bloqueados requiere:
+#   1. RFC en `audit/sprint-{N}/rfc/<short-name>.md`
+#   2. Approval de mesa-15 + mesa-01 lead arquitecto
+#   3. Sprint X.5 dedicado para arbitration + merge
+#
+# Esto previene que cells paralelas pisen core/theme silenciosamente.
+#
+# ─── Owners ─────────────────────────────────────────────────────────────────
+# Default owner: @alefvaras (solo dev, cubre todo hasta llegue 2do dev)
+
+# ─── Catch-all ──────────────────────────────────────────────────────────────
+*                                                       @alefvaras
+
+# ─── ADR / governance docs (cambios necesitan extra cuidado) ───────────────
+/docs/adr/                                              @alefvaras
+/audit/                                                 @alefvaras
+
+# ─── PROTECTED: Akibara Core plugin (Lock policy ADR 003) ──────────────────
+# Modificación durante Sprints paralelos requiere RFC + arbitration.
+# Sprint 2 weeks 2-3 = ÚNICO período permitido para extracción inicial.
+/wp-content/plugins/akibara-core/                       @alefvaras
+
+# ─── PROTECTED: Theme akibara (Cell H Design Ops) ──────────────────────────
+# Modificación durante Sprints paralelos requiere RFC + arbitration.
+# Solo Cell H owner (designer freelance + solo dev) modifica.
+/wp-content/themes/akibara/                             @alefvaras
+
+# ─── Addons (cells responsables, modificación libre dentro de su sprint) ───
+/wp-content/plugins/akibara-preventas/                  @alefvaras
+/wp-content/plugins/akibara-marketing/                  @alefvaras
+/wp-content/plugins/akibara-inventario/                 @alefvaras
+/wp-content/plugins/akibara-whatsapp/                   @alefvaras
+/wp-content/plugins/akibara-mercadolibre/               @alefvaras
+
+# ─── mu-plugins (load-bearing, cualquier cambio requiere extra review) ─────
+# Per ADR 001 + ADR 002: brevo-smtp, sentry-customizations, email-testing-guard
+# son load-bearing. Smoke obligatorio post-cambio.
+/wp-content/mu-plugins/                                 @alefvaras
+
+# ─── Scripts del workflow (deploy, smoke, monitor) ─────────────────────────
+# Cambios afectan TODO el ciclo deploy → review crítico.
+/scripts/                                               @alefvaras
+/bin/                                                   @alefvaras
+
+# ─── Config críticos (afectan prod) ────────────────────────────────────────
+/.gitignore                                             @alefvaras
+/.gitleaks.toml                                         @alefvaras
+/.htaccess                                              @alefvaras
+/wp-config.php                                          @alefvaras
+/wp-config-private.php                                  @alefvaras
+/composer.json                                          @alefvaras
+/composer.lock                                          @alefvaras
+/package.json                                           @alefvaras
+/package-lock.json                                      @alefvaras
+/docker-compose.yml                                     @alefvaras
+
+# ─── CI / GitHub workflows (afecta calidad gates) ──────────────────────────
+/.github/workflows/                                     @alefvaras
+/.github/CODEOWNERS                                     @alefvaras
+
+# ─── PROHIBIDO subir a prod (deploy.sh excludes — defensa adicional) ───────
+# Estos paths NO deberían existir en repo, pero si alguien los agrega:
+# review extra obligatorio (probablemente dev tooling que entró por error).
+**/vendor/                                              @alefvaras
+**/coverage/                                            @alefvaras
+**/tests/                                               @alefvaras
+**/node_modules/                                        @alefvaras
+
+# ─── Cuando entre 2do dev (M4 Milestone, ~100 customers/mo) ────────────────
+# Reasignar per ADR 003 cells:
+#
+# /wp-content/plugins/akibara-preventas/      @alefvaras @cell-a-preventas
+# /wp-content/plugins/akibara-marketing/      @alefvaras @cell-b-marketing
+# /wp-content/themes/akibara/                 @alefvaras @cell-h-design-ops
+# /wp-content/plugins/akibara-core/           @alefvaras @cell-arbiters  ← lock
+#
+# Update este file + branch protection rules en Settings → Branches.
