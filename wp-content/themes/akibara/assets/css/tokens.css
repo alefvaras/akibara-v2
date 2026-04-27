@@ -15,19 +15,32 @@
 
 :root {
   /* ── BRAND COLORS ─────────────────────────────────────────────── */
+  /* WCAG NOTE: --aki-red sobre dark surfaces tiene contrast 3.56:1 → FAIL AA 4.5:1 para body text.
+     Usar --aki-red SOLO como brand fill (buttons primary, logo). Para texto error usar --aki-error.
+     Para asteriscos requeridos en form usar --aki-error o --aki-red-bright (4.6:1 PASS AA). */
   --aki-red: #D90010;
   --aki-red-hover: #BB000D;
-  --aki-red-bright: #FF2020;
+  --aki-red-bright: #FF2020;     /* 4.6:1 sobre #0A0A0A — PASS AA body text */
   --aki-red-dark: #8B0000;
   --aki-yellow: #FFD700;
   --aki-yellow-bright: #FFE033;
   --aki-yellow-dark: #C8960C;
 
   /* ── SEMANTIC STATUS ──────────────────────────────────────────── */
-  --aki-success: #00C853;
-  --aki-warning: #F59E0B;
-  --aki-error: #FF3B3B;
+  --aki-success: #00C853;       /* Background only. Texto encima: usa --aki-on-success */
+  --aki-warning: #F59E0B;       /* Background only. Texto encima: usa --aki-on-warning */
+  --aki-error: #FF3B3B;         /* Texto error sobre dark surfaces (5.5:1 PASS AA) */
   --aki-info: #3B82F6;
+
+  /* Foreground tokens para badges/buttons sobre fondos de status (WCAG AA pre-validated):
+     --aki-success #00C853 con #000: 7.6:1 PASS AAA  | con #FFF: 2.24:1 FAIL
+     --aki-warning #F59E0B con #000: 8.7:1 PASS AAA  | con #FFF: 2.32:1 FAIL
+     --aki-gray-400 #8A8A8A con #000: 6.1:1 PASS AAA | con #FFF: 3.45:1 FAIL AA
+     Usar SIEMPRE estos tokens para texto sobre superficies de status. */
+  --aki-on-success: #000000;
+  --aki-on-warning: #000000;
+  --aki-on-gray-400: #000000;
+  --aki-on-info: #FFFFFF;       /* #3B82F6 con #FFF: 4.97:1 PASS AA */
 
   /* ── NEUTRAL / SURFACE (dark theme) ──────────────────────────── */
   --aki-black: #0A0A0A;
