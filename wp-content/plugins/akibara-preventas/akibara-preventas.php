@@ -155,11 +155,11 @@ if ( ! function_exists( 'akb_preventas_register_emails' ) ) {
             return $emails;
         }
 
-        $emails['Akibara_Email_Confirmada']     = require AKB_PREVENTAS_DIR . 'emails/class-email-confirmada.php';
-        $emails['Akibara_Email_Lista']          = require AKB_PREVENTAS_DIR . 'emails/class-email-lista.php';
-        $emails['Akibara_Email_Cancelada']      = require AKB_PREVENTAS_DIR . 'emails/class-email-cancelada.php';
-        $emails['Akibara_Email_Fecha_Cambiada'] = require AKB_PREVENTAS_DIR . 'emails/class-email-fecha-cambiada.php';
-        $emails['Akibara_Email_Nueva_Reserva']  = require AKB_PREVENTAS_DIR . 'emails/class-email-nueva-reserva.php';
+        $emails['AKB_Preventas_Email_Confirmada']     = require AKB_PREVENTAS_DIR . 'emails/class-email-confirmada.php';
+        $emails['AKB_Preventas_Email_Lista']          = require AKB_PREVENTAS_DIR . 'emails/class-email-lista.php';
+        $emails['AKB_Preventas_Email_Cancelada']      = require AKB_PREVENTAS_DIR . 'emails/class-email-cancelada.php';
+        $emails['AKB_Preventas_Email_Fecha_Cambiada'] = require AKB_PREVENTAS_DIR . 'emails/class-email-fecha-cambiada.php';
+        $emails['AKB_Preventas_Email_Nueva_Reserva']  = require AKB_PREVENTAS_DIR . 'emails/class-email-nueva-reserva.php';
 
         return $emails;
     }

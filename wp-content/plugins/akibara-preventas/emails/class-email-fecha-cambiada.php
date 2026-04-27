@@ -5,7 +5,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class Akibara_Email_Fecha_Cambiada extends WC_Email {
+class AKB_Preventas_Email_Fecha_Cambiada extends WC_Email {
 
 	public $old_fecha = 0;
 	public $new_fecha = 0;
@@ -67,4 +67,4 @@ class Akibara_Email_Fecha_Cambiada extends WC_Email {
 	}
 }
 
-return new Akibara_Email_Fecha_Cambiada();
+return new AKB_Preventas_Email_Fecha_Cambiada();
