@@ -1,0 +1,242 @@
+/* ══════════════════════════════════════════════════
+   AKIBARA HERO — Gemini Images + Animations v2
+   Desktop: 1280x542 | Mobile: 714x1280
+   ══════════════════════════════════════════════════ */
+
+/* ── Ken Burns entrance ── */
+@keyframes aki-ken-burns {
+  from { transform: translateZ(0) scale(1.07); }
+  to   { transform: translateZ(0) scale(1.0); }
+}
+
+/* ── Fade in hero container ── */
+@keyframes aki-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Ink flash (comic feel at start) ── */
+@keyframes aki-ink-flash {
+  0%   { opacity: 0.22; }
+  6%   { opacity: 0.08; }
+  100% { opacity: 0; }
+}
+
+/* ── Glow pulse sobre franja MANGA (roja) ── */
+@keyframes aki-glow-manga {
+  0%, 100% { opacity: 0.0; box-shadow: 0 0 0px rgba(200,0,0,0); }
+  50%      { opacity: 0.18; box-shadow: 0 0 40px 8px rgba(220,0,0,0.35); }
+}
+
+/* ── Glow pulse sobre franja COMICS (amarilla) ── */
+@keyframes aki-glow-comics {
+  0%, 100% { opacity: 0.0; box-shadow: 0 0 0px rgba(220,180,0,0); }
+  50%      { opacity: 0.22; box-shadow: 0 0 40px 8px rgba(255,210,0,0.4); }
+}
+
+/* ── Scanline drift ── */
+@keyframes aki-scanlines-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 40px; }
+}
+
+/* ══ Hero Container ══ */
+.aki-hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1280 / 542;
+  max-height: 640px;
+  overflow: hidden;
+  background: #0D0D0F;
+  isolation: isolate;
+  cursor: pointer;
+  animation: aki-fade-in 0.5s ease both;
+}
+
+/* ── SEO heading — visually hidden, readable by crawlers ── */
+.aki-hero__seo-heading {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  z-index: -1;
+}
+
+/* ── Picture ── */
+.aki-hero__picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  z-index: 1;
+}
+
+.aki-hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transform: translateZ(0);
+  animation: aki-ken-burns 10s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.05s both;
+  will-change: transform;
+  transition: transform 0.1s linear; /* para mouse parallax */
+}
+
+/* ── Ink flash ── */
+.aki-hero__ink {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 18% 50%, rgba(180,0,0,0.2) 0%, transparent 45%),
+    radial-gradient(ellipse at 78% 45%, rgba(220,185,0,0.16) 0%, transparent 40%);
+  animation: aki-ink-flash 2.8s ease forwards;
+}
+
+/* ── Scanlines ── */
+.aki-hero__scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 2px,
+    rgba(255,255,255,0.09) 2px, rgba(255,255,255,0.09) 4px
+  );
+  animation: aki-scanlines-drift 4s linear infinite;
+}
+
+/* ── Vignette ── */
+.aki-hero__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.32) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 25%, transparent 55%);
+}
+
+/* ── Glow pulses (sobre zonas MANGA/COMICS baked) ── */
+.aki-hero__glow {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+}
+
+/* MANGA glow — left band (~0-22% width, ~35-65% height) */
+.aki-hero__glow--manga {
+  left: 0;
+  top: 30%;
+  width: 22%;
+  height: 40%;
+  background: radial-gradient(ellipse, rgba(220,0,0,0.5) 0%, transparent 70%);
+  animation: aki-glow-manga 3.5s ease-in-out 2s infinite;
+}
+
+/* COMICS glow — right band (~72-100% width, ~30-60% height) */
+.aki-hero__glow--comics {
+  right: 0;
+  top: 28%;
+  width: 28%;
+  height: 40%;
+  background: radial-gradient(ellipse, rgba(255,215,0,0.55) 0%, transparent 70%);
+  animation: aki-glow-comics 3.5s ease-in-out 3.2s infinite;
+}
+
+/* ── CTA hitbox sobre "EXPLORAR AHORA" ── REMOVED per user request */
+/* .aki-hero__cta-hitbox {
+  position: absolute;
+  left: 33%;
+  right: 33%;
+  top: 55%;
+  bottom: 22%;
+  z-index: 10;
+  display: block;
+  border-radius: 6px;
+  transition: background 0.25s, transform 0.2s;
+}
+
+.aki-hero__cta-hitbox:hover {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  transform: scale(1.03);
+}
+
+.aki-hero__cta-hitbox:focus-visible {
+  outline: 3px solid #FFD700;
+  outline-offset: 6px;
+} */
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════ */
+
+@media (min-width: 1280px) {
+  .aki-hero { max-height: 700px; }
+}
+
+/* Tablet (601–900px) — 1200x896 image */
+@media (max-width: 900px) and (min-width: 601px) {
+  .aki-hero {
+    aspect-ratio: 1200 / 896;
+    max-height: 560px;
+  }
+  /* Glow pulses en tablet */
+  .aki-hero__glow--manga {
+    top: 8%;
+    left: 10%;
+    width: 50%;
+    height: 22%;
+  }
+  .aki-hero__glow--comics {
+    top: 28%;
+    left: 10%;
+    right: auto;
+    width: 45%;
+    height: 18%;
+  }
+}
+
+@media (max-width: 600px) {
+  .aki-hero {
+    aspect-ratio: 714 / 1280;
+    max-height: none;
+  }
+  .aki-hero__img {
+    object-position: center center;
+  }
+  /* Glow pulses en mobile */
+  .aki-hero__glow--manga {
+    top: 5%;
+    left: 5%;
+    width: 60%;
+    height: 20%;
+  }
+  .aki-hero__glow--comics {
+    top: 22%;
+    right: auto;
+    left: 5%;
+    width: 55%;
+    height: 18%;
+  }
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .aki-hero { animation: none; opacity: 1; }
+  .aki-hero__img { animation: none; transform: translateZ(0); will-change: auto; transition: none; }
+  .aki-hero__scanlines { animation: none; }
+  .aki-hero__ink { animation: none; opacity: 0; }
+  .aki-hero__glow { animation: none; opacity: 0; }
+}

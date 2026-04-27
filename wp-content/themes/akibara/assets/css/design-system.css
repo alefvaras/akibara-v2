@@ -1,0 +1,1992 @@
+@font-face {
+  font-family: "Russo One";
+  src: url("../fonts/russo-one.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+
+  /* Brand tokens — Manga Crimson + Gold + Black (rebrand 2026-04-22)
+     Referencia: docs/BRANDING-AUDIT-2026-04-22.md
+     Restricciones AA validadas matemáticamente — docs/CONTRAST-AUDIT-2026-04-25.md */
+  --aki-red: #D90010;           /* solo bg/borders/iconos large — NO foreground texto (3.56:1 vs #111, 3.00:1 vs #222 borderline UI) */
+  --aki-red-hover: #BB000D;     /* solo bg sobre claro (6.73:1 vs #FFF). FAIL todos los oscuros (<3:1) */
+  --aki-red-bright: #FF2020;    /* foreground sobre #111/#1A únicamente (4.93/4.54:1 AA). FAIL #222 (4.15:1) y blanco (3.83:1) */
+  --aki-red-dark: #8B0000;
+  --aki-yellow: #FFD700;
+  --aki-yellow-bright: #FFE033;
+  --aki-yellow-dark: #C8960C;
+
+  --aki-black: #0A0A0A;
+  --aki-surface: #111111;
+  --aki-surface-2: #1A1A1A;
+  --aki-surface-3: #222222;
+  --aki-border: #2A2A2E;
+  --aki-border-light: #333333;
+  /* Token nuevo 2026-04-25 (contrast-master BG): borders que definen UI components
+     deben cumplir WCAG 1.4.11 ≥3:1. #6A6A6A da 3.41:1 sobre #141414 surface.
+     Usar para: pill borders, checkbox borders, drawer CTAs structural. */
+  --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF;
+  --aki-gray-100: #F5F5F5;
+  --aki-gray-200: #E0E0E0;
+  --aki-gray-300: #B0B0B0;
+  --aki-gray-400: #8A8A8A;
+  --aki-gray-500: #8C8C8C;
+  --aki-text-muted: var(--aki-gray-400); /* alias semántico — solo dark surfaces (5.47/5.04/4.61:1 sobre #111/#1A/#222 AA). FAIL blanco (3.45:1) */
+  /* Fix A2 (2026-04-25): --aki-muted estaba USADO 3× en checkout.css (L2804/2826/2934)
+     pero NUNCA definido en :root → resolvía a `unset` y fallback browser default.
+     Aliased a --aki-text-muted (#8A8A8A) — todos los use sites están sobre dark
+     surfaces (.aki-progress__circle bg #111, .aki-progress__label sobre checkout bg,
+     .aki-saved-address__change sobre rgba(59,130,246,0.05) ≈ #0E1822 perceived).
+     Ratios AA verificados: 5.47:1 vs #111, 5.04:1 vs #1A1A1A, 4.61:1 vs #222.
+     --aki-light idem (L2924 .aki-saved-address__text), aliased a --aki-gray-200
+     (#E0E0E0) — texto principal sobre info card dark. 11.69:1 vs #111 AAA. */
+  --aki-muted: var(--aki-text-muted);
+  --aki-light: var(--aki-gray-200);
+  --aki-gray-600: #3A3A3E;
+  --aki-gray-700: #2A2A2E;
+  --aki-gray-800: #1A1A1E;
+  --aki-gray-900: #171717;
+
+  --aki-success: #00c853;
+  --aki-warning: #F59E0B;
+  --aki-error: #FF3B3B;
+  --aki-info: #3B82F6;
+
+  --aki-email-bg: #0D0D0F;
+  --aki-email-surface: #161618;
+  --aki-topbar-bg: #8B0000;
+
+  --font-heading: 'Bebas Neue', 'Impact', 'Arial Narrow', sans-serif;
+  --font-display: "Russo One", var(--font-heading);
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.775rem + 0.25vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+  --text-lg: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1rem + 0.75vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.1rem + 1.5vw, 1.75rem);
+  --text-3xl: clamp(1.8rem, 1.4rem + 2vw, 2.5rem);
+  --text-4xl: clamp(2.2rem, 1.6rem + 3vw, 3.5rem);
+  --text-5xl: clamp(2.8rem, 2rem + 4vw, 5rem);
+  --text-6xl: clamp(3.5rem, 2.5rem + 5vw, 7rem);
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  --container-max: 1400px;
+  --container-narrow: 900px;
+  --header-height: 70px;
+  --sidebar-width: 280px;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --shadow-glow-red: 0 0 20px rgba(217, 0, 16, 0.3);
+  --shadow-glow-info: 0 0 20px rgba(59, 130, 246, 0.3);
+  --shadow-glow-yellow: 0 0 20px rgba(255, 215, 0, 0.3);
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-lightbox: 900;
+
+  --skew-sm: -2deg;
+  --skew-md: -4deg;
+  --skew-lg: -6deg;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--aki-white);
+  background-color: var(--aki-black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--aki-white);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--aki-red-bright);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-normal);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--aki-white);
+}
+
+h1, .h1 { font-size: var(--text-5xl); font-family: var(--font-display); }
+h2, .h2 { font-size: var(--text-4xl); }
+h3, .h3 { font-size: var(--text-3xl); }
+h4, .h4 { font-size: var(--text-2xl); }
+h5, .h5 { font-size: var(--text-xl); }
+h6, .h6 { font-size: var(--text-lg); }
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+.section {
+  padding: var(--space-16) 0;
+}
+
+.section--compact {
+  padding: var(--space-8) 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-8);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base), opacity var(--transition-base);
+  transform: skewX(var(--skew-sm));
+  white-space: nowrap;
+}
+
+.btn > * {
+  transform: skewX(calc(var(--skew-sm) * -1));
+}
+
+.btn--primary {
+  background: var(--aki-red);
+  color: var(--aki-white);
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  padding: var(--space-4) var(--space-10);
+  box-shadow: 0 0 8px rgba(217, 0, 16, 0.22);
+}
+
+.btn--primary:hover {
+  background: var(--aki-red-bright);
+  color: var(--aki-white);
+  transform: skewX(var(--skew-sm)) translateY(-2px);
+  box-shadow: 0 0 16px rgba(217, 0, 16, 0.55), 0 0 36px rgba(217, 0, 16, 0.2);
+}
+
+.btn--primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left var(--transition-slow);
+}
+
+.btn--primary:hover::before {
+  left: 100%;
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--aki-white);
+  border: 2px solid var(--aki-white);
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  padding: var(--space-3) var(--space-8);
+}
+
+.btn--secondary:hover {
+  background: var(--aki-white);
+  color: var(--aki-black);
+  transform: skewX(var(--skew-sm)) translateY(-2px);
+}
+
+.btn--sm {
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-5);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: skewX(var(--skew-sm));
+  line-height: 1.4;
+}
+
+.badge > * {
+  transform: skewX(calc(var(--skew-sm) * -1));
+}
+
+.badge--sale {
+  background: var(--aki-red);
+  color: var(--aki-white);
+  animation: badgeIn 500ms var(--transition-bounce) both;
+  box-shadow: 0 0 8px rgba(217, 0, 16, 0.45), 1px 1px 0 0 rgba(0, 0, 0, 0.4);
+}
+
+.badge--preorder {
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  animation: badgeIn 500ms var(--transition-bounce) both;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 4px,
+    rgba(0, 0, 0, 0.06) 4px, rgba(0, 0, 0, 0.06) 8px
+  );
+  box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.3), 0 0 6px rgba(255, 215, 0, 0.3);
+}
+
+@keyframes badgeIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.badge--stock {
+  background: var(--aki-black);
+  color: var(--aki-white);
+}
+
+.badge--out {
+  background: var(--aki-gray-600);
+  color: var(--aki-gray-300);
+}
+
+.badge--vol {
+  background: var(--aki-surface-3);
+  color: var(--aki-white);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--aki-gray-300);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tag:hover {
+  color: var(--aki-white);
+  border-color: var(--aki-red-bright);
+  background: rgba(217, 0, 16, 0.1);
+}
+
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform var(--transition-slow), border-color var(--transition-slow), box-shadow var(--transition-slow);
+}
+
+@media (hover: hover) {
+  .product-card:hover {
+    border-color: var(--aki-red-bright);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.8), 0 0 0 1px var(--aki-red-bright);
+  }
+}
+
+.product-card--outofstock {
+  border-color: rgba(138, 138, 138, 0.35);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(0, 0, 0, 0.28)), var(--aki-surface);
+}
+
+.product-card--outofstock .product-card__image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 12, 14, 0.22);
+  pointer-events: none;
+}
+
+.product-card--outofstock .product-card__image img {
+  filter: grayscale(0.92) saturate(0.25) brightness(0.82);
+}
+
+.product-card--outofstock .product-card__title,
+.product-card--outofstock .product-card__title a,
+.product-card--outofstock .product-card__price .price {
+  color: var(--aki-gray-300);
+}
+
+.product-card--outofstock .product-card__category {
+  color: var(--aki-gray-500);
+}
+
+.product-card--outofstock .product-card__add-to-cart--encargar {
+  border-color: rgba(255, 255, 255, 0.26);
+  color: var(--aki-white);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.product-card--outofstock .product-card__add-to-cart--encargar:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--aki-white);
+}
+
+@media (hover: hover) {
+  .product-card--outofstock:hover {
+    border-color: rgba(170, 170, 170, 0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.68);
+  }
+}
+
+.product-card__image {
+  position: relative;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  background: var(--aki-surface-2);
+}
+
+.product-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-card__badges {
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: var(--z-base);
+  max-width: 50%;
+}
+.product-card__badges .badge {
+  font-size: 11px;
+  padding: 3px 6px;
+  letter-spacing: 0.05em;
+}
+
+.product-card__editorial {
+  position: absolute;
+  bottom: var(--space-1);
+  right: var(--space-1);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+  color: var(--aki-gray-100);
+  z-index: 2;
+  line-height: 1.4;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 55%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.product-card__editorial[data-brand*="ivrea"]  { color: #60a5fa; }
+.product-card__editorial[data-brand*="panini"] { color: #f87171; }
+.product-card__editorial[data-brand*="planeta"] { color: #4ade80; }
+.product-card__editorial[data-brand*="norma"]  { color: #34d399; }
+.product-card__editorial[data-brand*="ovni"]   { color: #c084fc; }
+.product-card__editorial[data-brand*="kamite"] { color: #fb923c; }
+.product-card__editorial[data-brand*="utop"]   { color: #38bdf8; }
+.product-card__editorial[data-brand*="milky"]  { color: #a78bfa; }
+.product-card__editorial[data-brand*="tmvn"]   { color: #fbbf24; }
+
+.product-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.product-card__wishlist {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  color: var(--aki-gray-400);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  margin: calc(var(--space-1) * -1);
+}
+
+@media (hover: hover) {
+  .product-card__wishlist:hover {
+    color: var(--aki-red-bright);
+    transform: scale(1.15);
+  }
+}
+
+.product-card__wishlist.active {
+  color: var(--aki-red-bright);
+}
+
+.product-card__wishlist.active svg {
+  fill: var(--aki-red);
+}
+
+.product-card__add-to-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 100%;
+  height: 36px;
+  margin-top: var(--space-2);
+  /* Fix Cola B Sprint 4 (2026-04-26): solid red bg + white text resuelve doble
+     propósito — color-contrast WCAG AA (#FFF on #D90010 = 5.31:1 PASS) y backlog
+     UX I7/I8 (CTA primario más prominente, alineado con WC standard). Outline
+     pattern previo daba 3.56:1 FAIL incluso con --aki-red-bright que en cierto
+     bg quedaba 4.93:1 borderline. Solid bg hace independent del card bg.
+     :hover usa --aki-red-hover #BB000D = 6.73:1 (AAA). */
+  background-color: var(--aki-red);
+  color: var(--aki-white);
+  border: 1px solid var(--aki-red);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  /* Transición más pulida y con easing estándar (Material/iOS). 200ms es
+     el sweet-spot entre "responsivo" y "fluido". Se anima también el
+     transform para dar feedback táctil en :active sin lag. */
+  transition:
+    background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 120ms ease-out;
+}
+
+/* Fix I14 (2026-04-25): wrap :hover en @media (hover: hover) para evitar
+   sticky-hover en mobile (iOS Safari, Android Chrome) — tras tap el :hover
+   queda "pegado" hasta tocar otro elemento. NO envolver :active ni
+   :focus-visible: :active = tap feedback necesario en mobile,
+   :focus-visible = keyboard navigation. Fix I15: shadow reducido de
+   `0 4px 12px` (clipeado por overflow:hidden del .product-card) a
+   `0 2px 6px` que cabe dentro del padding del CTA. Spread menor mantiene
+   feedback visual sin trade-off de overflow. */
+@media (hover: hover) {
+  .product-card__add-to-cart:hover {
+    background-color: var(--aki-red-hover);
+    border-color: var(--aki-red-hover);
+    color: var(--aki-white);
+    box-shadow: 0 2px 6px rgba(217, 0, 16, 0.4);
+  }
+}
+
+/* Press feedback táctil: scale-down breve confirma el tap antes de
+   que arranque el AJAX. Evita la sensación de "no hizo nada" en mobile
+   cuando el loading tarda 50-150ms en aparecer. */
+.product-card__add-to-cart:active {
+  background-color: var(--aki-red-dark);
+  border-color: var(--aki-red-dark);
+  transform: scale(0.97);
+  transition-duration: 80ms;
+}
+
+/* Focus indicator R19 — visible para keyboard users. Outline amarillo
+   sobre bg rojo da 3.78:1 (≥3:1 WCAG 2.4.13 UI components). */
+.product-card__add-to-cart:focus-visible {
+  outline: 2px solid var(--aki-yellow);
+  outline-offset: 2px;
+}
+
+.product-card__out-of-stock {
+  display: block;
+  text-align: center;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--aki-gray-400);
+  font-weight: var(--weight-medium);
+}
+
+.product-card__body {
+  padding: var(--space-3) var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.product-card__category {
+  font-size: var(--text-xs);
+  color: var(--aki-red-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--weight-semibold);
+}
+
+.product-card__title {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+  color: var(--aki-white);
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-transform: none;
+}
+
+.product-card__title a {
+  color: inherit;
+}
+
+.product-card__title a:hover {
+  color: var(--aki-red-bright);
+}
+
+.product-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding-top: 0;
+}
+
+.product-card__price .price {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  color: var(--aki-white);
+  letter-spacing: 0.02em;
+}
+
+.product-card__price .price del {
+  font-size: var(--text-sm);
+  color: var(--aki-gray-500);
+  text-decoration: line-through;
+}
+
+.product-card__price .price ins {
+  text-decoration: none;
+  color: var(--aki-red-bright);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+  position: relative;
+}
+
+.section-header__title {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  color: var(--aki-white);
+  position: relative;
+  display: inline-block;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.45);
+  paint-order: stroke fill;
+}
+
+.section-header__title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 60px;
+  height: 4px;
+  background: var(--aki-red);
+  transform: skewX(var(--skew-md));
+  box-shadow: 0 0 8px rgba(217, 0, 16, 0.6), 0 0 18px rgba(217, 0, 16, 0.25);
+}
+
+.section-header__link {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  color: var(--aki-gray-300);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: color var(--transition-fast);
+}
+
+.section-header__link:hover {
+  color: var(--aki-red-bright);
+}
+
+.section-header__link svg {
+  transition: transform var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .section-header__link:hover svg {
+    transform: translateX(4px);
+  }
+}
+
+.product-grid {
+  display: grid;
+  /* Fix UX 2026-04-25 (responsive-auditor BG): minmax 180→200 desktop reduce
+     orphan en row 2 (1440 ya no calcula 5 cols, queda en 4-5 según breakpoint).
+     Mobile mantiene 2-col por @media responsive-v2.css L24. */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.product-grid--large {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-6);
+}
+
+.category-pills {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: var(--space-2) 0;
+  -webkit-overflow-scrolling: touch;
+  /* UX-PILLS-REDESIGN Opción C: snap scroll — cada pill anclado al inicio. */
+  scroll-snap-type: x mandatory;
+}
+
+.category-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.category-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 52px;
+  min-width: 88px;
+  padding: 8px 14px;
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--aki-gray-300);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  /* UX-PILLS-REDESIGN Opción C: skewX eliminado (truncaba "PEDIDOS ESPECIALES"). */
+  white-space: nowrap;
+  /* Snap anchor */
+  scroll-snap-align: start;
+}
+
+.category-pill__name {
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.category-pill__count {
+  font-size: 10px;
+  opacity: 0.85; /* fix a11y 2026-04-25: era 0.65 (WCAG 1.4.3 ratio efectivo bajo 4.5:1 con texto 10px). 0.85 alineado con .category-pill--active __count */
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+.category-pill:hover,
+.category-pill--active {
+  color: var(--aki-white);
+  background: var(--aki-red);
+  border-color: var(--aki-red-bright);
+}
+
+.category-pill--active .category-pill__count {
+  /* Fix axe a11y 2026-04-26: opacity 0.85 → 1 sobre fondo --aki-red (#D90010).
+   * Texto blanco con opacity 0.85 mezcla con red, contraste efectivo cae a ~4.0:1
+   * (axe serious blocker: WCAG 1.4.3 minimum 4.5:1 para texto pequeño 10px).
+   * Con opacity 1: contraste blanco puro vs #D90010 = 5.18:1 → AA pass. */
+  opacity: 1;
+}
+
+/* UX-PILLS-REDESIGN Opción C: dot indicator para páginas scroll (a11y: buttons reales). */
+.category-pills-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 0;
+}
+.category-pills-indicator__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--aki-gray-600, #4a4a4a);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.category-pills-indicator__dot:hover,
+.category-pills-indicator__dot:focus-visible {
+  transform: scale(1.25);
+  outline: 2px solid var(--aki-red-bright, #FF2020);
+  outline-offset: 3px;
+}
+.category-pills-indicator__dot--active {
+  background: var(--aki-red-bright, #FF2020);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  color: var(--aki-white);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--aki-red-bright);
+  box-shadow: 0 0 0 2px rgba(217, 0, 16, 0.2);
+}
+
+.form-input::placeholder {
+  color: var(--aki-gray-500);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--aki-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--aki-gray-600);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--aki-red);
+}
+
+::selection {
+  background: var(--aki-red);
+  color: var(--aki-white);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-in {
+  animation: slideInUp 0.6s ease-out both;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--aki-surface-2) 25%, var(--aki-surface-3) 50%, var(--aki-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes aki-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+.aki-pulse {
+    animation: aki-pulse 0.3s ease;
+}
+
+.screen-reader-text {
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    word-wrap: normal !important;
+    border: 0;
+}
+
+.product-info__stock--preorder {
+  color: var(--aki-yellow, #FFD700);
+}
+
+.product-info__stock--preorder .dot {
+  background: var(--aki-yellow, #FFD700);
+}
+
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: var(--space-4);
+  z-index: 99999;
+  padding: var(--space-3) var(--space-6);
+  background: var(--aki-red);
+  color: var(--aki-white);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--aki-white); outline-offset: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--aki-red);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--aki-red);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible {
+  outline-offset: 4px;
+  box-shadow: var(--shadow-glow-red);
+}
+
+.scroll-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+  color: var(--aki-gray-400);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity var(--transition-base), visibility var(--transition-base), transform var(--transition-base), color var(--transition-base), background-color var(--transition-base), border-color var(--transition-base);
+  z-index: var(--z-sticky);
+}
+
+.scroll-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-top:hover {
+  color: var(--aki-white);
+  border-color: var(--aki-red-bright);
+  background: var(--aki-surface-3);
+}
+
+.product-info .badge {
+  width: fit-content;
+  display: inline-block;
+}
+
+.product-card__serie-badge {
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.product-card__serie-badge--completa {
+  background: rgba(0, 200, 83, .12);
+  color: var(--aki-success);
+  border: 1px solid rgba(0, 200, 83, .25);
+}
+
+.product-card__serie-badge--suspendida {
+  background: rgba(255, 160, 0, 0.10);
+  color: #ffa000;
+  border: 1px solid rgba(255, 160, 0, 0.25);
+}
+
+.product-card__footer {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.product-card__badges .badge--preorder {
+  border: 1px solid rgba(245, 214, 0, 0.48);
+  box-shadow: 0 0 0 1px rgba(245, 214, 0, 0.22), 0 8px 16px rgba(0, 0, 0, 0.42);
+}
+
+.product-card__fecha-badge,
+.product-card__reserva-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+}
+
+.product-card__fecha-badge {
+  background: rgba(245, 214, 0, 0.12);
+  color: var(--aki-yellow);
+  border: 1px solid rgba(245, 214, 0, 0.4);
+}
+
+.product-card__fecha-badge--recibido {
+  background: rgba(38, 180, 102, 0.16);
+  color: #8ff0b0;
+  border-color: rgba(38, 180, 102, 0.42);
+}
+
+.product-card__fecha-badge--en_transito {
+  background: rgba(255, 152, 0, 0.14);
+  color: #ffcb75;
+  border-color: rgba(255, 152, 0, 0.4);
+}
+
+.product-card__reserva-countdown {
+  background: linear-gradient(135deg, rgba(217, 0, 16, 0.15), rgba(245, 214, 0, 0.12));
+  border: 1px solid rgba(245, 214, 0, 0.32);
+  color: var(--aki-white);
+}
+
+.product-card__reserva-countdown--nofecha {
+  background: rgba(138, 138, 138, 0.14);
+  border-color: rgba(138, 138, 138, 0.35);
+  color: var(--aki-gray-300);
+}
+
+.product-card__reserva-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.product-card__reserva-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .product-card__reserva-text {
+    white-space: normal;
+  }
+}
+
+.aki-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+  max-width: 480px;
+  margin: var(--space-12) auto;
+  gap: var(--space-4);
+  background: var(--aki-surface);
+  border: 1px dashed var(--aki-border);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+  animation: fadeInEmpty 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes fadeInEmpty {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.aki-empty-state__icon {
+  color: var(--aki-gray-600);
+  margin-bottom: var(--space-2);
+  transition: transform var(--transition-slow);
+}
+
+.aki-empty-state:hover .aki-empty-state__icon {
+  transform: scale(1.1) rotate(-5deg);
+  color: var(--aki-gray-400);
+}
+
+.aki-empty-state__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  text-transform: uppercase;
+  color: var(--aki-white);
+  margin: 0;
+}
+
+.aki-empty-state__desc {
+  color: var(--aki-gray-400);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.aki-empty-state__desc strong {
+  color: var(--aki-white);
+}
+
+.aki-empty-state__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+.aki-empty-state__hint {
+  font-size: var(--text-xs);
+  color: var(--aki-gray-500);
+  margin: 0;
+}
+
+.aki-empty-state__hint a {
+  color: var(--aki-red-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Notify trigger button (card) ── */
+.product-card__notify-link {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-1);
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: var(--text-xs);
+  color: var(--aki-gray-400);
+  cursor: pointer;
+  text-align: center;
+  letter-spacing: 0.02em;
+  transition: color var(--transition-fast);
+}
+
+.product-card__notify-link:hover {
+  color: var(--aki-white);
+}
+
+.product-card__notify-link:focus-visible {
+  outline: 2px solid var(--aki-red);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Notify bottom-sheet ── */
+.aki-notify-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .22s ease, visibility .22s ease;
+}
+
+.aki-notify-sheet.is-open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.aki-notify-sheet__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .6);
+  cursor: pointer;
+}
+
+.aki-notify-sheet__panel {
+  position: relative;
+  background: var(--aki-surface-2);
+  border-top: 1px solid var(--aki-border);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 24px 20px calc(28px + env(safe-area-inset-bottom, 0px)) 20px;
+  transform: translateY(24px);
+  transition: transform .28s cubic-bezier(.32, .72, 0, 1);
+}
+
+.aki-notify-sheet.is-open .aki-notify-sheet__panel {
+  transform: translateY(0);
+}
+
+.aki-notify-sheet__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--aki-gray-400);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  min-width: 44px;
+  min-height: 44px;
+  transition: color var(--transition-fast);
+}
+
+.aki-notify-sheet__close:hover { color: var(--aki-white); }
+
+.aki-notify-sheet__close:focus-visible {
+  outline: 2px solid var(--aki-red);
+  outline-offset: 2px;
+}
+
+.aki-notify-sheet__title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--aki-white);
+  margin: 0 0 4px;
+  padding-right: 40px;
+}
+
+.aki-notify-sheet__hint {
+  font-size: var(--text-sm);
+  color: var(--aki-gray-400);
+  margin: 0 0 16px;
+}
+
+.aki-notify-sheet__row {
+  display: flex;
+  gap: 8px;
+}
+
+.aki-notify-sheet__input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  font-size: 16px; /* 16px evita zoom automático en iOS */
+  background: var(--aki-gray-900);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md);
+  color: var(--aki-white);
+  outline: none;
+}
+
+.aki-notify-sheet__input:focus {
+  border-color: var(--aki-red-bright);
+}
+
+.aki-notify-sheet__btn {
+  padding: 10px 20px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: opacity var(--transition-fast);
+}
+
+.aki-notify-sheet__btn:hover,
+.aki-notify-sheet__btn:focus-visible {
+  opacity: .85;
+}
+
+.aki-notify-sheet__btn:focus-visible {
+  outline: 2px solid var(--aki-white);
+  outline-offset: 2px;
+}
+
+.aki-notify-sheet__ok {
+  font-size: var(--text-sm);
+  color: var(--aki-success);
+  margin: 12px 0 0;
+}
+
+.aki-notify-sheet__err {
+  font-size: var(--text-sm);
+  color: var(--aki-red-bright);
+  margin: 12px 0 0;
+}
+
+.aki-notify-single__label {
+  font-size: var(--text-xs);
+  color: var(--aki-gray-400);
+  margin: 0 0 var(--space-2);
+  text-align: center;
+}
+
+.aki-notify-single__form {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.aki-notify-single__input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px var(--space-3);
+  font-size: var(--text-sm);
+  background: var(--aki-gray-900);
+  border: 1px solid var(--aki-gray-700);
+  border-radius: var(--radius-sm);
+  color: var(--aki-white);
+  outline: none;
+}
+
+.aki-notify-single__input:focus {
+  border-color: var(--aki-red-bright);
+}
+
+.aki-notify-single__btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.aki-notify-single__ok {
+  font-size: var(--text-sm);
+  color: var(--aki-success);
+  text-align: center;
+  margin: var(--space-2) 0 0;
+}
+
+.cart-complete-serie {
+  border-top: 1px solid var(--aki-gray-800);
+  padding: var(--space-4) var(--space-4) var(--space-2);
+}
+
+.cart-complete-serie__title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aki-gray-400);
+  margin: 0 0 var(--space-3);
+}
+
+.cart-complete-serie__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cart-complete-serie__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cart-complete-serie__img {
+  flex-shrink: 0;
+  width: 40px;
+  border-radius: 2px;
+  overflow: hidden;
+  display: block;
+}
+
+.cart-complete-serie__img img {
+  width: 40px;
+  height: 56px;
+  object-fit: cover;
+  display: block;
+}
+
+.cart-complete-serie__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cart-complete-serie__name {
+  font-size: var(--text-xs);
+  color: var(--aki-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.cart-complete-serie__price {
+  font-size: var(--text-xs);
+  color: var(--aki-gray-400);
+}
+
+.cart-complete-serie__price .woocommerce-Price-amount {
+  color: var(--aki-gray-400);
+}
+
+.cart-complete-serie__add {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 300;
+  transition: opacity var(--transition-fast);
+  padding: 0;
+}
+
+.cart-complete-serie__add:hover {
+  opacity: 0.85;
+}
+
+@keyframes btnSpinner {
+  to { transform: rotate(360deg); }
+}
+
+.product-card__add-to-cart.loading {
+  pointer-events: none;
+  position: relative;
+  cursor: wait;
+  opacity: 1;
+  /* Durante loading el botón queda lleno (como en hover) para que el
+     cambio sea coherente: rojo + texto blanco + spinner inline.
+     Nunca queda "vacío rojo" sin contenido. */
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-color: var(--aki-red-bright);
+}
+
+.btn.loading, .btn.is-loading, .button.loading, .button.is-loading {
+  pointer-events: none;
+  position: relative;
+  cursor: wait;
+  opacity: 0.8 !important;
+}
+
+.btn.loading > *, .btn.is-loading > *, .button.loading > *, .button.is-loading > * {
+  opacity: 0;
+}
+
+.btn.loading::after, .btn.is-loading::after, .button.loading::after, .button.is-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: btnSpinner 0.6s linear infinite;
+}
+
+.btn--secondary.loading::after, .btn--secondary.is-loading::after {
+  border-color: rgba(217, 0, 16, 0.3);
+  border-top-color: var(--aki-red-bright);
+}
+
+/* === Loading state para el add-to-cart del product card ===
+   Principio de diseño: el botón NUNCA queda vacío. Mantenemos el texto
+   ("Agregar al carrito" / "Encargar") visible durante la petición AJAX
+   y reemplazamos el ÍCONO por un spinner inline del mismo tamaño.
+   Esto da feedback claro sin romper la hierarquía visual. */
+.product-card__add-to-cart.loading > * {
+  opacity: 1;
+}
+
+/* Ocultar el ícono cart/package durante loading: el spinner lo reemplaza */
+.product-card__add-to-cart.loading > svg {
+  display: none;
+}
+
+/* Spinner inline vía ::before → queda ANTES del texto en el flex,
+   mismo tamaño que el ícono original (14px) y color blanco sobre el
+   fondo rojo. Visualmente pareciera que el ícono "gira". */
+.product-card__add-to-cart.loading::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btnSpinner 0.6s linear infinite;
+}
+
+/* Desactivar el ::after spinner global (ya no lo necesitamos, usamos ::before) */
+.product-card__add-to-cart.loading::after {
+  display: none;
+}
+
+/* Éxito: ocultar el ícono cart (ya no es coherente con "✓ Agregado"),
+   el check unicode en el texto es el feedback principal. */
+.product-card__add-to-cart.btn--added > svg {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes badgeIn { from { opacity: 0; } to { opacity: 1; } }
+  .badge--sale, .badge--preorder { animation-duration: 0.01ms; }
+  .product-card__add-to-cart { transition: background-color 100ms linear, color 100ms linear; }
+  .product-card__add-to-cart:active { transform: none; }
+  .product-card__add-to-cart.loading::before {
+    animation: none;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-top-color: #fff;
+  }
+  html { scroll-behavior: auto; }
+  .animate-in { animation: none; opacity: 1; }
+  .btn--added, .product-card__add-to-cart.btn--added { animation: none; }
+}
+
+@supports not (aspect-ratio: 2/3) {
+.product-card__image {
+    height: 0;
+    padding-bottom: 150%;
+    position: relative;
+    overflow: hidden;
+}
+.product-card__image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+}
+
+@supports not (accent-color: red) {
+  input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    outline: 2px solid var(--aki-red);
+    outline-offset: 1px;
+}
+}
+
+.akd-you-save {
+  color: var(--aki-red-bright);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.02em;
+}
+
+.product-info .akd-you-save {
+  font-size: var(--text-sm);
+  display: inline-block;
+  margin-top: var(--space-1);
+}
+
+.woocommerce-cart .akd-you-save {
+  font-size: 0.8em;
+  font-weight: var(--weight-medium);
+}
+
+.product-card__price .akd-you-save {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.75em;
+}
+
+::view-transition-group(root) {
+    background-color: #0a0a0a;
+}
+::view-transition-old(root) {
+    animation: vt-out 120ms ease-out both;
+}
+::view-transition-new(root) {
+    animation: vt-in 180ms ease-in 50ms both;
+}
+@keyframes vt-out {
+    to { opacity: 0; }
+}
+@keyframes vt-in {
+    from { opacity: 0; }
+}
+.site-header { view-transition-name: header; position: relative; z-index: 200; }
+::view-transition-old(header),
+::view-transition-new(header) { animation: none; }
+.bottom-nav { view-transition-name: bottomnav; }
+::view-transition-old(bottomnav),
+::view-transition-new(bottomnav) { animation: none; }
+#main-content {
+    view-transition-name: main;
+}
+::view-transition-old(main) {
+    animation: vt-slide-out 150ms ease-in both;
+}
+::view-transition-new(main) {
+    animation: vt-slide-in 200ms ease-out both;
+}
+@keyframes vt-slide-out {
+    to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes vt-slide-in {
+    from { opacity: 0; transform: translateY(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(*),
+::view-transition-new(*) {
+        animation-duration: 0.01ms !important;
+}
+}
+
+.product-card__badge-discount {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  z-index: var(--z-base);
+  max-width: 45%;
+}
+.product-card__badge-discount .badge--sale {
+  font-size: 11px;
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(217, 0, 16, 0.35);
+  transform: none;
+  line-height: 1.2;
+}
+.product-card__badge-discount .badge--sale > * {
+  transform: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* SKELETON LOADING — Shimmer effect while images load               */
+/* ═══════════════════════════════════════════════════════════════════ */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.product-card__image {
+  background: linear-gradient(
+    90deg,
+    var(--aki-surface-2, #1A1A1A) 25%,
+    var(--aki-surface-3, #252525) 37%,
+    var(--aki-surface-2, #1A1A1A) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.product-card__image img[src] {
+  animation: none;
+}
+
+/* Once image loads, stop shimmer */
+.product-card__image img.loaded,
+.product-card__image img:not([loading]) {
+  opacity: 1;
+}
+
+/* Skeleton for text content */
+.product-card__title a:empty::before,
+.product-card__price:empty::before {
+  content: '';
+  display: block;
+  height: 1em;
+  background: linear-gradient(
+    90deg,
+    var(--aki-surface-2, #1A1A1A) 25%,
+    var(--aki-surface-3, #252525) 37%,
+    var(--aki-surface-2, #1A1A1A) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* D5: Hover zoom on product card images */
+.product-card__image img {
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+  will-change: transform;
+}
+
+.product-card:hover .product-card__image img {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card__image {
+    animation: none;
+  }
+  .product-card:hover .product-card__image img {
+    transform: none;
+  }
+  .product-card__title a:empty::before,
+  .product-card__price:empty::before {
+    animation: none;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATION POLISH v1 — Wishlist Heart Pulse
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes aki-heart-pop {
+  0%   { transform: scale(1); }
+  15%  { transform: scale(1.35); }
+  30%  { transform: scale(0.95); }
+  45%  { transform: scale(1.15); }
+  60%  { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+.product-card__wishlist.aki-heart-pop {
+  animation: aki-heart-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card__wishlist.aki-heart-pop { animation: none; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MANGA / OTAKU VISUAL LAYER v1
+   Utilidades CSS para identidad manga auténtica — sin dependencias
+   externas. Cada clase es opt-in (no modifica selectores globales).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── 1. Ben-Day / Halftone dots ─────────────────────────────
+   Referencia: impresión offset de cómics/manga años 60-80.
+   Usar como background-image adicional sobre color sólido.
+   ──────────────────────────────────────────────────────────── */
+.aki-halftone {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
+}
+
+.aki-halftone--dense {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.aki-halftone--red {
+  background-image: radial-gradient(circle, rgba(217, 0, 16, 0.10) 2px, transparent 2px);
+  background-size: 14px 14px;
+}
+
+/* ─── 2. Speed lines ─────────────────────────────────────────
+   repeating-conic-gradient desde 50% 100% (borde inferior)
+   crea líneas que emanan hacia arriba — personaje "lanzándose".
+   Usar como overlay de ::after en contenedores de acento.
+   ──────────────────────────────────────────────────────────── */
+.aki-speed-lines {
+  position: relative;
+  overflow: hidden;
+}
+.aki-speed-lines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 120%,
+    rgba(255,255,255,0.04) 0deg 3deg,
+    transparent 3deg 20deg
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ─── 3. Manga panel border (viñeta dura) ────────────────────
+   Hard offset box-shadow = sombra impresa de viñeta manga.
+   El hover hace "pop" desplazando la sombra y levantando la carta.
+   ──────────────────────────────────────────────────────────── */
+.aki-panel {
+  border: 2px solid var(--aki-border-light, #333);
+  box-shadow: 4px 4px 0 0 var(--aki-red, #D90010);
+  border-radius: var(--radius-sm, 4px);
+  transition:
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .aki-panel:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--aki-red, #D90010);
+    border-color: var(--aki-red-bright, #D90010);
+  }
+}
+
+/* Variante oscura (fondo claro) */
+.aki-panel--dark {
+  border-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.85);
+}
+
+/* product-card + aki-panel: preserva radius del card y unifica hover en manga offset.
+   Especificidad 2 clases > 1 clase → prevalece sobre product-card:hover y aki-panel:hover. */
+.product-card.aki-panel {
+  border-radius: var(--radius-md);
+}
+@media (hover: hover) {
+  .product-card.aki-panel:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--aki-red);
+    border-color: var(--aki-red-bright);
+  }
+}
+
+/* ─── 4. Manga title stroke ──────────────────────────────────
+   -webkit-text-stroke + paint-order: stroke fill garantiza que
+   el trazo queda DETRÁS del relleno (el fill color se preserva).
+   Solo para display / hero headings. Nunca para body text.
+   ──────────────────────────────────────────────────────────── */
+.aki-manga-title {
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.55);
+  paint-order: stroke fill;
+  letter-spacing: 0.03em;
+}
+
+/* Variante con trazo rojo — para headings sobre fondo oscuro */
+.aki-manga-title--red {
+  -webkit-text-stroke: 1px var(--aki-red, #D90010);
+  paint-order: stroke fill;
+}
+
+/* ─── 5. Speed lines en CTA primario ────────────────────────
+   Enriquece .btn--primary existente: agrega capa cónica desde
+   el borde inferior. Refuerza la dirección cinética del clip-path.
+   ──────────────────────────────────────────────────────────── */
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 120%,
+    rgba(255,255,255,0.05) 0deg 2deg,
+    transparent 2deg 18deg
+  );
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+/* Los elementos internos del btn quedan sobre la capa de líneas */
+.btn--primary > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── 6. Preventa container manga ────────────────────────────
+   Combina aki-panel + halftone para destacar secciones de preventa.
+   ──────────────────────────────────────────────────────────── */
+.aki-preventa-highlight {
+  background-image: radial-gradient(circle, rgba(255, 215, 0, 0.06) 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+  border: 2px solid var(--aki-yellow, #FFD700);
+  box-shadow: 4px 4px 0 0 rgba(200, 150, 12, 0.6);
+  border-radius: var(--radius-sm, 4px);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+@media (hover: hover) {
+  .aki-preventa-highlight:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 rgba(200, 150, 12, 0.8);
+  }
+}
+
+/* ─── 7. Manga action badge ──────────────────────────────────
+   Modifica .badge--sale para mayor agresividad visual:
+   skew más pronunciado + sombra de trazo para effect "sticker".
+   ──────────────────────────────────────────────────────────── */
+.badge--sale {
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.7));
+}
+
+/* ─── Reduced motion: desactivar capas decorativas ──────────── */
+@media (prefers-reduced-motion: reduce) {
+  .aki-speed-lines::after,
+  .btn--primary::after {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   PREFERS-REDUCED-MOTION — override universal defensive (W3C standard)
+   Fix LambdaTest cloud audit 2026-04-25: spec comprehensive detectó
+   321 animaciones activas en iPhone PM y 318 en Desktop Chrome cuando
+   el OS user setting es reduce. Coverage parcial existente (22 occ en 11
+   archivos) NO cubría todo. Este bloque universal garantiza WCAG 2.3.3
+   Animation from Interactions (AAA) + 2.2.2 Pause/Stop/Hide (A).
+   Patrón: https://www.w3.org/WAI/WCAG22/Techniques/css/C39
+   ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}

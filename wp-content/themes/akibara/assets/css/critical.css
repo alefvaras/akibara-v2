@@ -1,0 +1,56 @@
+/**
+ * Akibara Critical CSS — loaded synchronously BEFORE lazy CSS.
+ *
+ * Purpose: prevent FOUC (Flash of Unstyled Content) for elements that are:
+ *   - position:fixed / absolute (render outside normal flow)
+ *   - expected to be hidden initially (drawers, overlays, modals)
+ *
+ * Why this file exists:
+ *   `layout-v2.css` is lazy-loaded via rel=preload+onload for FCP/LCP
+ *   optimization. During the gap between HTML parse and CSS apply, any
+ *   element relying on `transform: translateX(100%)` / `opacity: 0` to
+ *   hide itself is briefly visible, then animates out when CSS kicks in.
+ *   This file contains ONLY the minimal hidden-state rules needed to
+ *   prevent that flash. Keep it small.
+ *
+ * Rules here must match the base rules in layout-v2.css exactly (same
+ * hide mechanism). The `.open` variants stay in layout-v2.css.
+ */
+
+/* Cart drawer — slides in from right */
+.cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    max-width: 420px;
+    transform: translateX(100%);
+    z-index: var(--z-modal, 1000);
+}
+.cart-drawer__overlay {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Mobile nav drawer — slides in from left */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    height: 100dvh;
+    width: 85%;
+    max-width: 340px;
+    transform: translateX(-100%);
+    z-index: var(--z-modal, 1000);
+}
+.mobile-overlay {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+}

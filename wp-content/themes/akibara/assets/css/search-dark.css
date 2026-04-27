@@ -1,0 +1,259 @@
+.akibara-search-popup .akibara-popup-overlay {
+    background: rgba(0,0,0,.88);
+    backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.akibara-search-box {
+    background: var(--aki-surface, var(--aki-surface));
+    border: 2px solid var(--aki-border, var(--aki-border));
+    border-radius: 0;
+    box-shadow: 0 10px 40px rgba(0,0,0,.5);
+    padding: 0 16px 0 20px;
+}
+
+.akibara-search-box:focus-within {
+    border-color: var(--aki-red-bright, var(--aki-red));
+    box-shadow: 0 12px 50px rgba(217, 0, 16, .2);
+}
+
+#akibara-popup-input {
+    color: var(--aki-white, var(--aki-gray-100));
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 18px;
+    padding: 18px 12px;
+}
+
+#akibara-popup-input::placeholder {
+    color: var(--aki-gray-500, #666);
+}
+
+.akibara-close-btn {
+    background: var(--aki-surface-2, var(--aki-surface-2));
+    border: 1px solid var(--aki-border, var(--aki-border));
+    color: var(--aki-gray-400, var(--aki-gray-400));
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.akibara-close-btn:hover {
+    background: var(--aki-red, var(--aki-red));
+    border-color: var(--aki-red-bright, var(--aki-red));
+    color: #fff;
+}
+
+/* Hide browser-native clear X on search input to avoid double-✕ collision */
+#akibara-popup-input::-webkit-search-cancel-button,
+#akibara-popup-input::-webkit-search-decoration,
+#akibara-popup-input::-ms-clear {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+}
+
+.akibara-popup-results {
+    background: var(--aki-surface, var(--aki-surface));
+    border: 1px solid var(--aki-border, var(--aki-border));
+    border-radius: 0;
+    box-shadow: 0 10px 40px rgba(0,0,0,.4);
+    border-top: 2px solid var(--aki-red, var(--aki-red));
+}
+
+.akibara-popup-results li a,
+.ajax-search-result li a {
+    color: var(--aki-white, var(--aki-gray-100));
+    border-radius: 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--aki-border, var(--aki-border));
+    margin: 0;
+    gap: 16px;
+}
+
+.akibara-popup-results li:last-child a,
+.ajax-search-result li:last-child a {
+    border-bottom: none;
+}
+
+.akibara-popup-results li a:hover,
+.akibara-popup-results li.akb-active a,
+.ajax-search-result li a:hover,
+.ajax-search-result li.akb-active a {
+    background: var(--aki-surface-2, var(--aki-surface-2));
+}
+
+#akibara-popup-results .akibara-result-item:focus-visible,
+#akibara-popup-results .akb-chip:focus-visible,
+#akibara-popup-results .akb-suggest-row:focus-visible {
+  outline: 2px solid var(--aki-red, #D90010);
+  outline-offset: -2px;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 4px;
+}
+
+.search-image {
+    border-radius: 0;
+    background: var(--aki-surface-2, var(--aki-surface-2));
+    border: 1px solid var(--aki-border, var(--aki-border));
+    width: 56px;
+    height: 80px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.search-title {
+    color: var(--aki-white, var(--aki-gray-100));
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.search-title mark {
+    color: var(--aki-red-bright, var(--aki-red));
+    background: none;
+    font-weight: 700;
+}
+
+.search-price {
+    color: var(--aki-gray-400, var(--aki-gray-400));
+    font-size: 15px;
+}
+
+.search-price .amount,
+.search-price ins .amount {
+    color: var(--aki-red-bright, var(--aki-red));
+    font-weight: 700;
+}
+
+.search-price del {
+    opacity: .5;
+    color: var(--aki-gray-500, #666);
+}
+
+.search-loading {
+    color: var(--aki-gray-400, var(--aki-gray-400));
+    padding: 40px 20px;
+}
+
+.search-loading::after {
+    border-color: var(--aki-border, var(--aki-border));
+    border-top-color: var(--aki-red-bright, var(--aki-red));
+}
+
+.no-results {
+    color: var(--aki-gray-400, var(--aki-gray-400));
+    padding: 40px 20px;
+}
+
+.no-results strong {
+    color: var(--aki-white, var(--aki-gray-100));
+}
+
+.search-error {
+    color: var(--aki-red-bright, var(--aki-red));
+}
+
+.akb-section {
+  margin-bottom: 16px;
+  border-left: 3px solid var(--aki-red, #D90010);
+  padding-left: 12px;
+}
+
+.akb-section-head {
+  font-family: var(--font-heading, 'Bebas Neue', sans-serif);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aki-red-bright, #D90010);
+  margin-bottom: 8px;
+}
+
+.akb-chip[data-type='serie']::before {
+  content: '📚';
+  margin-right: 6px;
+}
+
+.akb-chip[data-type='autor']::before {
+  content: '✍️';
+  margin-right: 6px;
+}
+
+.akb-chip[data-type='query']::before {
+  content: '🔍';
+  margin-right: 6px;
+}
+
+.akb-suggest-row {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--aki-border, rgba(255,255,255,0.1));
+}
+
+.akb-history-header {
+    color: var(--aki-gray-500, #666);
+    border-bottom: 1px solid var(--aki-border, var(--aki-border));
+    padding: 12px 20px 8px;
+    font-family: var(--font-heading, 'Bebas Neue', sans-serif);
+    font-size: 13px;
+    letter-spacing: .08em;
+}
+
+.akb-history-icon {
+    opacity: .3;
+    color: var(--aki-gray-400);
+}
+
+.akb-trending-header {
+    color: var(--aki-gray-500);
+    border-bottom: 1px solid var(--aki-border);
+    padding: 12px 20px 8px;
+    font-family: var(--font-heading, 'Bebas Neue', sans-serif);
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.akb-trending-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px 16px;
+}
+
+.akb-trending-tag {
+    padding: 6px 14px;
+    background: var(--aki-surface-2, var(--aki-surface-2));
+    border: 1px solid var(--aki-border, var(--aki-border));
+    color: var(--aki-gray-300, var(--aki-gray-300));
+    font-size: 13px;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.akb-trending-tag:hover {
+    border-color: var(--aki-red-bright, var(--aki-red));
+    color: var(--aki-white, var(--aki-gray-100));
+}
+
+.ajax-search-result {
+    background: var(--aki-surface, var(--aki-surface));
+    border: 1px solid var(--aki-border, var(--aki-border));
+    border-radius: 0;
+    border-top: 2px solid var(--aki-red, var(--aki-red));
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+}
+
+@media (max-width: 768px) {
+
+    #akibara-popup-input {
+        font-size: 16px;
+        padding: 16px 10px;
+    }
+
+    .search-image {
+        width: 48px;
+        height: 68px;
+    }
+
+    .akibara-popup-results {
+        margin-top: 12px;
+    }
+}

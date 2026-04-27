@@ -1,0 +1,1038 @@
+.aki-auth-page {
+  min-height: calc(100vh - 220px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-4) var(--space-12);
+  background: radial-gradient(ellipse 80% 60% at 50% -10%,
+    rgba(217, 0, 16, 0.12) 0%, transparent 70%);
+}
+
+.aki-auth {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  background: var(--aki-surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.03),
+    0 20px 60px rgba(0,0,0,.6),
+    0 4px 16px rgba(0,0,0,.3);
+}
+
+.aki-auth__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--aki-bg);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.aki-auth__tab {
+  padding: 15px var(--space-6);
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--aki-gray-500);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+  margin-bottom: -1px;
+}
+
+.aki-auth__tab:hover:not(.is-active) {
+  color: var(--aki-gray-300);
+}
+
+.aki-auth__tab.is-active {
+  color: var(--aki-white);
+  border-bottom-color: var(--aki-red-bright);
+}
+
+.aki-auth__panel {
+  display: none;
+  padding: 32px 32px 28px;
+  animation: authIn var(--transition-fast) ease both;
+}
+
+.aki-auth__panel.is-active {
+  display: block;
+}
+
+@keyframes authIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.aki-auth__subtitle {
+  font-size: var(--text-sm);
+  color: var(--aki-gray-400);
+  margin: 0 0 24px;
+  line-height: 1.55;
+}
+
+.aki-auth__google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-4);
+  background: #fff;
+  color: #3c4043;
+  border: 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Google Sans', 'Roboto', var(--font-body);
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast), background-color var(--transition-fast);
+  margin-bottom: 20px;
+  letter-spacing: .01em;
+}
+
+@media (hover: hover) {
+  .aki-auth__google-btn:hover {
+    background: var(--aki-gray-100);
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    color: #3c4043;
+  }
+}
+
+.aki-auth__google-btn svg {
+  flex-shrink: 0;
+}
+
+.aki-auth__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.aki-auth__divider::before,
+.aki-auth__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.07);
+}
+
+.aki-auth__divider span {
+  font-size: 11px;
+  color: var(--aki-gray-500);
+  white-space: nowrap;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.aki-auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.aki-auth__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.aki-auth__label {
+  font-size: 13px;
+  font-weight: var(--weight-medium);
+  color: var(--aki-gray-300);
+  display: block;
+}
+
+.aki-auth__label small {
+  font-weight: var(--weight-normal);
+  color: var(--aki-gray-500);
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.aki-auth__input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 6px;
+  color: var(--aki-white);
+  font-size: 16px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+  outline: none;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+}
+
+.aki-auth__input::placeholder {
+  color: rgba(255,255,255,.22);
+}
+
+.aki-auth__input:focus {
+  border-color: var(--aki-red-bright);
+  background: rgba(255,255,255,.06);
+  box-shadow: 0 0 0 3px rgba(220,38,38,.15);
+}
+
+.aki-auth__input.is-valid {
+  border-color: rgba(34,197,94,.5);
+}
+
+.aki-auth__input.is-invalid {
+  border-color: rgba(248,113,113,.6);
+  background: rgba(248,113,113,.04);
+}
+
+.aki-auth__pw-wrap {
+  position: relative;
+}
+
+.aki-auth__pw-wrap .aki-auth__input {
+  padding-right: 46px;
+}
+
+.aki-auth__pw-eye {
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  height: 42px;
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  color: rgba(255,255,255,.3);
+  transition: color var(--transition-fast);
+  padding: 0;
+}
+
+.aki-auth__pw-eye:hover {
+  color: rgba(255,255,255,.7);
+}
+
+.aki-auth__strength {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.aki-auth__strength.is-visible {
+  display: flex;
+}
+
+.aki-auth__strength-track {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.aki-auth__strength-bar {
+  height: 100%;
+  border-radius: 3px;
+  width: 0%;
+  transition: transform var(--transition-base), background-color var(--transition-base);
+}
+
+.aki-auth__strength-txt {
+  font-size: 11px;
+  min-width: 64px;
+  text-align: right;
+  letter-spacing: .02em;
+}
+
+.aki-auth__strength.lvl-1 .aki-auth__strength-bar { width:20%; background:var(--aki-error, var(--aki-error)); }
+.aki-auth__strength.lvl-2 .aki-auth__strength-bar { width:40%; background:#f97316; }
+.aki-auth__strength.lvl-3 .aki-auth__strength-bar { width:65%; background:#eab308; }
+.aki-auth__strength.lvl-4 .aki-auth__strength-bar { width:85%; background:var(--aki-success); }
+.aki-auth__strength.lvl-5 .aki-auth__strength-bar { width:100%; background:#4ade80; }
+.aki-auth__strength.lvl-1 .aki-auth__strength-txt { color:var(--aki-error, var(--aki-error)); }
+.aki-auth__strength.lvl-2 .aki-auth__strength-txt { color:#f97316; }
+.aki-auth__strength.lvl-3 .aki-auth__strength-txt { color:#eab308; }
+.aki-auth__strength.lvl-4 .aki-auth__strength-txt { color:var(--aki-success); }
+.aki-auth__strength.lvl-5 .aki-auth__strength-txt { color:#4ade80; }
+
+.aki-auth__err {
+  font-size: 12px;
+  color: var(--aki-red-bright, var(--aki-red-bright));
+  min-height: 0;
+  display: block;
+  line-height: 1.3;
+}
+
+.aki-auth__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: -4px;
+}
+
+.aki-auth__check {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--aki-gray-300);
+  line-height: 1.45;
+}
+
+.aki-auth__check input[type="checkbox"] {
+  flex-shrink: 0;
+  margin-top: 1px;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--aki-red-bright);
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.aki-auth__check--terms {
+  margin-top: 4px;
+}
+
+.aki-auth__check--terms a {
+  color: var(--aki-red-bright);
+  text-decoration: none;
+}
+
+.aki-auth__check--terms a:hover {
+  text-decoration: underline;
+}
+
+.aki-auth__link-sm {
+  font-size: 12px;
+  color: var(--aki-gray-400);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.aki-auth__link-sm:hover {
+  color: var(--aki-white);
+}
+
+.btn--full {
+  width: 100%;
+  justify-content: center;
+  height: 46px;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+/* Fix axe cloud audit 2026-04-25: rgba(255,255,255,.25) computed = #4D4D4D
+   sobre #111 = 2.23:1 FAIL. Subimos opacity .25→.55 = #8C8C8C = 5.62:1 PASS. */
+.aki-auth__trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--aki-gray-300, #B0B0B0);
+  margin: 8px 0 0;
+  text-align: center;
+}
+
+.aki-auth__hint {
+  font-size: 13px;
+  color: var(--aki-gray-400);
+  background: rgba(255,255,255,.03);
+  border: 1px dashed rgba(255,255,255,.08);
+  padding: 12px 14px;
+  border-radius: 6px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.aki-auth__switch {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  text-align: center;
+  font-size: 13px;
+  color: var(--aki-gray-500);
+}
+
+.aki-auth__switch a,
+.aki-auth__switch-btn {
+  color: var(--aki-red-bright);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+  /* Reset <button> defaults para que se vea como link inline */
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.aki-auth__switch a:hover,
+.aki-auth__switch-btn:hover,
+.aki-auth__switch-btn:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+.aki-auth-page .woocommerce-error,
+.aki-auth-page .woocommerce-message,
+.aki-auth-page .woocommerce-info {
+  max-width: 460px;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+@media (max-width: 520px) {
+  .aki-auth-page {
+    align-items: flex-start;
+    min-height: auto;
+  }
+  .aki-auth {
+    border-radius: 10px;
+    border-left: none;
+    border-right: none;
+    max-width: 100%;
+  }
+
+  .aki-auth__tab {
+    padding: 13px 0;
+    letter-spacing: .08em;
+  }
+
+  .aki-auth__google-btn {
+    height: 48px;
+    font-size: 15px;
+  }
+}
+
+.woocommerce-account:not(.logged-in) .woocommerce {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block !important;
+  gap: 0 !important;
+}
+
+.woocommerce-account:not(.logged-in) .woocommerce-MyAccount-navigation {
+  display: none !important;
+}
+
+.woocommerce-account:not(.logged-in) .woocommerce-MyAccount-content {
+  flex: none !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.aki-auth__magic { margin-top: 4px; }
+
+.aki-auth__magic-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 44px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,.7);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+.aki-auth__magic-trigger:hover {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.2);
+  color: #fff;
+}
+.aki-auth__magic-trigger small {
+  color: rgba(255,255,255,.4);
+  font-size: 12px;
+}
+.aki-auth__magic-trigger svg {
+  color: var(--aki-red-bright, var(--aki-red-bright));
+  flex-shrink: 0;
+}
+
+.aki-auth__magic-form {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aki-auth__magic-ok {
+  text-align: center;
+  color: var(--aki-success);
+  font-size: 14px;
+  padding: 12px;
+  background: rgba(39,174,96,.1);
+  border-radius: 8px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.aki-auth__magic-err {
+  text-align: center;
+  color: var(--aki-red-bright);
+  font-size: 13px;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aki-auth__panel { animation: none; opacity: 1; transform: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MY ACCOUNT — NAVEGACIÓN
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.aki-account-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aki-account-nav li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  color: var(--aki-gray-300);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.aki-account-nav li a:hover {
+  color: var(--aki-white);
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: var(--aki-border);
+}
+
+.aki-account-nav li.is-active a,
+.aki-account-nav li a[aria-current="page"] {
+  color: var(--aki-white);
+  border-left-color: var(--aki-red-bright);
+  background: rgba(217, 0, 16, 0.08);
+  font-weight: 600;
+}
+
+.aki-nav-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.aki-account-nav li.is-active .aki-nav-icon,
+.aki-account-nav li a[aria-current="page"] .aki-nav-icon {
+  opacity: 1;
+  color: var(--aki-red-bright);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MY ACCOUNT — DASHBOARD
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.aki-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.aki-dashboard__greeting {
+  padding-bottom: 4px;
+}
+
+.aki-dashboard__hello {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-family: var(--font-heading, 'Archivo Black', sans-serif);
+  color: var(--aki-white);
+  line-height: 1.2;
+}
+
+.aki-dashboard__subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--aki-gray-400);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Panel structure */
+.aki-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--aki-border);
+}
+
+.aki-panel__title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aki-gray-300);
+  margin: 0;
+}
+
+.aki-panel__link {
+  font-size: 12px;
+  color: var(--aki-red-bright);
+  text-decoration: none;
+}
+
+.aki-panel__link:hover {
+  color: var(--aki-red-bright);
+  text-decoration: underline;
+}
+
+.aki-panel__body {
+  padding: 16px 18px;
+}
+
+/* ─── Welcome discount nudge ──────────────────────────────────────────────── */
+
+.aki-nudge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background: rgba(255, 214, 0, 0.06);
+  border: 1px solid rgba(255, 214, 0, 0.25);
+  border-left: 3px solid var(--aki-yellow, #FFD600);
+  border-radius: 6px;
+}
+
+.aki-nudge__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.aki-nudge__title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--aki-white);
+}
+
+.aki-nudge__sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--aki-gray-300);
+  line-height: 1.6;
+}
+
+.aki-nudge__code-label {
+  color: var(--aki-gray-400);
+}
+
+.aki-nudge__code-value {
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 7px;
+  border-radius: 3px;
+  color: var(--aki-yellow, #FFD600);
+  font-size: 13px;
+  user-select: all;
+}
+
+.aki-nudge__cta {
+  display: inline-block;
+  padding: 9px 16px;
+  background: var(--aki-yellow, #FFD600);
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.aki-nudge__cta:hover {
+  opacity: 0.88;
+  color: #000;
+}
+
+/* ─── Recent order meta ───────────────────────────────────────────────────── */
+
+.aki-order-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-bottom: 16px;
+}
+
+.aki-order-meta__number {
+  font-weight: 700;
+  color: var(--aki-red-bright);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.aki-order-meta__number:hover {
+  color: var(--aki-red-bright);
+}
+
+.aki-order-meta__date,
+.aki-order-meta__total {
+  font-size: 13px;
+  color: var(--aki-gray-300);
+}
+
+.aki-order-status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--aki-gray-300);
+}
+
+.aki-order-status--processing { background: rgba(217, 0, 16, 0.15); color: var(--aki-red-bright); }
+.aki-order-status--completed  { background: rgba(76, 175, 80, 0.15); color: #4CAF50; }
+.aki-order-status--on-hold    { background: rgba(245, 158, 11, 0.15); color: var(--aki-warning); }
+.aki-order-status--pending    { background: rgba(255, 255, 255, 0.06); color: var(--aki-gray-400); }
+.aki-order-status--cancelled,
+.aki-order-status--failed     { background: rgba(255, 59, 59, 0.12); color: var(--aki-error); }
+.aki-order-status--refunded   { background: rgba(59, 130, 246, 0.12); color: var(--aki-info); }
+
+/* ─── Order progress bar ──────────────────────────────────────────────────── */
+
+.aki-order-progress {
+  position: relative;
+  padding-top: 28px;
+}
+
+.aki-order-progress__track {
+  position: absolute;
+  top: 8px;
+  left: calc(12.5% + 6px);
+  right: calc(12.5% + 6px);
+  height: 3px;
+  background: var(--aki-border);
+  border-radius: 2px;
+}
+
+.aki-order-progress__fill {
+  height: 100%;
+  background: var(--aki-red);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.aki-order-progress__steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align: center;
+}
+
+.aki-order-progress__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--aki-border);
+  border: 2px solid var(--aki-surface-2, #1A1A1A);
+  margin: 0 auto 6px;
+  transition: background 0.2s;
+}
+
+.aki-order-progress__step.is-done .aki-order-progress__dot {
+  background: var(--aki-red);
+}
+
+.aki-order-progress__step.is-current .aki-order-progress__dot {
+  background: var(--aki-red);
+  box-shadow: 0 0 0 3px rgba(217, 0, 16, 0.25);
+}
+
+.aki-order-progress__label {
+  display: block;
+  font-size: 11px;
+  color: var(--aki-gray-500);
+  line-height: 1.2;
+}
+
+.aki-order-progress__step.is-done .aki-order-progress__label,
+.aki-order-progress__step.is-current .aki-order-progress__label {
+  color: var(--aki-gray-200);
+  font-weight: 600;
+}
+
+/* ─── Reservas panel ──────────────────────────────────────────────────────── */
+
+.aki-dashboard__reservas-msg {
+  margin: 0;
+  font-size: 14px;
+  color: var(--aki-gray-300);
+}
+
+/* ─── Quick links grid ────────────────────────────────────────────────────── */
+
+.aki-dashboard__quick-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.aki-quick-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 10px;
+  background: var(--aki-surface-2, #1A1A1A);
+  border: 1px solid var(--aki-border);
+  border-radius: 8px;
+  color: var(--aki-gray-300);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.aki-quick-link:hover {
+  border-color: var(--aki-red-bright);
+  color: var(--aki-white);
+  background: rgba(217, 0, 16, 0.06);
+}
+
+.aki-quick-link__icon {
+  display: flex;
+  color: var(--aki-red-bright);
+}
+
+.aki-quick-link__label {
+  line-height: 1.2;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MIS RESERVAS TEMPLATE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.aki-reservas-panel {
+  background: var(--aki-surface, #111);
+  padding: 0;
+}
+
+.aki-reservas-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--aki-gray-400);
+}
+
+.aki-reservas-empty svg {
+  display: block;
+  margin: 0 auto 16px;
+  color: var(--aki-gray-600);
+}
+
+.aki-reservas-empty__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--aki-gray-200);
+  margin: 0 0 6px;
+}
+
+.aki-reservas-empty__sub {
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+
+.aki-reservas-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.aki-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.aki-table th,
+.aki-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--aki-border);
+  color: var(--aki-gray-300);
+}
+
+.aki-table thead th {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--aki-gray-500);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.aki-reservas-order-link {
+  font-weight: 700;
+  color: var(--aki-red-bright);
+  text-decoration: none;
+}
+
+.aki-reservas-order-link:hover {
+  color: var(--aki-red-bright);
+}
+
+.aki-muted {
+  color: var(--aki-gray-500);
+}
+
+.aki-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aki-badge--gold {
+  background: rgba(255, 214, 0, 0.15);
+  color: var(--aki-yellow, #FFD600);
+  border: 1px solid rgba(255, 214, 0, 0.3);
+}
+
+.aki-estado {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--aki-gray-300);
+}
+
+.aki-estado--pendiente    { background: rgba(245, 158, 11, 0.15); color: var(--aki-warning); }
+.aki-estado--en_camino    { background: rgba(217, 0, 16, 0.15);   color: var(--aki-red-bright); }
+.aki-estado--lista        { background: rgba(76, 175, 80, 0.15);  color: #4CAF50; }
+.aki-estado--entregada    { background: rgba(76, 175, 80, 0.1);   color: #4CAF50; }
+.aki-estado--cancelada    { background: rgba(255, 59, 59, 0.1);   color: var(--aki-error); }
+
+.aki-reservas-wa {
+  margin: 16px 0 0;
+}
+
+.aki-wa-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #25D366;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.aki-wa-link:hover {
+  text-decoration: underline;
+  color: #25D366;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RESPONSIVE — MY ACCOUNT
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .aki-dashboard__quick-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .aki-nudge {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .aki-nudge__cta {
+    width: 100%;
+    text-align: center;
+  }
+
+  .aki-order-progress__label {
+    font-size: 10px;
+  }
+
+  /* Responsive table: stack rows on mobile */
+  .aki-table thead {
+    display: none;
+  }
+
+  .aki-table,
+  .aki-table tbody,
+  .aki-table tr,
+  .aki-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .aki-table tr {
+    border-bottom: 1px solid var(--aki-border);
+    padding: 10px 0;
+  }
+
+  .aki-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    border-bottom: none;
+  }
+
+  .aki-table td::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--aki-gray-500);
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+}
+
+@media (max-width: 479px) {
+  .aki-dashboard__hello {
+    font-size: 18px;
+  }
+
+  .aki-quick-link {
+    padding: 12px 8px;
+    font-size: 11px;
+  }
+}

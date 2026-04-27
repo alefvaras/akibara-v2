@@ -1,0 +1,4161 @@
+.woocommerce-checkout .page-header,
+.woocommerce-checkout .page-header__title {
+  display: none;
+}
+
+.aki-co__layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-4) var(--space-12);
+}
+
+@media (min-width: 769px) {
+.aki-co__layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: var(--space-8);
+    align-items: start;
+  }
+.aki-co__back {
+    grid-column: 1 / -1;
+  }
+.aki-co__express {
+    grid-column: 1 / -1;
+  }
+.aki-co__sticky,
+  .aki-co__drawer,
+  .aki-co__drawer-overlay {
+    display: none;
+  }
+}
+
+.aki-co__back {
+  margin-bottom: var(--space-4);
+}
+
+.aki-co__back a {
+  color: var(--aki-gray-400);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.aki-co__back a:hover {
+  color: var(--aki-red-bright);
+}
+
+.aki-co__express {
+  margin-bottom: var(--space-6);
+}
+
+.aki-co__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-5) 0;
+}
+
+.aki-co__divider::before,
+.aki-co__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--aki-border);
+}
+
+.aki-co__divider span {
+  color: var(--aki-gray-500);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.aki-step {
+  background: var(--aki-surface);
+  border: 2px solid var(--aki-border);
+  margin-bottom: var(--space-3);
+  transition: border-color var(--transition-fast);
+}
+
+.aki-step--active {
+  border-color: var(--aki-red-bright);
+}
+
+.aki-step--done {
+  border-color: var(--aki-border);
+}
+
+.aki-step--locked {
+  border-color: var(--aki-border);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.aki-step__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+}
+
+.aki-step--active .aki-step__header {
+  border-bottom: 1px solid var(--aki-border);
+}
+
+.aki-step__number {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  flex-shrink: 0;
+  background: var(--aki-surface-2);
+  border: 2px solid var(--aki-border);
+  color: var(--aki-gray-400);
+  box-shadow: 2px 2px 0 0 var(--aki-border);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.aki-step--active .aki-step__number {
+  background: var(--aki-red);
+  border-color: var(--aki-red-bright);
+  color: var(--aki-white);
+  box-shadow: 2px 2px 0 0 rgba(217, 0, 16, 0.45);
+}
+
+.aki-step--done .aki-step__number {
+  background: var(--aki-success);
+  border-color: var(--aki-success);
+  color: var(--aki-white);
+  animation: checkmarkPop 350ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.aki-step__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.aki-step__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--aki-white);
+  margin: 0;
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.4);
+  paint-order: stroke fill;
+}
+
+.aki-step__subtitle {
+  font-size: var(--text-xs);
+  color: var(--aki-gray-500);
+  margin: 0;
+}
+
+.aki-step__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+}
+
+.aki-step--active .aki-step__summary {
+  display: none;
+}
+
+.aki-step--locked .aki-step__content,
+.aki-step--done .aki-step__content {
+  display: none;
+}
+
+.aki-step__summary-text {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--aki-gray-300);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aki-step__edit {
+  background: none;
+  border: 0;
+  color: var(--aki-red-bright);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.aki-step__edit:hover {
+  text-decoration: underline;
+}
+
+.aki-step__content {
+  padding: var(--space-5);
+  animation: stepContentIn 280ms ease-out both;
+}
+
+.aki-step__continue {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border: 0;
+  cursor: pointer;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  transition: background var(--transition-fast);
+}
+
+.aki-step__continue:hover {
+  background: var(--aki-red-bright);
+}
+
+.woocommerce-checkout .form-row {
+  margin-bottom: var(--space-4);
+  /* F-05: compensar el sticky header de paso al enfocar un campo con teclado virtual
+     activo en mobile (iOS Safari / Chrome Android). Valor = altura header checkout
+     (~76px) + paso header (~40px) + holgura (~12px). */
+  scroll-margin-top: 96px;
+}
+
+.woocommerce-checkout label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--aki-gray-300);
+  margin-bottom: var(--space-1);
+}
+
+.woocommerce-checkout label .required {
+  color: var(--aki-red-bright);
+}
+
+/* Metro San Miguel: cuando cliente elige retiro gratis, los campos
+   de dirección se marcan como OPCIONALES (no se ocultan). Mantiene
+   los valores ya tipeados, saca el asterisco rojo y agrega un hint
+   "opcional" para que quede claro que no son requeridos. */
+.aki-metro-optional label .required {
+  display: none;
+}
+.aki-metro-optional label::after {
+  content: " (opcional)";
+  color: var(--aki-text-dim, #666);
+  font-size: 11px;
+  font-weight: 400;
+  margin-left: 4px;
+  letter-spacing: 0.02em;
+}
+.aki-metro-optional input,
+.aki-metro-optional select {
+  opacity: 0.7;
+}
+.aki-metro-optional input:focus,
+.aki-metro-optional select:focus {
+  opacity: 1;
+}
+
+.woocommerce-checkout .woocommerce-input-wrapper {
+  display: block;
+}
+
+.woocommerce-checkout input[type="text"],
+.woocommerce-checkout input[type="email"],
+.woocommerce-checkout input[type="tel"],
+.woocommerce-checkout input[type="number"],
+.woocommerce-checkout input[type="password"],
+.woocommerce-checkout select,
+.woocommerce-checkout textarea {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  color: var(--aki-white);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.woocommerce-checkout input:focus-visible,
+.woocommerce-checkout select:focus-visible,
+.woocommerce-checkout textarea:focus-visible {
+  outline: none;
+  border-color: var(--aki-red-bright);
+  box-shadow: 0 0 0 2px rgba(217, 0, 16, 0.15);
+}
+
+.woocommerce-checkout input::placeholder,
+.woocommerce-checkout textarea::placeholder {
+  color: var(--aki-gray-500);
+}
+
+.woocommerce-checkout textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.aki-step__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.aki-step__fields .form-row {
+  flex: 1 1 100%;
+  margin-bottom: 0;
+}
+
+.aki-step__fields #billing_first_name_field,
+.aki-step__fields #billing_last_name_field,
+.aki-step__fields #billing_phone_field,
+.aki-step__fields #billing_email_field {
+  flex: 1 1 calc(50% - var(--space-2));
+}
+
+.woocommerce-billing-fields__field-wrapper,
+.woocommerce-shipping-fields__field-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.woocommerce-billing-fields__field-wrapper .form-row,
+.woocommerce-shipping-fields__field-wrapper .form-row {
+  flex: 1 1 100%;
+  margin-bottom: 0;
+}
+
+.woocommerce-billing-fields__field-wrapper #billing_first_name_field,
+.woocommerce-billing-fields__field-wrapper #billing_last_name_field,
+.woocommerce-billing-fields__field-wrapper #billing_phone_field,
+.woocommerce-billing-fields__field-wrapper #billing_email_field {
+  flex: 1 1 calc(50% - var(--space-2));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ * SELECT2 DROPDOWN — Dark theme para Región / Comuna / País
+ *
+ * IMPORTANTE: el dropdown de select2 se appendea al <body>, fuera de
+ * `.woocommerce-checkout`. Por eso los estilos del dropdown NO deben
+ * ser scopedos a `.woocommerce-checkout`. En su lugar usamos:
+ *   - `body.woocommerce-checkout` (para dropdowns del checkout)
+ *   - Clases globales `.select2-*` con override con especificidad alta
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* --- Trigger (campo visible, cerrado) --- */
+.woocommerce-checkout .select2-container--default .select2-selection--single {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  height: auto;
+  padding: 10px 14px;
+  color: var(--aki-white);
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.woocommerce-checkout .select2-container--default.select2-container--focus .select2-selection--single,
+.woocommerce-checkout .select2-container--default.select2-container--open .select2-selection--single {
+  border-color: var(--aki-red-bright, #D90010);
+  box-shadow: 0 0 0 3px rgba(217, 0, 16, 0.12);
+  outline: none;
+}
+
+.woocommerce-checkout .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--aki-white);
+  padding: 0;
+  line-height: 1.5;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.woocommerce-checkout .select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: var(--aki-text-muted, #888);
+  font-weight: 400;
+}
+
+.woocommerce-checkout .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 50%;
+  transform: translateY(-50%);
+  right: var(--space-3);
+}
+
+/* --- Dropdown (contenedor flotante fuera del checkout) ---
+ * Scope: body que está en checkout. Alta especificidad para ganarle
+ * al CSS default de select2.
+ *
+ * Patrón UX: hover neutro (gris muted), selected con accent rojo sutil
+ * (como Airbnb / Linear / Notion). Evita barras rojas saturadas. */
+body.woocommerce-checkout .select2-dropdown,
+body.woocommerce-checkout .select2-container--default .select2-dropdown,
+.select2-container.select2-container--open .select2-dropdown {
+  background: var(--aki-surface, #161618);
+  border: 1px solid var(--aki-border, #2A2A2E);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  z-index: 99999;
+  margin-top: 4px;
+}
+
+body.woocommerce-checkout .select2-dropdown--above {
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
+/* Search field wrapper */
+body.woocommerce-checkout .select2-search--dropdown {
+  padding: 10px 10px 8px;
+  background: var(--aki-surface, #161618);
+  border-bottom: 1px solid var(--aki-border, #2A2A2E);
+}
+
+/* Search input — estilo neutro, focus sutil SIN rojo agresivo */
+body.woocommerce-checkout .select2-search--dropdown .select2-search__field,
+.select2-container .select2-search--dropdown .select2-search__field {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--aki-white, #F5F5F5);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  box-shadow: none;
+  transition: background .15s, border-color .15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+body.woocommerce-checkout .select2-search--dropdown .select2-search__field:focus,
+.select2-container .select2-search--dropdown .select2-search__field:focus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+}
+
+body.woocommerce-checkout .select2-search--dropdown .select2-search__field::placeholder {
+  color: var(--aki-text-muted, #888);
+}
+
+/* Lista de resultados */
+body.woocommerce-checkout .select2-results,
+.select2-container .select2-results {
+  background: var(--aki-surface, #161618);
+}
+
+body.woocommerce-checkout .select2-results__options {
+  max-height: 300px;
+  padding: 6px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--aki-border, #2A2A2E) transparent;
+}
+
+body.woocommerce-checkout .select2-results__options::-webkit-scrollbar {
+  width: 6px;
+}
+
+body.woocommerce-checkout .select2-results__options::-webkit-scrollbar-thumb {
+  background: var(--aki-border, #2A2A2E);
+  border-radius: 3px;
+}
+
+/* Opción individual — padding generoso, transición suave */
+body.woocommerce-checkout .select2-results__option,
+.select2-container .select2-results__option {
+  color: var(--aki-text, #F5F5F5);
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+  background: transparent;
+  position: relative;
+}
+
+/* ─── Semántica de select2 ───
+ *   [aria-selected="true"] → FOCUS actual (hover/teclado), = .--highlighted
+ *   [data-selected="true"] → elección real del user (estable con check ✓)
+ * Ver woocommerce.css para más contexto. */
+
+/* 1. HOVER/focus — rojo sutil, SIN check */
+body.woocommerce-checkout .select2-container--default .select2-results__option--highlighted,
+body.woocommerce-checkout .select2-container--default .select2-results__option[aria-selected="true"]:not([data-selected="true"]),
+.select2-container .select2-results__option--highlighted {
+  background: rgba(217, 0, 16, 0.10);
+  color: var(--aki-white, #F5F5F5);
+}
+
+/* 2. ELEGIDA — rojo medio + accent bar + check ✓ */
+body.woocommerce-checkout .select2-container--default .select2-results__option[data-selected="true"],
+body.woocommerce-checkout .select2-container--default .select2-results__option[data-selected=true],
+body.woocommerce-checkout .select2-container--default .select2-results__option--selected,
+.select2-container .select2-results__option[data-selected="true"] {
+  background: rgba(217, 0, 16, 0.14) !important;
+  color: var(--aki-white, #F5F5F5);
+  font-weight: 500;
+  padding-left: 16px;
+  padding-right: 36px;
+}
+
+/* Accent bar izquierda de ELEGIDA */
+body.woocommerce-checkout .select2-container--default .select2-results__option[data-selected="true"]::after,
+body.woocommerce-checkout .select2-container--default .select2-results__option[data-selected=true]::after,
+body.woocommerce-checkout .select2-container--default .select2-results__option--selected::after,
+.select2-container .select2-results__option[data-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--aki-red, #D90010);
+}
+
+/* Check ✓ derecha de ELEGIDA */
+body.woocommerce-checkout .select2-container--default .select2-results__option[data-selected="true"]::before,
+body.woocommerce-checkout .select2-container--default .select2-results__option[data-selected=true]::before,
+body.woocommerce-checkout .select2-container--default .select2-results__option--selected::before,
+.select2-container .select2-results__option[data-selected="true"]::before {
+  content: "\2713";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--aki-red-bright, #D90010);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Estado deshabilitado (ej: ciudad antes de elegir región) */
+body.woocommerce-checkout .select2-container--disabled .select2-selection--single,
+body.woocommerce-checkout .select2-container--default.select2-container--disabled .select2-selection--single {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: var(--aki-border, #2A2A2E);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Mensaje "No hay resultados" / loading */
+body.woocommerce-checkout .select2-results__message,
+body.woocommerce-checkout .select2-results__option.loading-results {
+  color: var(--aki-text-muted, #888);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-style: italic;
+  background: transparent;
+}
+
+/* Mobile: más tap area */
+@media (max-width: 480px) {
+  body.woocommerce-checkout .select2-dropdown {
+    border-radius: 8px;
+  }
+  body.woocommerce-checkout .select2-results__option {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+  body.woocommerce-checkout .select2-container--default .select2-results__option[aria-selected="true"] {
+    padding-right: 40px;
+  }
+  body.woocommerce-checkout .select2-search--dropdown .select2-search__field {
+    padding: 10px 12px;
+    font-size: 16px; /* 16px evita zoom del browser en iOS */
+  }
+}
+
+.woocommerce-checkout #ship-to-different-address {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  cursor: pointer;
+}
+
+.woocommerce-checkout #ship-to-different-address input {
+  accent-color: var(--aki-red-bright);
+  width: 18px;
+  height: 18px;
+}
+
+#aki-shipping-methods {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--aki-border);
+}
+
+.aki-step__shipping-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--aki-gray-300);
+  margin: 0 0 var(--space-3);
+}
+
+/* Trust mini-row dentro del Step 2 (CRO: reduce fricción pre-envío). */
+.aki-step__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin: 0 0 var(--space-4);
+  padding: 8px 10px;
+  list-style: none;
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm, 8px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+}
+.aki-step__trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--aki-gray-200);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.03);
+}
+.aki-step__trust li svg {
+  color: var(--aki-success, #10B981);
+  flex-shrink: 0;
+}
+@media (max-width: 480px) {
+  .aki-step__trust {
+    gap: 4px 6px;
+    padding: 6px 8px;
+  }
+  .aki-step__trust li {
+    font-size: 10.5px;
+    padding: 3px 7px;
+  }
+  .aki-step__trust li svg { width: 12px; height: 12px; }
+}
+
+.aki-shipping-inner ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aki-shipping-inner ul li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+/* ============== Shipping Methods · Premium card grid ============== */
+
+/* Placeholder (address incomplete) */
+.aki-ship-placeholder {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px dashed rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.05);
+  border-radius: var(--radius-md, 12px);
+  color: var(--aki-gray-200);
+}
+.aki-ship-placeholder__icon {
+  width: 44px; height: 44px;
+  flex: 0 0 44px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: rgba(251, 191, 36, 0.12);
+  color: #facc15;
+}
+.aki-ship-placeholder__icon svg { width: 22px; height: 22px; }
+.aki-ship-placeholder__body { display: flex; flex-direction: column; gap: 4px; }
+.aki-ship-placeholder__body strong { color: var(--aki-white); font-size: var(--text-sm); }
+.aki-ship-placeholder__body span { font-size: var(--text-xs); color: var(--aki-gray-400); }
+
+/* Countdown banner */
+.aki-ship-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md, 12px);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(251, 191, 36, 0.05));
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  margin-bottom: var(--space-3);
+  color: var(--aki-white);
+}
+.aki-ship-banner__icon {
+  width: 40px; height: 40px; flex: 0 0 40px;
+  border-radius: 50%;
+  background: #facc15;
+  color: #1a1a1a;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.aki-ship-banner__icon svg { width: 20px; height: 20px; }
+.aki-ship-banner__text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.aki-ship-banner__text strong { font-size: var(--text-sm); font-weight: 600; }
+.aki-ship-banner__text span { font-size: var(--text-xs); color: var(--aki-gray-300); text-transform: uppercase; letter-spacing: 0.04em; }
+.aki-ship-banner__timer {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: #facc15;
+  letter-spacing: 0.04em;
+}
+.aki-ship-banner[data-mode="next"] .aki-ship-banner__timer {
+  font-size: var(--text-sm);
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--aki-gray-200);
+}
+
+/* Card grid */
+ul.aki-ship-grid,
+.aki-ship-grid {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column;
+  gap: 8px;
+}
+.aki-ship-grid li {
+  background: none !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+  display: block;
+}
+.aki-ship-grid > li > label {
+  display: block !important;
+  cursor: pointer;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  width: 100%;
+}
+.aki-ship-grid li input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Fila compacta horizontal: [radio] [icon] [nombre+sub] [precio] */
+.aki-ship-row {
+  display: grid;
+  grid-template-columns: 22px 40px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md, 10px);
+  background: var(--aki-surface-2);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  width: 100%;
+  box-sizing: border-box;
+}
+.aki-ship-grid li:hover .aki-ship-row { border-color: var(--aki-gray-500); }
+.aki-ship-grid li.is-selected .aki-ship-row {
+  border-color: var(--aki-red-bright);
+  background: rgba(217, 0, 16, 0.06);
+  box-shadow: 0 0 0 1px var(--aki-red);
+}
+
+/* Radio visual custom (el input real está oculto) */
+.aki-ship-row__radio {
+  width: 18px; height: 18px;
+  border: 2px solid var(--aki-gray-500);
+  border-radius: 50%;
+  background: transparent;
+  transition: border-color var(--transition-fast);
+  position: relative;
+}
+.aki-ship-grid li.is-selected .aki-ship-row__radio {
+  border-color: var(--aki-red-bright);
+}
+.aki-ship-grid li.is-selected .aki-ship-row__radio::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--aki-red);
+}
+
+.aki-ship-row__icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  color: var(--aki-gray-200);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.aki-ship-row__icon svg { width: 18px; height: 18px; }
+.aki-ship-grid li[data-courier="pickup"] .aki-ship-row__icon { background: rgba(16, 185, 129, 0.18); color: #10B981; }
+
+.aki-ship-row__body { min-width: 0; }
+.aki-ship-row__top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.aki-ship-row__name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--aki-white);
+  line-height: 1.25;
+}
+.aki-ship-row__badge {
+  background: #10B981;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.aki-ship-row__sub {
+  font-size: var(--text-xs);
+  color: var(--aki-gray-400);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.aki-ship-row__price {
+  text-align: right;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.aki-ship-row__price .woocommerce-Price-amount {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--aki-white);
+}
+.aki-ship-row__free {
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--aki-success, #10B981);
+  letter-spacing: 0.04em;
+}
+/* Badge "Ahorra $X" — resalta el descuento de Retiro en Punto
+   para comunicar valor vs Despacho a domicilio. */
+.aki-ship-row__savings {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--aki-success, #10B981);
+  background: rgba(16, 185, 129, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* Highlight del <li> seleccionado en modo PUDO/Metro.
+   IMPORTANTE: los paneles #aki-pudo-map y #aki-pudo-metro NO se inyectan
+   dentro del <li> porque el fragmento AJAX de WC reemplaza la grid entera
+   y destruiría el iframe (ver moveAuxPanels en checkout-shipping-enhancer.js).
+   Los paneles viven siempre en #aki-pudo (rendered por PHP fuera del
+   fragmento), y se muestran debajo de la grid cuando `.is-open` está activo. */
+.aki-ship-grid > li.has-aux {
+  position: relative;
+}
+.aki-ship-grid > li.has-aux::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  transform: translate(-50%, 100%);
+  width: 14px;
+  height: 14px;
+  background: var(--aki-surface-2);
+  border-left: 1px solid var(--aki-border);
+  border-top: 1px solid var(--aki-border);
+  transform: translate(-50%, calc(100% - 7px)) rotate(45deg);
+  z-index: 2;
+}
+@keyframes akiShipAuxIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile: precio abajo si no cabe en una línea */
+@media (max-width: 420px) {
+  .aki-ship-row {
+    grid-template-columns: 22px 40px 1fr;
+    row-gap: 4px;
+  }
+  .aki-ship-row__price {
+    grid-column: 2 / -1;
+    text-align: left;
+    margin-top: 2px;
+  }
+}
+
+/* Coverage strip */
+.aki-ship-coverage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-3);
+  padding: 10px var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--aki-gray-400);
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm, 8px);
+}
+.aki-ship-coverage__icon {
+  color: #facc15;
+  display: inline-flex; align-items: center;
+}
+.aki-ship-coverage__icon svg { width: 14px; height: 14px; }
+.aki-ship-coverage strong { color: var(--aki-white); margin-right: 2px; }
+
+/* (Legacy rule removed — la fila shipping del sidebar ahora se estiliza
+   en el bloque moderno "Tu Pedido" más abajo, con soporte para mostrar
+   el método seleccionado inline junto al label "ENVÍO".) */
+
+/* Regional info banner (non-RM) */
+.aki-ship-regional {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md, 12px);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  margin-bottom: var(--space-3);
+  color: var(--aki-white);
+}
+.aki-ship-regional__icon {
+  width: 36px; height: 36px; flex: 0 0 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.18);
+  color: #60a5fa;
+}
+.aki-ship-regional__icon svg { width: 18px; height: 18px; }
+.aki-ship-regional__text { display: flex; flex-direction: column; gap: 2px; }
+.aki-ship-regional__text strong { font-size: var(--text-sm); font-weight: 600; }
+.aki-ship-regional__text span { font-size: var(--text-xs); color: var(--aki-gray-300); }
+
+/* Sidebar shipping summary */
+.aki-ship-summary {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  margin: var(--space-3) 0;
+  border-radius: var(--radius-md, 12px);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+}
+.aki-ship-summary__icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  color: var(--aki-gray-200);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.aki-ship-summary[data-courier="pickup"] .aki-ship-summary__icon { background: rgba(16,185,129,0.16); color: #10B981; }
+.aki-ship-summary__icon svg { width: 18px; height: 18px; }
+.aki-ship-summary__body { display: flex; flex-direction: column; min-width: 0; }
+.aki-ship-summary__label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aki-gray-500); }
+.aki-ship-summary__name { font-size: var(--text-sm); color: var(--aki-white); font-weight: 600; }
+.aki-ship-summary__eta { font-size: 11px; color: var(--aki-gray-400); margin-top: 2px; }
+.aki-ship-summary__price { font-weight: 700; color: var(--aki-white); }
+
+/* ════════════════════════════════════════════════════════
+   Free shipping progress bar (sidebar desktop + mobile top)
+   ════════════════════════════════════════════════════════ */
+.aki-ship-freebar {
+  margin: var(--space-3) 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-md, 12px);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+}
+
+/* La barra del sidebar (side) es la versión desktop por defecto.
+   La barra top (mobile) se oculta ≥ 900px y se muestra por debajo. */
+.aki-ship-freebar--top {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .aki-ship-freebar--side {
+    display: none;
+  }
+  .aki-ship-freebar--top {
+    display: block;
+    margin: 0 0 var(--space-3);
+  }
+}
+.aki-ship-freebar[data-complete="1"],
+.aki-ship-freebar[data-stage="complete"] {
+  background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.02));
+  border-color: rgba(16,185,129,0.5);
+  box-shadow: 0 0 0 1px rgba(16,185,129,0.12) inset;
+}
+.aki-ship-freebar__msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--aki-gray-200);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+.aki-ship-freebar__msg strong { color: var(--aki-white); font-weight: 700; }
+.aki-ship-freebar[data-complete="1"] .aki-ship-freebar__msg strong,
+.aki-ship-freebar[data-stage="complete"] .aki-ship-freebar__msg strong { color: #10B981; }
+.aki-ship-freebar__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #10B981;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+  animation: akiShipFreebarCheckIn 0.35s ease-out;
+}
+@keyframes akiShipFreebarCheckIn {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.aki-ship-freebar__track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  overflow: hidden;
+  position: relative;
+}
+.aki-ship-freebar__fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #F87171, var(--aki-red));
+  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+/* Shine sutil cruzando el fill cuando está en mid/near (micro-motion CRO). */
+.aki-ship-freebar[data-stage="mid"] .aki-ship-freebar__fill::after,
+.aki-ship-freebar[data-stage="near"] .aki-ship-freebar__fill::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -40%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: akiShipFreebarShine 2.2s linear infinite;
+}
+@keyframes akiShipFreebarShine {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(350%); }
+}
+/* Color del fill según stage: rojo→naranja→amarillo→verde */
+.aki-ship-freebar[data-stage="early"] .aki-ship-freebar__fill {
+  background: linear-gradient(90deg, #F87171, #EF4444);
+}
+.aki-ship-freebar[data-stage="mid"] .aki-ship-freebar__fill {
+  background: linear-gradient(90deg, #F59E0B, #FB923C);
+}
+.aki-ship-freebar[data-stage="near"] .aki-ship-freebar__fill {
+  background: linear-gradient(90deg, #FBBF24, #10B981);
+}
+.aki-ship-freebar[data-complete="1"] .aki-ship-freebar__fill,
+.aki-ship-freebar[data-stage="complete"] .aki-ship-freebar__fill {
+  background: linear-gradient(90deg, #10B981, #34D399);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .aki-ship-freebar__fill::after { animation: none !important; }
+  .aki-ship-freebar__icon { animation: none !important; }
+}
+
+/* Ocultar el selector "Modo de entrega" legacy lo hace el PHP
+   condicionalmente (feature flag akibara_ship_unified_grid). */
+
+/* Virtual PUDO card + todas las cards de la grid (keyboard nav) */
+.aki-ship-card-virtual { list-style: none; cursor: pointer; }
+.aki-ship-grid > li { outline: none; }
+.aki-ship-grid > li:focus-visible .aki-ship-card {
+  box-shadow: 0 0 0 2px var(--aki-red), 0 0 0 4px rgba(217, 0, 16, 0.25);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Hero + Accordion v3.0 — Amazon/ML-style shipping UX
+   ════════════════════════════════════════════════════════════════ */
+
+/* Hide original WC shipping list when hero layout is active */
+.aki-ship-grid--hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: -1px !important;
+}
+
+/* Hero wrap */
+.aki-ship-hero-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Hero card ── */
+.aki-ship-hero {
+  position: relative;
+  padding: 16px 18px;
+  border: 2px solid var(--aki-border);
+  border-radius: var(--radius-md, 12px);
+  background: var(--aki-surface-2);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.aki-ship-hero:hover {
+  border-color: var(--aki-gray-500);
+}
+.aki-ship-hero.is-selected {
+  border-color: var(--aki-red-bright);
+  background: rgba(217, 0, 16, 0.04);
+  box-shadow: 0 0 0 1px var(--aki-red);
+}
+.aki-ship-hero--free.is-selected {
+  border-color: var(--aki-success, #10B981);
+  background: rgba(16, 185, 129, 0.06);
+  box-shadow: 0 0 0 1px var(--aki-success, #10B981);
+}
+
+.aki-ship-hero__badge {
+  position: absolute;
+  top: -9px;
+  left: 16px;
+  background: var(--aki-success, #10B981);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 999px;
+  line-height: 1.4;
+}
+
+.aki-ship-hero__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.aki-ship-hero__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--aki-gray-200);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.aki-ship-hero--free .aki-ship-hero__icon {
+  background: rgba(16, 185, 129, 0.14);
+  color: var(--aki-success, #10B981);
+}
+.aki-ship-hero__icon svg { width: 22px; height: 22px; }
+
+.aki-ship-hero__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.aki-ship-hero__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.aki-ship-hero__title > span:first-child {
+  font-size: var(--text-base, 16px);
+  font-weight: 700;
+  color: var(--aki-white);
+}
+
+.aki-ship-hero__price {
+  text-align: right;
+}
+.aki-ship-hero__price-free {
+  font-size: var(--text-base, 16px);
+  font-weight: 800;
+  color: var(--aki-success, #10B981);
+  letter-spacing: 0.03em;
+}
+.aki-ship-hero__price-amount {
+  font-size: var(--text-base, 16px);
+  font-weight: 700;
+  color: var(--aki-white);
+}
+
+.aki-ship-hero__eta {
+  font-size: var(--text-sm, 14px);
+  color: var(--aki-gray-300);
+  margin-top: 4px;
+}
+
+.aki-ship-hero__details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.aki-ship-hero__detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--aki-gray-500);
+}
+.aki-ship-hero--free .aki-ship-hero__detail { color: var(--aki-gray-400); }
+.aki-ship-hero__detail svg { width: 12px; height: 12px; color: var(--aki-success, #10B981); }
+
+/* Upsell bar (below threshold) */
+.aki-ship-hero__upsell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 8px;
+  font-size: var(--text-xs, 12px);
+  color: var(--aki-gray-200);
+  line-height: 1.4;
+}
+.aki-ship-hero__upsell-icon {
+  display: inline-flex;
+  color: #F59E0B;
+  flex-shrink: 0;
+}
+.aki-ship-hero__upsell-icon svg { width: 16px; height: 16px; }
+.aki-ship-hero__upsell strong { color: var(--aki-white); font-weight: 700; }
+
+/* Progress track inside hero */
+.aki-ship-hero__progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--aki-gray-500);
+}
+.aki-ship-hero__progress-track {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+.aki-ship-hero__progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #F59E0B, #EF4444);
+  transition: width 0.4s ease-out;
+}
+
+/* ── Alt cards (flat grid Variante A, redesign 2026-04-20) ──
+   Objetivo CRO: aumentar conversion con jerarquía clara, badge
+   "Recomendado" flotante, pulse de savings, entrance animation
+   stagger y feedback visual más explícito en selected/hover.      */
+.aki-ship-flat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.aki-ship-alt__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px 40px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md, 10px);
+  background: var(--aki-surface-2);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+  outline: none;
+  animation: akiShipCardIn 0.35s ease-out both;
+}
+.aki-ship-alt__card:nth-child(1) { animation-delay: 0.02s; }
+.aki-ship-alt__card:nth-child(2) { animation-delay: 0.08s; }
+.aki-ship-alt__card:nth-child(3) { animation-delay: 0.14s; }
+.aki-ship-alt__card:nth-child(4) { animation-delay: 0.20s; }
+
+/* Card 12 Horas "LLEGA HOY" — naranja para diferenciarla de BlueX (azul) y metro (verde).
+   Contraste AA: color #FF8A3D sobre bg dark ratio ≥ 5:1 (antes #FF6B00 = 4.2:1, fail). */
+.aki-ship-alt__card[data-alt-mode="sameday"] .aki-ship-alt__savings,
+.aki-ship-alt__card[data-alt-mode="sameday"] .aki-ship-alt__savings--pulse {
+  color: #FF8A3D;
+  background: rgba(255, 138, 61, 0.18);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  /* Override del pulse verde: usamos keyframe naranja para mantener el efecto. */
+  animation-name: akiShipSavingsPulseSameDay;
+}
+.aki-ship-alt__card[data-alt-mode="sameday"] .aki-ship-alt__icon {
+  color: #FF8A3D;
+}
+@keyframes akiShipSavingsPulseSameDay {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 138, 61, 0);
+    background: rgba(255, 138, 61, 0.18);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 138, 61, 0);
+    background: rgba(255, 138, 61, 0.28);
+  }
+}
+
+@keyframes akiShipCardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.aki-ship-alt__card:hover {
+  border-color: var(--aki-gray-500);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.aki-ship-alt__card.is-selected {
+  border-color: var(--aki-red-bright);
+  background: linear-gradient(135deg, rgba(217, 0, 16, 0.09), rgba(217, 0, 16, 0.02));
+  box-shadow: 0 0 0 1px var(--aki-red), 0 6px 18px rgba(217, 0, 16, 0.12);
+}
+.aki-ship-alt__card:focus-visible {
+  box-shadow: 0 0 0 2px var(--aki-red), 0 0 0 5px rgba(217, 0, 16, 0.22);
+}
+
+/* Card destacada: halo sutil + borde reforzado. La card-recommended
+   convive con is-selected (puede o no estar elegida). Si además
+   está seleccionada, ambos estilos se suman. */
+.aki-ship-alt__card--recommended {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.35);
+}
+.aki-ship-alt__card--recommended.is-selected {
+  border-color: var(--aki-red-bright);
+  box-shadow: 0 0 0 1px var(--aki-red), 0 6px 20px rgba(217, 0, 16, 0.15);
+}
+
+/* Badge "Recomendado" flotante sobre la card */
+.aki-ship-alt__badge {
+  position: absolute;
+  top: -9px;
+  right: 14px;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  line-height: 1.4;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35);
+  pointer-events: none;
+}
+
+.aki-ship-alt__radio {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--aki-gray-500);
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+.aki-ship-alt__card.is-selected .aki-ship-alt__radio {
+  border-color: var(--aki-red-bright);
+  background: rgba(217, 0, 16, 0.08);
+}
+.aki-ship-alt__card.is-selected .aki-ship-alt__radio::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--aki-red);
+  animation: akiShipRadioPop 0.25s ease-out;
+}
+@keyframes akiShipRadioPop {
+  from { transform: scale(0.2); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.aki-ship-alt__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--aki-gray-200);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.aki-ship-alt__icon svg { width: 18px; height: 18px; }
+.aki-ship-alt__icon--metro {
+  background: rgba(16, 185, 129, 0.16);
+  color: var(--aki-success, #10B981);
+}
+.aki-ship-alt__icon--pudo {
+  background: rgba(217, 0, 16, 0.14);
+  color: var(--aki-red-bright);
+}
+.aki-ship-alt__card.is-selected .aki-ship-alt__icon {
+  background: rgba(217, 0, 16, 0.16);
+  color: var(--aki-red-bright);
+}
+
+.aki-ship-alt__body { min-width: 0; }
+.aki-ship-alt__name {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--aki-white);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+.aki-ship-alt__sub {
+  display: block;
+  font-size: 12px;
+  color: var(--aki-gray-400);
+  margin-top: 3px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+.aki-ship-alt__price {
+  text-align: right;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.aki-ship-alt__price-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--aki-white);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.aki-ship-alt__price-val--free {
+  color: var(--aki-success, #10B981);
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+.aki-ship-alt__savings {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--aki-success, #10B981);
+  background: rgba(16, 185, 129, 0.14);
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.aki-ship-alt__savings--pulse {
+  animation: akiShipSavingsPulse 2.4s ease-in-out infinite;
+}
+@keyframes akiShipSavingsPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    background: rgba(16, 185, 129, 0.14);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+    background: rgba(16, 185, 129, 0.22);
+  }
+}
+
+/* Mobile alt cards */
+@media (max-width: 480px) {
+  .aki-ship-alt__card {
+    grid-template-columns: 18px 36px 1fr;
+    padding: 12px 14px 14px;
+  }
+  .aki-ship-alt__price {
+    grid-column: 2 / -1;
+    text-align: left;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .aki-ship-alt__name { font-size: 14px; }
+  .aki-ship-alt__icon { width: 36px; height: 36px; }
+  .aki-ship-alt__badge { right: 10px; font-size: 11px; padding: 2px 8px; }
+  .aki-ship-hero__title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .aki-ship-hero__icon {
+    width: 38px;
+    height: 38px;
+  }
+  .aki-ship-hero__icon svg { width: 18px; height: 18px; }
+}
+
+/* Reducir animaciones si el usuario lo pidió (accesibilidad) */
+@media (prefers-reduced-motion: reduce) {
+  .aki-ship-alt__card { animation: none !important; }
+  .aki-ship-alt__savings--pulse { animation: none !important; }
+  .aki-ship-alt__card.is-selected .aki-ship-alt__radio::after { animation: none !important; }
+}
+
+/* Loading feedback durante update_checkout AJAX (Fix #7) */
+.aki-shipping-inner.is-updating {
+  position: relative;
+  pointer-events: none;
+}
+.aki-shipping-inner.is-updating::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 13, 15, 0.4);
+  border-radius: var(--radius-md, 12px);
+  animation: akiShipFadeIn 0.2s ease-out forwards;
+  z-index: 2;
+  pointer-events: none;
+}
+.aki-shipping-inner.is-updating::before {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 28px; height: 28px;
+  margin: -14px 0 0 -14px;
+  border: 3px solid rgba(255,255,255,0.15);
+  border-top-color: var(--aki-red-bright);
+  border-radius: 50%;
+  animation: akiShipSpin 0.7s linear infinite;
+  z-index: 3;
+}
+@keyframes akiShipSpin { to { transform: rotate(360deg); } }
+@keyframes akiShipFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Slot auxiliar inline (mapa PUDO / hint Metro bajo la card activa) */
+.aki-ship-aux {
+  list-style: none;
+  grid-column: 1 / -1;
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md, 12px);
+  padding: var(--space-3);
+  margin-top: calc(var(--space-3) * -0.3);
+}
+.aki-ship-aux #aki-pudo-map,
+.aki-ship-aux #aki-pudo-metro {
+  display: block !important;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .aki-ship-grid { grid-template-columns: 1fr; }
+
+  /* Cards mobile: una sola columna — todas comparten ancho (100%) y
+     tienen min-height uniforme para que la grilla se vea alineada
+     aunque cada card traiga contenido distinto (tagline 1 vs 2 líneas,
+     precio real vs em-dash, etc.). */
+  .aki-ship-card {
+    grid-template-columns: 40px 1fr;
+    min-height: 150px;
+    row-gap: var(--space-2);
+  }
+
+  /* Row del precio ocupa todo el ancho, alineado a la derecha,
+     con separador visual sobre él para que siempre se vea como un
+     "footer" consistente. min-height fija → el em-dash no deja la
+     card visiblemente más corta que una con precio real. */
+  .aki-ship-card__price {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 32px;
+    padding-top: var(--space-3);
+    margin-top: var(--space-1);
+    border-top: 1px solid color-mix(in srgb, var(--aki-border) 65%, transparent);
+    text-align: right;
+  }
+
+  /* Placeholder "—" con peso visual similar a un precio real para que
+     las cards se vean equivalentes mientras se calcula el envío. */
+  .aki-ship-card__price > span:only-child {
+    font-size: var(--text-base);
+    color: var(--aki-gray-500);
+    font-weight: 600;
+  }
+
+  .aki-ship-banner { flex-wrap: wrap; }
+  .aki-ship-banner__timer { margin-left: auto; }
+}
+
+.aki-shipping-inner ul li:has(input:checked),
+.aki-shipping-inner ul li.is-selected {
+  border-color: var(--aki-red-bright);
+}
+
+.aki-shipping-inner ul li input[type="radio"] {
+  accent-color: var(--aki-red-bright);
+  flex-shrink: 0;
+}
+
+.aki-shipping-inner ul li label {
+  margin: 0;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  color: var(--aki-gray-300);
+}
+
+.aki-co__sidebar {
+  /* Sticky movido a #order_review: trust signals como estáticos debajo evita
+     el "overflowing sticky" (jank al scroll si el stack > viewport). */
+}
+
+.aki-co__sidebar-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--aki-white);
+  margin: 0 0 var(--space-4);
+  padding: 2px 0 2px 12px;
+  border-left: 4px solid var(--aki-red);
+  line-height: 1.2;
+}
+
+#order_review {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  padding: var(--space-5);
+  overflow: hidden;
+  position: sticky;
+  top: calc(var(--header-height, 120px) + var(--space-4));
+}
+
+@media (max-height: 820px) {
+  #order_review { position: static; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Trust signals — se lee como extensión del #order_review
+   (sin border-radius ni gap; border-top: 0 para continuidad)
+   ════════════════════════════════════════════════════════════════ */
+.aki-co__trust {
+  margin-top: 0;
+  padding: var(--space-5);
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-top: 0;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.aki-co__trust-heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.aki-co__trust-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.aki-co__trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  color: var(--aki-text-muted, #A0A0A0);
+  font-size: var(--text-xs, 12px);
+  line-height: 1.45;
+}
+
+.aki-co__trust-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin-top: -4px;
+  color: var(--aki-red-bright);
+  border-radius: 6px;
+}
+
+.aki-co__trust-item--hero .aki-co__trust-icon {
+  background: rgba(217, 0, 16, 0.12);
+}
+
+.aki-co__trust-text strong {
+  display: block;
+  color: var(--aki-white, #fff);
+  font-size: var(--text-sm, 14px);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.aki-co__trust-item--hero .aki-co__trust-text strong {
+  font-size: 15px;
+}
+
+.aki-co__trust-text span {
+  display: block;
+}
+
+.aki-co__trust-pay {
+  margin-top: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--aki-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aki-co__trust-pay-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--aki-text-dim, #9a9a9a);
+}
+
+.aki-co__pay-badges {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.aki-co__pay-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 3px 10px 3px 8px;
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-left: 2px solid var(--aki-border);
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--aki-text, #F5F5F5);
+  letter-spacing: 0.02em;
+}
+
+.aki-co__pay-badge--webpay { border-left-color: #ED3434; }
+.aki-co__pay-badge--mp     { border-left-color: #00B1EA; }
+
+.woocommerce-checkout #order_review .blockUI.blockOverlay {
+  background: rgba(10, 10, 12, 0.45) !important;
+  opacity: 1 !important;
+}
+
+.woocommerce-checkout #order_review_heading + #order_review > h2,
+.aki-co__sidebar #order_review > h2:first-child {
+  display: none;
+}
+
+.woocommerce-billing-fields > h3,
+.woocommerce-shipping-fields > h3 {
+  display: none;
+}
+
+/* (Legacy "shipping-totals" block removed — se movió al bloque moderno
+   "Tu Pedido" más abajo. Aquí dejamos sólo los estilos del estado PUDO
+   pending porque JS todavía los usa.) */
+
+/* Aviso cuando el cliente está en modo PUDO pero aún no ha elegido
+   un punto en el mapa (no hay precio calculado). */
+.aki-co__layout #order_review tr.aki-pudo-pending #shipping_method {
+  display: none;
+}
+.aki-co__layout #order_review tr.aki-pudo-pending td {
+  text-align: left !important;
+}
+.aki-pudo-pending-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs, 12px);
+  color: var(--aki-red-bright);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.aki-pudo-pending-msg::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--aki-red);
+  animation: akiPulse 1.4s infinite ease-in-out;
+  flex-shrink: 0;
+}
+@keyframes akiPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* =====================================================================
+   Tu Pedido — modern card-list
+   Convierte la <table> nativa de WooCommerce en un layout card/flex
+   (sin cambiar el DOM), con thumbnails redondeados, chip de cantidad,
+   meta footer tipográfico y total destacado.
+   ===================================================================== */
+.woocommerce table.woocommerce-checkout-review-order-table,
+.woocommerce table.woocommerce-checkout-review-order-table thead,
+.woocommerce table.woocommerce-checkout-review-order-table tbody,
+.woocommerce table.woocommerce-checkout-review-order-table tfoot,
+.woocommerce table.woocommerce-checkout-review-order-table tr,
+.woocommerce-checkout-review-order-table,
+.woocommerce-checkout-review-order-table thead,
+.woocommerce-checkout-review-order-table tbody,
+.woocommerce-checkout-review-order-table tfoot,
+.woocommerce-checkout-review-order-table tr {
+  display: block !important;
+  width: 100%;
+}
+
+/* Neutraliza chrome heredado de tabla */
+.woocommerce table.woocommerce-checkout-review-order-table,
+.woocommerce table.woocommerce-checkout-review-order-table td,
+.woocommerce table.woocommerce-checkout-review-order-table th,
+.woocommerce-checkout-review-order-table,
+.woocommerce-checkout-review-order-table td,
+.woocommerce-checkout-review-order-table th {
+  border: 0 !important;
+  background: transparent;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+/* td/th deben ser block para no crear anonymous table rows dentro
+   del tr con display: flex/grid. */
+.woocommerce table.woocommerce-checkout-review-order-table td,
+.woocommerce table.woocommerce-checkout-review-order-table th {
+  display: block !important;
+}
+
+.woocommerce-checkout-review-order-table {
+  margin: 0 0 var(--space-4);
+  border-collapse: collapse;
+}
+
+/* Header "PRODUCTO / SUBTOTAL": lo reemplazamos por una etiqueta sutil
+   en una sola línea tipo section-label (accesible y compacto) */
+.woocommerce-checkout-review-order-table thead {
+  display: block;
+  padding: 0 0 var(--space-3);
+  margin-bottom: var(--space-2);
+  border-bottom: 1px solid var(--aki-border) !important;
+}
+.woocommerce table.woocommerce-checkout-review-order-table thead tr,
+.woocommerce-checkout-review-order-table thead tr {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.woocommerce-checkout-review-order-table thead th {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aki-gray-500);
+  font-weight: var(--weight-medium);
+}
+.woocommerce-checkout-review-order-table thead th:last-child {
+  text-align: right;
+}
+
+/* ---------- Product rows ---------- */
+.woocommerce table.woocommerce-checkout-review-order-table tbody tr.cart_item,
+.woocommerce-checkout-review-order-table tbody tr.cart_item {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+}
+.woocommerce-checkout-review-order-table tbody tr.cart_item + tr.cart_item {
+  border-top: 1px solid var(--aki-border) !important;
+}
+
+.woocommerce-checkout-review-order-table td.product-name {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-3);
+  row-gap: 6px;
+  align-items: start;
+  min-width: 0;
+}
+
+.woocommerce-checkout-review-order-table .aki-co-review__thumb-wrap {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--aki-border);
+  background: var(--aki-surface-2, var(--aki-surface));
+  display: block;
+  line-height: 0;
+  align-self: start;
+  flex-shrink: 0;
+}
+.woocommerce-checkout-review-order-table .aki-co-review__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 0;
+  border-radius: 0;
+}
+
+.woocommerce-checkout-review-order-table .aki-co-review__name {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 1.35;
+  color: var(--aki-white);
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+/* Chip de cantidad: pildora neutra con "× N" */
+.woocommerce-checkout-review-order-table td.product-name .product-quantity {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--aki-surface-2, rgba(255,255,255,0.04));
+  border: 1px solid var(--aki-border);
+  color: var(--aki-gray-300);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.woocommerce-checkout-review-order-table td.product-total {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
+  color: var(--aki-white);
+  text-align: right;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* Desktop XL */
+@media (min-width: 1440px) {
+  .woocommerce-checkout-review-order-table td.product-name {
+    grid-template-columns: 64px 1fr;
+    column-gap: var(--space-4);
+  }
+  .woocommerce-checkout-review-order-table .aki-co-review__thumb-wrap {
+    width: 64px;
+    height: 64px;
+  }
+  .woocommerce-checkout-review-order-table .aki-co-review__name {
+    font-size: var(--text-base);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .woocommerce-checkout-review-order-table td.product-name {
+    grid-template-columns: 48px 1fr;
+    column-gap: var(--space-3);
+  }
+  .woocommerce-checkout-review-order-table .aki-co-review__thumb-wrap {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ---------- Meta rows (subtotal / envío / fee / tax) ---------- */
+.woocommerce-checkout-review-order-table tfoot {
+  padding-top: var(--space-3);
+}
+.woocommerce table.woocommerce-checkout-review-order-table tfoot tr,
+.woocommerce-checkout-review-order-table tfoot tr {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 6px 0;
+  font-size: var(--text-sm);
+  min-height: 24px;
+}
+.woocommerce-checkout-review-order-table tfoot tr th,
+.woocommerce-checkout-review-order-table tfoot tr td {
+  line-height: 1.4;
+}
+.woocommerce-checkout-review-order-table tfoot tr:first-child {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--aki-border) !important;
+}
+.woocommerce-checkout-review-order-table tfoot tr th {
+  font-family: var(--font-body);
+  font-weight: var(--weight-normal);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--aki-gray-400);
+  font-size: var(--text-sm);
+}
+.woocommerce-checkout-review-order-table tfoot tr td {
+  color: var(--aki-white);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-weight: var(--weight-medium);
+}
+.woocommerce-checkout-review-order-table tfoot tr.cart-subtotal td,
+.woocommerce-checkout-review-order-table tfoot tr.shipping td,
+.woocommerce-checkout-review-order-table tfoot tr.tax-rate td,
+.woocommerce-checkout-review-order-table tfoot tr.fee td {
+  color: var(--aki-gray-200);
+}
+
+/* En el tfoot (sidebar) el <ul id="shipping_method"> renderizado por WC
+   mostraría radios duplicados (los reales viven en el acordeón izquierdo).
+   Estrategia: dentro de la fila ENVÍO mostrar SOLO el método marcado como
+   seleccionado, con su label y precio, compacto. El radio queda accesible
+   (opacity 0) para que WC siga pudiendo marcarlo al re-renderizar. */
+.woocommerce-checkout-review-order-table tfoot tr.shipping td {
+  text-align: right;
+}
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul#shipping_method,
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul.woocommerce-shipping-methods {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  text-align: right;
+}
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  display: none;
+}
+/* Mostrar el li del método activo. Usamos BOTH [checked] (atributo, siempre
+   presente en el HTML renderizado por WC) y :checked (property, puede
+   desincronizarse tras interacción) para cubrir ambos estados. */
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li:has(input[type="radio"][checked]),
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li:has(input[type="radio"]:checked),
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li.is-chosen {
+  display: inline !important;
+}
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li label {
+  color: var(--aki-white);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  cursor: default;
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li label .woocommerce-Price-amount,
+.woocommerce-checkout-review-order-table tfoot tr.shipping td ul li label strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--aki-white);
+  font-weight: var(--weight-medium);
+}
+
+/* Placeholder "Ingresa tu dirección" que WC/enhancer pueda inyectar */
+.woocommerce-checkout-review-order-table tfoot tr.shipping td .aki-ship-placeholder {
+  display: block;
+  text-align: right;
+  color: var(--aki-gray-400);
+  font-size: var(--text-xs);
+}
+
+/* Labels especiales (primera compra 10%) */
+.woocommerce-checkout-review-order-table .akb-first-discount-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--aki-gray-200);
+  font-weight: var(--weight-semibold);
+}
+.woocommerce-checkout-review-order-table .akb-first-discount-label::before {
+  content: '10%';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(217, 0, 16, 0.18);
+  color: var(--aki-red-bright);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.woocommerce-checkout-review-order-table .coupon-primeracompra10 td,
+.woocommerce-checkout-review-order-table .coupon-primeracompra10 th {
+  color: var(--aki-red-bright);
+}
+
+/* ---------- Total hero ---------- */
+.woocommerce table.woocommerce-checkout-review-order-table tfoot tr.order-total,
+.woocommerce-checkout-review-order-table tfoot tr.order-total {
+  display: flex !important;
+  margin-top: var(--space-3);
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--aki-border) !important;
+  align-items: center;
+  justify-content: space-between;
+}
+.woocommerce-checkout-review-order-table tfoot tr.order-total th {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  color: var(--aki-white);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: var(--weight-normal);
+}
+.woocommerce-checkout-review-order-table tfoot tr.order-total td {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  color: var(--aki-white);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.woocommerce-checkout-review-order-table .order-total .includes_tax,
+.woocommerce-checkout-review-order-table .order-total small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--aki-gray-500);
+  font-weight: var(--weight-normal);
+  margin-top: 4px;
+  letter-spacing: 0;
+}
+
+.woocommerce-checkout-payment {
+  margin-top: var(--space-5);
+}
+
+.wc_payment_methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding: 0;
+}
+
+.wc_payment_methods li {
+  list-style: none;
+}
+
+.wc_payment_method {
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.wc_payment_method:has(input:checked),
+.wc_payment_method.is-selected {
+  border-color: var(--aki-red-bright);
+}
+
+.wc_payment_method > label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  font-weight: var(--weight-medium);
+  color: var(--aki-white);
+  margin: 0;
+}
+
+.wc_payment_method > label input[type="radio"] {
+  accent-color: var(--aki-red-bright);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.wc_payment_method > label img {
+  height: 24px;
+  width: auto;
+}
+
+.wc_payment_method .payment_box {
+  padding: var(--space-3) var(--space-4);
+  background: var(--aki-surface-2);
+  border-top: 1px solid var(--aki-border);
+  font-size: var(--text-sm);
+  color: var(--aki-gray-400);
+  line-height: 1.5;
+}
+
+.aki-step .woocommerce-checkout-payment {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.woocommerce-terms-and-conditions {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: var(--space-3);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--aki-gray-400);
+  border-radius: var(--radius-sm);
+}
+
+.woocommerce-terms-and-conditions-wrapper {
+  margin-bottom: var(--space-4);
+}
+
+.woocommerce-terms-and-conditions-wrapper label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--aki-gray-300);
+  cursor: pointer;
+}
+
+.woocommerce-terms-and-conditions-wrapper input[type="checkbox"] {
+  accent-color: var(--aki-red-bright);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.woocommerce-terms-and-conditions-wrapper a {
+  color: var(--aki-red-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.aki-co-submit {
+  display: block;
+  width: 100%;
+  padding: var(--space-4) var(--space-6);
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--aki-red-bright);
+  color: var(--aki-white);
+  border: 0;
+  cursor: pointer;
+  transition: background-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.aki-co-submit:hover, .aki-co-submit:focus-visible {
+  background: var(--aki-red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(217, 0, 16, 0.4);
+}
+
+.woocommerce-checkout .woocommerce-message,
+.woocommerce-checkout .woocommerce-info {
+  padding: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-4);
+  border: 1px solid;
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.woocommerce-checkout .woocommerce-message {
+  background: rgba(0, 255, 136, 0.05);
+  border-color: var(--aki-success);
+  color: var(--aki-success);
+}
+
+.woocommerce-checkout .woocommerce-info {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: var(--aki-info);
+  color: var(--aki-info);
+}
+
+.woocommerce-checkout .woocommerce-info a,
+.woocommerce-checkout .woocommerce-message a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.woocommerce-checkout .woocommerce-error {
+  padding: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-4);
+  background: rgba(255, 0, 51, 0.05);
+  border: 1px solid var(--aki-error);
+  color: var(--aki-error);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+  list-style: none;
+}
+
+.woocommerce-checkout .woocommerce-form-coupon-toggle .woocommerce-info {
+  border-left: 4px solid var(--aki-red);
+}
+
+.woocommerce-checkout .checkout_coupon {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-sm);
+}
+
+.woocommerce-checkout .checkout_coupon .input-text {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  color: var(--aki-white);
+  border-radius: var(--radius-sm);
+}
+
+/* Fix UX 2026-04-25: el .button hereda de .woocommerce button.button (woocommerce.css L1593)
+   clip-path polygon + transform skewX + halo box-shadow en hover, que se ven glitch en
+   este botón secundario (form coupon checkout). Reseteamos esos heredados aquí + bg fill
+   rojo limpio en hover (5.31:1 white vs red AA pass). NO usar .btn--primary speed-lines
+   (reservado a CTAs principales hero/PDP). */
+.woocommerce-checkout .checkout_coupon .button {
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  text-transform: uppercase;
+  background: var(--aki-surface-3);
+  color: var(--aki-white);
+  border: 1px solid var(--aki-border);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  /* Reset herencia .woocommerce button.button (skew + clip + box-shadow halo) */
+  transform: none;
+  clip-path: none;
+  box-shadow: none;
+}
+
+.woocommerce-checkout .checkout_coupon .button:hover {
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-color: var(--aki-red-bright);
+  /* No translateY ni skew ni glow halo — feedback visual limpio */
+  transform: none;
+  box-shadow: none;
+}
+
+.woocommerce-checkout .checkout_coupon .button:focus-visible {
+  outline: none;
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-color: var(--aki-red-bright);
+  box-shadow: 0 0 0 3px rgba(217, 0, 16, 0.35); /* focus ring WCAG 2.4.13 + R19 */
+  transform: none;
+}
+
+.woocommerce-checkout .checkout_coupon .button:active {
+  background: var(--aki-red-hover);
+  border-color: var(--aki-red-hover);
+  transform: translateY(1px); /* pressed state R19 feedback visual */
+  box-shadow: none;
+}
+
+.aki-co__sticky {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: var(--aki-surface);
+  border-top: 2px solid var(--aki-red);
+  padding: 0 var(--space-4);
+  z-index: 100;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aki-co__sticky-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--aki-gray-300);
+}
+
+.aki-co__sticky-total {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  color: var(--aki-red-bright);
+}
+
+.aki-co__sticky-btn {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  color: var(--aki-gray-300);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.aki-co__sticky-btn:hover {
+  border-color: var(--aki-red-bright);
+}
+
+.aki-co__drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: none;
+}
+
+.aki-co__drawer-overlay.open {
+  display: block;
+}
+
+.aki-co__drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 70vh;
+  background: var(--aki-surface);
+  border-top: 2px solid var(--aki-red);
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.aki-co__drawer.open {
+  transform: translateY(0);
+}
+
+.aki-co__drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--aki-border);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  color: var(--aki-white);
+  position: sticky;
+  top: 0;
+  background: var(--aki-surface);
+  z-index: 1;
+}
+
+.aki-co__drawer-header button {
+  background: none;
+  border: 0;
+  color: var(--aki-gray-400);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.aki-co__drawer-body {
+  padding: var(--space-4) var(--space-5);
+}
+
+@keyframes stepContentIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes checkmarkPop {
+  0%   { transform: scale(0) rotate(-10deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes fieldShake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+
+.aki-field-error {
+  animation: fieldShake 0.4s ease-in-out;
+  border-color: var(--aki-red-bright);
+}
+
+@keyframes btnLoadingStripe {
+  from { background-position: 0 0; }
+  to   { background-position: 28px 0; }
+}
+
+#place_order.processing,
+#place_order[disabled] {
+  pointer-events: none;
+  opacity: 0.85;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.06) 10px,
+    rgba(255, 255, 255, 0.06) 20px
+  );
+  background-size: 28px 28px;
+  animation: btnLoadingStripe 0.8s linear infinite;
+}
+
+@keyframes atcSuccess {
+  0%   { transform: scale(0.95); }
+  60%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.btn--added,
+.product-card__add-to-cart.btn--added {
+  background: var(--aki-success);
+  color: var(--aki-white);
+  pointer-events: none;
+  animation: atcSuccess 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.cart-skeleton {
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  border-bottom: 1px solid var(--aki-border);
+}
+
+.cart-skeleton__img {
+  width: 56px;
+  height: 72px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, var(--aki-surface-2) 25%, var(--aki-surface-3, var(--aki-border)) 50%, var(--aki-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+}
+
+.cart-skeleton__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cart-skeleton__line {
+  height: 12px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--aki-surface-2) 25%, var(--aki-surface-3, var(--aki-border)) 50%, var(--aki-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+}
+
+.cart-skeleton__line--short { width: 55%; }
+.cart-skeleton__line--price { width: 35%; }
+
+@media (max-width: 1024px) {
+  .aki-co__layout {
+    grid-template-columns: 1fr 340px;
+    gap: var(--space-6);
+  }
+}
+
+@media (max-width: 768px) {
+.aki-co__sidebar {
+    display: none;
+  }
+
+  .aki-co__sticky {
+    display: flex;
+  }
+
+  body.woocommerce-checkout {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .aki-co__layout {
+    padding: 0 var(--space-3) var(--space-8);
+  }
+
+  .aki-step__fields #billing_first_name_field,
+  .aki-step__fields #billing_last_name_field,
+  .aki-step__fields #billing_phone_field,
+  .aki-step__fields #billing_email_field,
+  .woocommerce-billing-fields__field-wrapper #billing_first_name_field,
+  .woocommerce-billing-fields__field-wrapper #billing_last_name_field,
+  .woocommerce-billing-fields__field-wrapper #billing_phone_field,
+  .woocommerce-billing-fields__field-wrapper #billing_email_field {
+    flex: 1 1 100%;
+  }
+.aki-checkout-v2 {
+    padding: 0 var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+.aki-step__content {
+    padding: var(--space-4);
+  }
+
+  .aki-step__header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  #order_review {
+    padding: var(--space-4);
+  }
+.aki-progress__label {
+    font-size: 11px;
+  }
+  .aki-progress__circle {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+  .aki-progress__line {
+    min-width: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aki-step__content { animation: none; opacity: 1; }
+  .aki-step--done .aki-step__number { animation: none; }
+  .aki-field-error { animation: none; }
+  #place_order.processing { animation: none; }
+  .btn--added,
+  .product-card__add-to-cart.btn--added { animation: none; }
+  .cart-skeleton__img,
+  .cart-skeleton__line { animation: none; background: var(--aki-surface-2); }
+  .aki-co__drawer { transition: none; }
+}
+
+.woocommerce-checkout .col2-set {
+  display: block;
+}
+
+.woocommerce-checkout .col2-set .col-1,
+.woocommerce-checkout .col2-set .col-2 {
+  width: 100%;
+  float: none;
+}
+
+.woocommerce-checkout .woocommerce-additional-fields h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+}
+
+.aki-step .woocommerce-additional-fields {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--aki-border);
+}
+
+.aki-checkout,
+.aki-checkout__grid,
+.aki-checkout__main,
+.aki-checkout__section,
+.aki-checkout__heading {
+  display: contents;
+}
+
+.aki-checkout-v2 {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.aki-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) 0 var(--space-6);
+  gap: 0;
+  /* A21 (a11y): elemento es <ol>, reseteamos chrome de lista para preservar
+     el layout horizontal de bullets/numeración del browser. */
+  list-style: none;
+  margin: 0;
+}
+
+.aki-progress__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  position: relative;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.aki-progress__circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--aki-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--aki-muted);
+  background: var(--aki-surface);
+  transition: all 0.3s ease;
+}
+
+.aki-progress__step--active .aki-progress__circle {
+  border-color: var(--aki-red-bright);
+  color: var(--aki-white);
+  background: var(--aki-red);
+  box-shadow: 0 0 0 4px rgba(217, 0, 16, 0.2);
+}
+
+.aki-progress__step--done .aki-progress__circle {
+  border-color: var(--aki-success, var(--aki-success));
+  color: var(--aki-white);
+  background: var(--aki-success, var(--aki-success));
+}
+
+.aki-progress__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--aki-muted);
+  transition: color 0.3s;
+}
+
+.aki-progress__step--active .aki-progress__label,
+.aki-progress__step--done .aki-progress__label {
+  color: var(--aki-white);
+}
+
+.aki-progress__line {
+  flex: 1;
+  height: 2px;
+  background: var(--aki-border);
+  margin: 0 var(--space-2);
+  margin-bottom: 20px;
+  transition: background 0.3s;
+  min-width: 40px;
+}
+
+.aki-progress__line--done {
+  background: var(--aki-success, var(--aki-success));
+}
+
+.aki-step__icon {
+  color: var(--aki-red-bright);
+  flex-shrink: 0;
+}
+
+.aki-step--done .aki-step__icon {
+  color: var(--aki-success, var(--aki-success));
+}
+
+.aki-step__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  cursor: default;
+}
+
+.aki-step__content {
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.aki-step__content--entering {
+  animation: akiSlideDown 0.4s ease forwards;
+}
+
+@keyframes akiSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-row.woocommerce-validated input,
+.form-row.woocommerce-validated select {
+  border-color: var(--aki-success, var(--aki-success));
+}
+
+.form-row.woocommerce-invalid input,
+.form-row.woocommerce-invalid select {
+  border-color: var(--aki-error, var(--aki-red));
+}
+
+/* A4 (a11y): hint container inyectado por akibara_checkout_field_aria_hint().
+   El container existe siempre (vacío) para que aria-describedby siempre apunte
+   a un nodo válido. Cuando checkout-validation.js lo popule con un mensaje,
+   role="alert" + aria-live="polite" hace que SR lo anuncie. Visualmente:
+   oculto cuando está vacío (no ocupa espacio), visible cuando tiene texto. */
+.checkout-field-hint {
+  margin: 4px 0 0;
+  font-size: var(--text-xs, 12px);
+  font-weight: 500;
+  color: var(--aki-error, var(--aki-red));
+  line-height: 1.35;
+  min-height: 0;
+}
+.checkout-field-hint:empty {
+  display: none;
+}
+/* Refuerzo visual cuando el campo asociado está focuseado: borde sutil para
+   que el mensaje se sienta vinculado al input (R19 feedback visual). */
+.form-row:focus-within .checkout-field-hint:not(:empty) {
+  padding-left: 6px;
+  border-left: 2px solid var(--aki-error, var(--aki-red));
+}
+
+.aki-security-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-4);
+  background: rgba(0, 200, 83, 0.05);
+  border: 1px solid rgba(0, 200, 83, 0.2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--aki-success, var(--aki-success));
+}
+
+.aki-security-badge svg {
+  flex-shrink: 0;
+}
+
+.aki-saved-address {
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid var(--aki-info, #3B82F6);
+  border-radius: var(--radius-sm);
+}
+
+.aki-saved-address__text {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--aki-light);
+}
+
+.aki-saved-address__btn {
+  margin-right: var(--space-3);
+}
+
+.aki-saved-address__change {
+  background: none;
+  border: 0;
+  color: var(--aki-muted);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PUDO container — aloja hidden state radios + metro/map panels.
+   Sin chrome propio: la UI visible del modo de entrega vive en el
+   unified grid (ship-grid.js). Los paneles `#aki-pudo-metro` y
+   `#aki-pudo-map` tienen su propio `margin-top` cuando `.is-open`.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Shake + halo rojo para la card virtual PUDO cuando step 2 se valida sin punto */
+@keyframes akbShake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20%      { transform: translate3d(-4px, 0, 0); }
+  40%      { transform: translate3d(4px, 0, 0); }
+  60%      { transform: translate3d(-3px, 0, 0); }
+  80%      { transform: translate3d(3px, 0, 0); }
+}
+@keyframes akbPulseError {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--aki-red) 55%, transparent); }
+  50%      { box-shadow: 0 0 0 8px color-mix(in srgb, var(--aki-red) 0%, transparent); }
+}
+#aki-shipping-methods li.akb-shake {
+  animation: akbShake 0.55s cubic-bezier(.36,.07,.19,.97) both;
+}
+#aki-shipping-methods li.akb-pulse-error {
+  border-color: var(--aki-red-bright) !important;
+  animation: akbPulseError 1.6s ease-out 2;
+}
+.aki-pudo-step-error__icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  color: var(--aki-red-bright);
+  font-size: 14px;
+}
+
+.aki-pudo-step-error {
+  margin: var(--space-3) 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--aki-red) 55%, var(--aki-border));
+  background: color-mix(in srgb, var(--aki-red) 10%, var(--aki-surface-2));
+  color: #fca5a5;
+  font-size: var(--text-xs, 12px);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* Legacy selector UI removido: `.aki-pudo__title`, `.aki-pudo__options`,
+   `.aki-pudo__option*` vivían aquí. La UI visible del modo de entrega
+   ahora vive en el unified grid (ship-grid.js hero + accordion).
+   Los radios `akibara_delivery_mode` permanecen como hidden state
+   carriers — no tienen UI propia en este selector. */
+
+/* Sección Metro San Miguel — aviso WhatsApp */
+.aki-pudo__metro {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  margin-top: 0;
+}
+
+.aki-pudo__metro.is-open {
+  max-height: 220px;
+  opacity: 1;
+  margin-top: var(--space-3);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-left: 3px solid var(--aki-red);
+  border-radius: var(--radius-sm);
+}
+
+.aki-pudo__metro > svg {
+  color: var(--aki-red-bright);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.aki-pudo__metro-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.aki-pudo__metro-body strong {
+  display: block;
+  color: var(--aki-white, #fff);
+  font-size: var(--text-sm);
+  margin-bottom: 4px;
+}
+
+.aki-pudo__metro-body p {
+  margin: 0;
+  font-size: var(--text-xs, 12px);
+  color: var(--aki-gray-300);
+  line-height: 1.5;
+}
+
+/* Map / iframe container */
+.aki-pudo__map {
+  margin-top: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.aki-pudo__map.is-open {
+  margin-top: var(--space-3);
+  max-height: 1400px;
+  opacity: 1;
+}
+
+/* Value-prop panel visible arriba del mapa. Comunica precio desde,
+   beneficios operativos (3.200 puntos, Copec 24/7, lockers) y plazos
+   reales de entrega BlueX. */
+.aki-pudo__features {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md, 8px);
+  padding: 12px 14px;
+  margin-bottom: var(--space-3);
+}
+.aki-pudo__features-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--aki-border);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.aki-pudo__features-price strong {
+  font-family: var(--font-display, inherit);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--aki-white, #fff);
+  letter-spacing: 0.01em;
+}
+.aki-pudo__features-price span {
+  font-size: 11px;
+  color: var(--aki-text-dim, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.aki-pudo__features-price-tag {
+  margin-left: auto;
+  padding: 3px 9px;
+  font-size: 10.5px !important;
+  font-weight: 800;
+  color: var(--aki-success, #10B981) !important;
+  background: rgba(16, 185, 129, 0.14);
+  border-radius: 999px;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.aki-pudo__features-list li strong {
+  color: var(--aki-white);
+  font-weight: 700;
+}
+.aki-pudo__features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.aki-pudo__features-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--aki-gray-300, #cfcfcf);
+  line-height: 1.4;
+}
+.aki-pudo__features-list li svg {
+  flex-shrink: 0;
+  color: var(--aki-success, #10B981);
+  margin-top: 2px;
+}
+.aki-pudo__features-note {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px dashed var(--aki-border);
+  font-size: 11px;
+  color: var(--aki-text-dim, #999);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+}
+.aki-pudo__features-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--aki-warning, #F59E0B);
+}
+
+.aki-pudo__selected {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: color-mix(in srgb, var(--aki-red) 10%, var(--aki-surface-2));
+  border: 1px solid var(--aki-red);
+  border-radius: var(--radius-sm);
+  color: var(--aki-white, #fff);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-3);
+}
+
+.aki-pudo__selected svg {
+  color: var(--aki-red-bright);
+  flex-shrink: 0;
+}
+
+.aki-pudo__selected span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aki-pudo__change {
+  background: none;
+  border: 0;
+  color: var(--aki-red-bright);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.aki-pudo__iframe-wrap {
+  position: relative;
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-md, 8px);
+  overflow: hidden;
+}
+
+.aki-pudo__iframe-wrap[hidden] {
+  display: none;
+}
+
+.aki-pudo__iframe-wrap iframe {
+  display: block;
+  width: 100%;
+  height: 520px;
+  border: 0;
+  background: var(--aki-surface-2);
+}
+
+@media (max-width: 640px) {
+  .aki-pudo__iframe-wrap iframe {
+    height: 440px;
+  }
+}
+
+/* F-02: Reducir altura del iframe PUDO en viewports pequeños para que el mapa
+   sea usable sin ocupar todo el viewport. El widget externo (widget-pudo.blue.cl)
+   se puede scrollear internamente desde estas alturas reducidas. */
+@media (max-width: 480px) {
+  .aki-pudo__iframe-wrap iframe {
+    height: 320px;
+  }
+}
+
+@media (max-width: 360px) {
+  .aki-pudo__iframe-wrap iframe {
+    height: 280px;
+  }
+}
+
+.aki-pudo__hint {
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs, 12px);
+  color: var(--aki-gray-400, #8a8a8a);
+  background: var(--aki-surface-3, rgba(255, 255, 255, 0.02));
+  border-top: 1px solid var(--aki-border);
+  text-align: center;
+}
+
+/* Nota explicativa cuando los campos de dirección se autocompletan
+   con la ubicación del PUDO seleccionado. */
+.aki-pudo-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-3);
+  background: color-mix(in srgb, var(--aki-red) 8%, var(--aki-surface-2));
+  border: 1px solid color-mix(in srgb, var(--aki-red) 40%, var(--aki-border));
+  border-left: 3px solid var(--aki-red);
+  border-radius: var(--radius-sm);
+  color: var(--aki-gray-200);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.aki-pudo-notice svg {
+  color: var(--aki-red-bright);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.aki-pudo-notice strong {
+  color: var(--aki-white, #fff);
+  font-weight: 600;
+}
+
+.aki-pudo-notice em {
+  font-style: normal;
+  color: var(--aki-red-bright);
+  font-weight: 600;
+}
+
+/* Defensivo: esconder widget legacy del plugin BlueX si llegara a
+   inyectarse (no debería con la limpieza de hooks). */
+#bluex-shipping-selector-native,
+#bluex-shipping-selector-optimized,
+.bluex-shipping-options {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CHECKOUT DECLUTTER — suprimir elementos flotantes que compiten
+   con el formulario o tapan CTAs en mobile (Baymard #2.3
+   "Minimize distractions during checkout"). La thank-you page
+   (order-received) NO se afecta por el selector :not().
+   ═══════════════════════════════════════════════════════════════ */
+body.woocommerce-checkout:not(.woocommerce-order-received) #akibara-wa,
+body.woocommerce-checkout:not(.woocommerce-order-received) .akibara-wa {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER/FOOTER MINIMAL DE CHECKOUT
+   Solo se renderizan en el funnel /checkout/ (excluye thank-you).
+   Logo + señales de confianza + salida controlada.
+   ═══════════════════════════════════════════════════════════════ */
+.akb-checkout-header {
+    background: #000;
+    border-bottom: 1px solid rgba(217, 0, 16, 0.25);
+    padding: 14px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.akb-checkout-header__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.akb-checkout-header__logo {
+    display: inline-flex;
+    align-items: center;
+}
+.akb-checkout-header__logo img {
+    height: 48px;
+    width: auto;
+    display: block;
+}
+.akb-checkout-header__signals {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+.akb-checkout-header__ssl,
+.akb-checkout-header__support,
+.akb-checkout-header__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #ddd;
+    text-decoration: none;
+    line-height: 1;
+    transition: color .15s ease;
+}
+.akb-checkout-header__ssl { color: #7ad79b; cursor: default; }
+.akb-checkout-header__support:hover,
+.akb-checkout-header__back:hover { color: #D90010; }
+.akb-checkout-header__back { font-weight: 500; }
+
+@media (max-width: 640px) {
+    .akb-checkout-header__inner { padding: 0 14px; gap: 8px; }
+    .akb-checkout-header__logo img { height: 36px; }
+    .akb-checkout-header__ssl span,
+    .akb-checkout-header__back span { display: none; }
+    .akb-checkout-header__signals { gap: 12px; }
+}
+
+.akb-checkout-footer {
+    background: #0A0A0A;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 20px 0;
+    margin-top: 48px;
+}
+.akb-checkout-footer__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+}
+.akb-checkout-footer__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+.akb-checkout-footer__links a {
+    color: #bbb;
+    text-decoration: none;
+}
+.akb-checkout-footer__links a:hover { color: #D90010; }
+.akb-checkout-footer__copyright {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #888; /* WCAG AA: 4.84:1 sobre #0A0A0A (antes #777=4.42:1, falla) */
+}
+.akb-checkout-footer__trust::before {
+    content: "🔒";
+    margin-right: 4px;
+}
+
+/* Ocultar scroll-top y bottom-nav que vienen de footer.php cuando el
+   checkout footer toma el relevo (son parte del layout original pero
+   el filtro get_footer_template ya evita que se rendericen). */
+body.akb-checkout-minimal .bottom-nav,
+body.akb-checkout-minimal .scroll-top { display: none !important; }
+
+/* Estado "locked" de region/city cuando el método es Retiro San Miguel.
+   No usamos disabled para que el dato viaje al servidor; bloqueamos la
+   interacción con pointer-events y damos feedback visual. */
+.form-row.akb-field--locked {
+    opacity: 0.72;
+    position: relative;
+}
+.form-row.akb-field--locked select,
+.form-row.akb-field--locked input {
+    pointer-events: none;
+    background: rgba(217, 0, 16, 0.04) !important;
+    border-color: rgba(217, 0, 16, 0.2) !important;
+    cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Places Autocomplete v2 (PlaceAutocompleteElement, API New)
+   El Web Component reemplaza el input visual y necesita heredar
+   los estilos de los inputs del checkout para no romper el look.
+   ═══════════════════════════════════════════════════════════════ */
+gmp-place-autocomplete.akb-pac-element,
+.akb-pac-element {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    /* Inhecta tokens via custom props — el shadow DOM del WC respeta
+       estos ::part() y vars para el input interno. */
+    --gmp-mat-color-surface: #0F0F10;
+    --gmp-mat-color-on-surface: #fff;
+    --gmp-mat-color-on-surface-variant: #999;
+    --gmp-mat-color-primary: #D90010;
+    --gmp-mat-color-outline: rgba(255,255,255,0.12);
+}
+gmp-place-autocomplete.akb-pac-element::part(input) {
+    background: #0F0F10;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    width: 100%;
+    box-sizing: border-box;
+}
+gmp-place-autocomplete.akb-pac-element::part(input):focus {
+    border-color: #D90010;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(217,0,16,0.18);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Mobile sticky bottom bar — resumen del pedido siempre a mano
+   En mobile el resumen queda lejos del CTA al colapsar a 1 columna.
+   Un sticky con total + botón primario del paso actual elimina
+   cientos de scrolls y es estándar de e-commerce moderno.
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    body.woocommerce-checkout:not(.woocommerce-order-received) .aki-mobile-sticky {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 95;
+        background: rgba(10, 10, 10, 0.97);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-top: 1px solid rgba(217, 0, 16, 0.25);
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    body.woocommerce-checkout:not(.woocommerce-order-received) .aki-mobile-sticky__total {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+    }
+    body.woocommerce-checkout:not(.woocommerce-order-received) .aki-mobile-sticky__total-label {
+        font-size: 11px;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    body.woocommerce-checkout:not(.woocommerce-order-received) .aki-mobile-sticky__total-value {
+        font-size: 18px;
+        font-weight: 800;
+        color: #fff;
+    }
+    /* Margen inferior extra al main para que el contenido no quede tapado */
+    body.woocommerce-checkout:not(.woocommerce-order-received) .site-content {
+        padding-bottom: 92px;
+    }
+}
+@media (min-width: 769px) {
+    .aki-mobile-sticky { display: none !important; }
+}
+
+/* Auto-capitalización visual (CSS `text-transform: capitalize` respeta
+   mayúsculas preexistentes). Para corregir el valor REAL enviado al server
+   lo hace el JS en address-autocomplete-v2 + un listener global aquí abajo. */
+body.woocommerce-checkout #billing_address_1,
+body.woocommerce-checkout #shipping_address_1,
+body.woocommerce-checkout #billing_city,
+body.woocommerce-checkout #shipping_city {
+    text-transform: capitalize;
+}
+
+/* Chips de descuentos aplicados — refuerzo positivo en checkout */
+.akb-discounts-applied {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0;
+}
+.akb-discounts-applied__chip {
+    background: rgba(122, 215, 155, 0.1);
+    border: 1px solid rgba(122, 215, 155, 0.35);
+    color: #7ad79b;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.3;
+}
+.akb-discounts-applied__chip::before { content: "✓"; font-weight: 700; }
+
+/* Chips de métodos de pago en header-checkout — señal visual rápida
+   de que aceptamos los gateways chilenos confiables. */
+.akb-checkout-header__pays {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+}
+.akb-checkout-header__pay-chip {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+@media (max-width: 900px) {
+    .akb-checkout-header__pays { display: none; }
+}
+
+/* Variante chip del akb-vol-notice para checkout (compacto). */
+.akb-vol-notice--chip {
+    display: inline-block;
+    background: rgba(122, 215, 155, 0.08);
+    border: 1px solid rgba(122, 215, 155, 0.3);
+    color: #7ad79b;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AUDITORÍA FIXES — 2026-04-21
+   Consolidado de los 3 reportes (a11y, code review, performance).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* "Ver pedido" — botón secundario en sticky mobile que abre el drawer de resumen.
+   Reemplaza el antiguo .aki-co__sticky-btn (F-01: sticky legacy eliminada). */
+.aki-mobile-sticky__pedido-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-sm, 6px);
+    color: #fff;
+    cursor: pointer;
+    font-size: var(--text-sm, 13px);
+    font-weight: var(--weight-medium, 500);
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.aki-mobile-sticky__pedido-btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* A11Y 2.5.5 Target Size: botón sticky mobile ≥44×44px */
+.aki-mobile-sticky .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 20px !important;
+}
+
+/* A11Y 2.4.7 Focus Visible: outline nítido al llegar por teclado */
+.aki-mobile-sticky .btn:focus-visible,
+.akb-checkout-header__support:focus-visible,
+.akb-checkout-header__back:focus-visible,
+.akb-checkout-footer__links a:focus-visible {
+    outline: 2px solid #D90010;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* A11Y 1.4.3 Contraste: focus ring del CTA sticky — blanco (más alto contraste) */
+.aki-mobile-sticky .btn--primary:focus-visible {
+    outline-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+/* CLS: reservar altura para el grid de envío para evitar layout shift
+   cuando las cards se renderizan tras la respuesta AJAX */
+#aki-shipping-methods,
+.aki-ship-grid,
+.aki-ship-flat {
+    min-height: 140px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CHIPS DE DESCUENTOS APLICADOS (checkout) — V2 consolidable.
+   Política h\u00edbrida: N≤2 individuales con nombre; N≥3 summary
+   con tooltip expandible. Decisión de mesa CRO + UX + Frontend.
+   ═══════════════════════════════════════════════════════════════ */
+.akb-discount-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    align-items: center;
+    margin: 10px 0 16px;
+    position: relative; /* tooltip absoluto se ancla al contenedor */
+}
+
+.akb-vol-notice--chip .akb-chip-check { font-weight: 700; margin-right: 1px; }
+.akb-vol-notice--chip .akb-chip-name  { font-weight: 700; }
+.akb-vol-notice--chip .akb-chip-amount { font-weight: 700; white-space: nowrap; }
+
+/* Variante summary (N≥3): es un <button>, debe verse como chip */
+.akb-vol-notice--summary {
+    background: rgba(122, 215, 155, 0.1);
+    border: 1px solid rgba(122, 215, 155, 0.4);
+    color: #7ad79b;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: help;
+    transition: background-color 0.15s ease;
+    white-space: nowrap;
+}
+.akb-vol-notice--summary:hover  { background: rgba(122, 215, 155, 0.18); }
+.akb-vol-notice--summary:focus-visible {
+    outline: 2px solid #D90010;
+    outline-offset: 2px;
+}
+.akb-chip-info {
+    opacity: 0.75;
+    margin-left: 4px;
+    font-size: 11px;
+}
+
+/* Tooltip expandible — detalle por serie */
+.akb-discount-tooltip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #0F0F10;
+    border: 1px solid rgba(122, 215, 155, 0.4);
+    border-radius: 8px;
+    padding: 12px 16px;
+    min-width: 240px;
+    max-width: min(340px, calc(100vw - 32px));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 30;
+}
+/* Hover en desktop, click toggle en mobile via JS aria-expanded */
+.akb-vol-notice--summary:hover + .akb-discount-tooltip,
+.akb-vol-notice--summary[aria-expanded="true"] + .akb-discount-tooltip,
+.akb-discount-tooltip:hover {
+    display: block;
+}
+
+.akb-discount-tooltip__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.akb-discount-tooltip__list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13px;
+    line-height: 1.35;
+}
+.akb-discount-tooltip__name   { color: #ddd; }
+.akb-discount-tooltip__amount { color: #7ad79b; font-weight: 700; white-space: nowrap; }
+
+@media (max-width: 480px) {
+    .akb-discount-tooltip { min-width: 200px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CUOTAS SIN INTERÉS — destacado en paso 3 (PAGO)
+   Diferenciador clave Mercado Pago en Chile. Posicionado justo
+   antes del botón "Realizar pedido" para reforzar cierre.
+   ═══════════════════════════════════════════════════════════════ */
+.aki-payment-installments {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    margin: 12px 0 16px;
+    background: rgba(217, 0, 16, 0.08);
+    border-left: 4px solid #D90010;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #fff;
+}
+.aki-payment-installments__icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.aki-payment-installments__text strong {
+    color: #D90010;
+    font-weight: 700;
+}
+
+/* Error inline de validación del método de pago (paso 3).
+   Clase ya no se emite desde JS (el check duplicaba validación de WC core),
+   pero dejamos el CSS por si otro plugin la usa en el futuro. */
+.aki-payment-error-required {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    margin: 0 0 14px;
+    background: rgba(255, 76, 76, 0.1);
+    border: 1px solid rgba(255, 76, 76, 0.4);
+    border-radius: 6px;
+    color: #ff8080;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Suavizar el CTA "Usar esta dirección" — estaba en uppercase por btn styles.
+   Preservar look pero en case natural: señal menos "grita" + más profesional. */
+.aki-saved-address__btn {
+    margin-right: 12px;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   THANK-YOU HEADER — reemplaza el genérico "Thank you" WC.
+   Personalización emocional + número de pedido + siguiente paso
+   contextualizado al método de envío elegido.
+   ═══════════════════════════════════════════════════════════════ */
+.akb-thankyou-header {
+    margin: 24px 0 32px;
+    padding: 28px 28px 24px;
+    background: linear-gradient(135deg, rgba(217, 0, 16, 0.08), rgba(122, 215, 155, 0.06));
+    border: 1px solid rgba(217, 0, 16, 0.25);
+    border-radius: 12px;
+    text-align: center;
+}
+.akb-thankyou-header__title {
+    margin: 0 0 10px;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.akb-thankyou-header__icon {
+    font-size: 32px;
+    line-height: 1;
+}
+.akb-thankyou-header__sub {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: #ddd;
+}
+.akb-thankyou-header__sub strong {
+    color: #D90010;
+    font-weight: 800;
+}
+.akb-thankyou-header__next {
+    margin: 0;
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.5;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 480px) {
+    .akb-thankyou-header { padding: 22px 16px; margin: 16px 0 24px; }
+    .akb-thankyou-header__title { font-size: 22px; }
+    .akb-thankyou-header__sub { font-size: 14px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MERCADO PAGO BASIC DESTACADO EN PASO 3
+   Solo MP Basic (redirect a mercadopago.cl con saldo + QR + cuotas)
+   lleva el badge "Recomendado". Antes se aplicaba también a Custom
+   (tarjeta inline), confundiendo al cliente con 2 métodos "recomendados".
+   Decisión: Basic es el estándar chileno (Ripley/Falabella usan redirect).
+   Custom mantiene el highlight sutil pero sin badge.
+   ═══════════════════════════════════════════════════════════════ */
+.wc_payment_method.payment_method_woo-mercado-pago-basic,
+.wc_payment_method.payment_method_woo-mercado-pago-custom {
+    position: relative;
+    border: 2px solid rgba(217, 0, 16, 0.25) !important;
+    background: rgba(217, 0, 16, 0.02);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    overflow: visible; /* permite que el badge ::after salga del borde sin cortarse */
+}
+/* Solo Basic es "Recomendado" + highlight más fuerte.
+   margin-top extra para que el badge con top:-12px tenga espacio y no
+   choque con el item anterior (BACS) ni se recorte por overflow ancestor. */
+.wc_payment_method.payment_method_woo-mercado-pago-basic {
+    border-color: rgba(217, 0, 16, 0.45) !important;
+    background: rgba(217, 0, 16, 0.04);
+    margin-top: 24px !important;
+}
+.wc_payment_method.payment_method_woo-mercado-pago-basic::after {
+    content: "Recomendado";
+    position: absolute;
+    top: -12px;
+    right: 12px;
+    background: #D90010;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(217, 0, 16, 0.4);
+    z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CROSS-SELL THANK-YOU — "Mientras esperas tu pedido…"
+   Grid reutiliza el sistema de product-grid del catálogo.
+   ═══════════════════════════════════════════════════════════════ */
+.akb-thankyou-crosssell {
+    margin: 40px 0;
+    padding: 0;
+}
+.akb-thankyou-crosssell .section-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.akb-thankyou-crosssell .section-header__title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 6px;
+}
+.akb-thankyou-crosssell .section-header__sub {
+    font-size: 13px;
+    color: #aaa;
+    margin: 0;
+}
+
+@media (max-width: 480px) {
+    .akb-thankyou-crosssell { margin: 28px 0; }
+    .akb-thankyou-crosssell .section-header__title { font-size: 18px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ESTADO DE PROCESSING al submitear el pago.
+   Estrategia UX en 2 tiempos:
+   1. Botón: mantener texto VISIBLE cambiándolo a "Procesando…" +
+      spinner pequeño al lado (user sabe que clickeó, no re-clickea).
+   2. Overlay fullscreen después de 500ms con mensaje contextual
+      (JS lo agrega). Reduce ansiedad en redirect a MP/Flow.
+   ═══════════════════════════════════════════════════════════════ */
+form.checkout.processing #place_order,
+form.checkout.processing button[name="woocommerce_checkout_place_order"] {
+    position: relative;
+    pointer-events: none;
+    cursor: wait;
+    opacity: 0.85;
+    padding-right: 44px !important; /* espacio para el spinner a la derecha */
+}
+form.checkout.processing #place_order::after,
+form.checkout.processing button[name="woocommerce_checkout_place_order"]::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    width: 18px;
+    height: 18px;
+    margin-top: -9px;
+    border: 2.5px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: akbOrderSpinner 0.75s linear infinite;
+}
+@keyframes akbOrderSpinner {
+    to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    form.checkout.processing #place_order::after,
+    form.checkout.processing button[name="woocommerce_checkout_place_order"]::after {
+        animation: none;
+        border-top-color: rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OVERLAY fullscreen durante el processing del pago.
+   Aparece 500ms tras submit para evitar flash en respuestas rápidas.
+   Copy contextual según método: MP → "Te llevamos a Mercado Pago…",
+   Flow → "Te llevamos a Flow…", transferencia → "Confirmando…".
+   ═══════════════════════════════════════════════════════════════ */
+.akb-checkout-processing-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 24px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+.akb-checkout-processing-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.akb-checkout-processing-overlay__spinner {
+    width: 56px;
+    height: 56px;
+    border: 4px solid rgba(217, 0, 16, 0.2);
+    border-top-color: #D90010;
+    border-radius: 50%;
+    animation: akbOrderSpinner 0.85s linear infinite;
+    margin-bottom: 24px;
+}
+.akb-checkout-processing-overlay__title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 10px;
+    line-height: 1.25;
+    max-width: 380px;
+}
+.akb-checkout-processing-overlay__sub {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+    line-height: 1.45;
+    max-width: 400px;
+}
+.akb-checkout-processing-overlay__sub strong { color: #FF2020; }
+@media (prefers-reduced-motion: reduce) {
+    .akb-checkout-processing-overlay { transition: none; }
+    .akb-checkout-processing-overlay__spinner { animation: none; opacity: 0.7; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   A11Y FIXES — WCAG AA contraste (axe-core audit)
+   Elevar labels/subtitles/showcoupon al ratio 4.5:1 mínimo.
+   Colors base del tema (var tokens) no alcanzaban en algunos grises.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Labels de forma del checkout: 2.93:1 → 6.3:1 */
+body.woocommerce-checkout .form-row label,
+body.woocommerce-checkout .woocommerce-form-row label {
+    color: #d0d0d0 !important;
+}
+
+/* Subtitles del accordion (step subtitle): 1.92-4.39:1 → 5.5:1 */
+body.woocommerce-checkout .aki-step__subtitle {
+    color: #c8c8c8 !important;
+}
+/* En steps locked subimos aún más para 7:1+ (enhanced) */
+body.woocommerce-checkout .aki-step--locked .aki-step__subtitle {
+    color: #a8a8a8 !important;
+}
+
+/* Link "Click aquí para ingresar tu código" (showcoupon): 3.84 → 5.5:1+ */
+body.woocommerce-checkout .showcoupon,
+body.woocommerce-checkout .checkout_coupon_login_info a,
+body.woocommerce-checkout .woocommerce-form-login-toggle a {
+    color: #FF2020 !important;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+body.woocommerce-checkout .showcoupon:hover,
+body.woocommerce-checkout .checkout_coupon_login_info a:hover {
+    color: #FF2020 !important;
+}
+
+/* Sprint 6 A5 — `<a class="showcoupon">` migrado a `<button class="showcoupon">`
+   (WCAG 4.1.2: toggle de form es acción, no navegación).
+   Reset visual: el `<button>` debe lucir idéntico al `<a>` previo. */
+body.woocommerce-checkout button.showcoupon {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    /* Mismo color/underline que la regla `.showcoupon` de arriba. */
+    color: #FF2020;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    /* R19 — feedback visual en :hover/:active/:focus-visible. */
+    transition: opacity .15s ease, text-decoration-thickness .15s ease;
+}
+body.woocommerce-checkout button.showcoupon:hover {
+    opacity: .85;
+    text-decoration-thickness: 2px;
+}
+body.woocommerce-checkout button.showcoupon:active {
+    opacity: .7;
+}
+body.woocommerce-checkout button.showcoupon:focus-visible {
+    outline: 2px solid #FF2020;
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PULIDO FINAL — banners superiores menos agresivos
+   "¿Ya eres cliente?" y "¿Tienes un cupón?" ocupaban 200px de alto
+   antes del stepper. Compactamos a ~50px cada uno sin perder CTA.
+   ═══════════════════════════════════════════════════════════════ */
+body.woocommerce-checkout .woocommerce-form-login-toggle,
+body.woocommerce-checkout .woocommerce-form-coupon-toggle {
+    padding: 10px 16px !important;
+    margin: 4px 0 !important;
+    font-size: 13px !important;
+    border-width: 1px !important;
+    border-radius: 6px !important;
+}
+body.woocommerce-checkout .woocommerce-form-login-toggle .woocommerce-info,
+body.woocommerce-checkout .woocommerce-form-coupon-toggle .woocommerce-info {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    line-height: 1.4 !important;
+}
+
+/* Fix contraste restantes (axe run 2): steps locked subtitles, tax label, cuotas */
+
+/* Steps locked. SIN opacity:0.85 — degradaba el color efectivo a 2.67:1.
+   Ahora #a0a0a0 sin opacity = 5.57:1 sobre #0e0e0e. */
+body.woocommerce-checkout .aki-step--locked .aki-step__subtitle,
+body.woocommerce-checkout div[data-step="3"] .aki-step__subtitle {
+    color: #a0a0a0 !important;
+    opacity: 1 !important;
+}
+
+/* includes_tax small (#7a7a7a) → 5.5:1 */
+body.woocommerce-checkout small.includes_tax,
+body.woocommerce-checkout small.includes_tax .woocommerce-Price-amount,
+body.woocommerce-checkout small.includes_tax .woocommerce-Price-currencySymbol {
+    color: #bbbbbb !important;
+}
+
+/* Asegurar que el texto del banner de cuotas pase contraste */
+body.woocommerce-checkout .aki-payment-installments {
+    color: #eeeeee;
+}
+body.woocommerce-checkout .aki-payment-installments strong {
+    color: #FF2020 !important;
+}
+
+/* Axe run 3: últimos nodos de contraste */
+body.woocommerce-checkout .akb-installments__with {
+    color: #c0c0c0 !important;
+}
+
+/* Ajuste final: opacity del step locked (0.5) bajaba contraste efectivo
+   a 2.58. Subimos a 0.75 — sigue comunicando "no activo" pero permite
+   que el contraste efectivo del subtitle pase WCAG AA (~5.2:1). */
+body.woocommerce-checkout .aki-step--locked {
+    opacity: 0.75 !important;
+}
+body.woocommerce-checkout .aki-step--locked .aki-step__subtitle,
+body.woocommerce-checkout div[data-step="3"] .aki-step__subtitle {
+    color: #d0d0d0 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Mobile: headers de cada paso quedan sticky al scroll
+   Beneficio: en mobile el user scrollea mucho dentro de un step y
+   pierde contexto de "¿en qué paso estoy?". Header sticky sigue
+   visible con el número + título.
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .aki-step.aki-step--active .aki-step__header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(10, 10, 10, 0.96);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        /* La barra superior de la app (navbar/checkout header) puede
+           tener altura variable; usar `env(safe-area-inset-top)` +
+           un offset conservador evita que el header quede oculto. */
+        padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+        margin-top: calc((env(safe-area-inset-top, 0px) + 8px) * -1);
+    }
+}

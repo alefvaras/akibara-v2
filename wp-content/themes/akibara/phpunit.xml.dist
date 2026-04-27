@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../plugins/akibara/vendor/phpunit/phpunit/phpunit.xsd"
+  bootstrap="tests/phpunit/bootstrap-theme.php"
+  colors="true"
+>
+  <testsuites>
+    <testsuite name="theme-unit">
+      <directory>tests/phpunit/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory>inc</directory>
+    </include>
+  </source>
+</phpunit>

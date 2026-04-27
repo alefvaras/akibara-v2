@@ -1,0 +1,985 @@
+/* ═══════════════════════════════════════════════════════════════
+   FILTERS v5 — Premium Panel Design
+   3 tones: #0A0A0A (page) → #141414 (panel) → #1E1E1E (hover)
+   Improved: contrast, spacing, micro-interactions, polish
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Reset base styles inside sidebar ── */
+.shop-sidebar .sidebar-widget { background: transparent; border: none; padding: 0; }
+.shop-sidebar .sidebar-widget__title:not(.sidebar-accordion__toggle):not(.sidebar-widget__title--static) { display: none; }
+
+/* ── Sidebar panel ── */
+.shop-sidebar {
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 0 !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Context label — AA sobre #141414 (drawer bg) via --aki-red-bright (4.81:1) */
+.sidebar-context {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--aki-red-bright, #FF2020);
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid #222;
+  background: rgba(229, 9, 20, 0.04);
+}
+
+/* ── Accordion sections ── */
+.sidebar-accordion {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.sidebar-widget.sidebar-accordion {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Divider between sections */
+.sidebar-accordion + .sidebar-accordion,
+.sidebar-accordion + .sidebar-widget--toggles,
+.sidebar-widget--toggles + .sidebar-accordion {
+  border-top: 1px solid #222 !important;
+}
+
+/* ── Accordion header ── */
+.sidebar-accordion__toggle {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  padding: 12px 18px;
+  margin: 0;
+  border: none;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #e8e8e8;
+  background: #181818;
+  border-bottom: 1px solid #222;
+  transition: background 0.15s, color 0.15s;
+}
+
+@media (min-width: 769px) {
+  .sidebar-accordion__toggle {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #181818 !important;
+  }
+}
+
+.sidebar-accordion__toggle:hover {
+  background: #1A1A1A;
+  color: #ccc;
+}
+
+.sidebar-accordion__toggle::-webkit-details-marker { display: none; }
+
+/* Open state */
+.sidebar-accordion[open] > .sidebar-accordion__toggle {
+  color: #fff;
+  background: #1c1c1c;
+  border-bottom: 1px solid var(--aki-red, #D90010);
+}
+
+/* Closed state */
+.sidebar-accordion:not([open]) .sidebar-accordion__toggle {
+  color: #aaa;
+  background: #161616;
+}
+
+.sidebar-accordion:not([open]):hover .sidebar-accordion__toggle {
+  color: #aaa;
+}
+
+/* Chevron */
+.accordion-chevron {
+  color: #555;
+  transition: transform 0.25s ease, color 0.2s;
+  flex-shrink: 0;
+}
+
+.sidebar-accordion[open] > .sidebar-accordion__toggle .accordion-chevron {
+  transform: rotate(180deg);
+  color: var(--aki-red-bright, #D90010);
+}
+
+.sidebar-accordion:not([open]):hover .accordion-chevron {
+  color: #888;
+}
+
+/* Active count badge */
+.sidebar-accordion__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--aki-red, #D90010);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 9px;
+  margin-left: auto;
+  margin-right: 8px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Accordion body */
+.sidebar-accordion__body {
+  padding: 4px 0 10px;
+}
+
+details.sidebar-accordion[open] > .sidebar-accordion__body {
+  display: block !important;
+  padding: 4px 0 10px;
+}
+
+/* ── Checkbox items ── */
+.filter-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+
+.filter-checklist::-webkit-scrollbar { width: 3px; }
+.filter-checklist::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.filter-checklist::-webkit-scrollbar-thumb:hover { background: #555; }
+
+.filter-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px 8px 22px;
+  /* UX-DRAWER-REDESIGN A2: #999→#d4d4d4 sobre #141414 (~11.7:1 AAA). User reportó "no se ve claro". */
+  color: #d4d4d4;
+  font-family: var(--font-body);
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+  cursor: pointer;
+  border-radius: 0;
+  border-left: 2px solid transparent;
+}
+
+.filter-check:hover {
+  background: #1A1A1A;
+  color: #ddd;
+}
+
+.filter-check--active {
+  color: #fff;
+  background: rgba(229, 9, 20, 0.06);
+  border-left-color: var(--aki-red-bright, #FF2020);
+}
+
+.filter-check--active:hover {
+  background: rgba(229, 9, 20, 0.10);
+}
+
+/* Custom checkbox */
+.filter-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #444;
+  border-radius: 3px;
+  background: #0A0A0A;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  position: relative;
+}
+
+.filter-checkbox[checked],
+.filter-check--active .filter-checkbox {
+  background: var(--aki-red, #D90010);
+  border-color: var(--aki-red-bright, #D90010);
+  transform: scale(1.05);
+}
+
+.filter-checkbox[checked]::after,
+.filter-check--active .filter-checkbox::after {
+  content: '';
+  width: 3.5px;
+  height: 7px;
+  border: solid #fff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 1px;
+}
+
+.filter-check__label { flex: 1; line-height: 1.3; }
+
+/* Count badges — UX-DRAWER-REDESIGN A2 quick win: contrast #555→#c0c0c0 sobre #232323 (~8.6:1 AA+). */
+.filter-check__count {
+  font-size: 10px;
+  color: #c0c0c0;
+  background: #232323;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 26px;
+  text-align: center;
+  font-weight: 600;
+  transition: color 0.12s;
+}
+
+.filter-check:hover .filter-check__count {
+  color: #ffffff;
+}
+
+.filter-check--active .filter-check__count {
+  color: #aaa;
+  background: rgba(229, 9, 20, 0.12);
+}
+
+/* ── Filter pills (demographics) ── */
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 18px 12px;
+}
+
+/* Fix 2026-04-25 (mesa diseño consensus + contrast-master 9 P0):
+   Filter A Minimal — pills outline default, fill crimson SOLO en active.
+   Border #2A2A2A 1.28:1 FAIL UI → --aki-border-aa #6A6A6A 3.41:1 PASS.
+   Text #999 6.11:1 → #B0B0B0 8.59:1 (--aki-gray-300). */
+.filter-pill {
+  display: inline-block;
+  padding: 7px 16px;
+  background: var(--aki-surface-2, #1A1A1A);
+  border: 1px solid var(--aki-border-aa, #6A6A6A);
+  color: var(--aki-gray-300, #B0B0B0);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+}
+
+@media (hover: hover) {
+  .filter-pill:hover {
+    background: var(--aki-surface-3, #222);
+    border-color: var(--aki-red-bright, #D90010);
+    color: var(--aki-white, #FFF);
+  }
+}
+
+/* Active = único elemento con fill crimson — restraint = premium (design-critique BG).
+   Quitamos box-shadow halo rojo (era "alarma visual" según mesa). */
+.filter-pill--active {
+  background: var(--aki-red, #D90010);
+  border-color: var(--aki-red-bright, #D90010);
+  color: var(--aki-white, #FFF);
+}
+
+@media (hover: hover) {
+  .filter-pill--active:hover {
+    background: var(--aki-red-hover, #BB000D);
+    border-color: var(--aki-red-hover, #BB000D);
+  }
+}
+
+/* ── Toggles (Filtros Rapidos) ── */
+.sidebar-widget--toggles {
+  background: transparent !important;
+  border: none !important;
+  border-top: 1px solid #222 !important;
+  border-radius: 0 !important;
+  padding: 4px 0 8px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sidebar-widget__title--static {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #e8e8e8;
+  padding: 12px 18px;
+  margin-bottom: 0;
+  background: #181818;
+  border-bottom: 1px solid var(--aki-red, #D90010);
+}
+
+.filter-toggle-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  color: #888;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.filter-toggle-link:hover {
+  background: #1A1A1A;
+  color: #ccc;
+}
+
+.filter-toggle-link--active {
+  color: #fff;
+}
+
+.filter-toggle-switch {
+  width: 32px;
+  height: 17px;
+  background: #4a4a4a;
+  border: 1px solid #666;
+  border-radius: 9px;
+  position: relative;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.filter-toggle-switch::after {
+  content: '';
+  width: 13px;
+  height: 13px;
+  background: #999;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease, background 0.2s;
+}
+
+.filter-toggle-switch--on {
+  background: var(--aki-red, #D90010);
+  border-color: var(--aki-red-bright, #D90010);
+}
+
+.filter-toggle-switch--on::after {
+  transform: translateX(15px);
+  background: #fff;
+}
+
+/* ── Active filter chips ── */
+.akb-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #222;
+}
+
+.akb-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: #141414;
+  border: 1px solid var(--aki-red, #D90010);
+  color: #ddd;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 6px;
+}
+
+.akb-filter-chip:hover { background: var(--aki-red, #D90010); color: #fff; }
+.akb-filter-chip__x { font-size: 10px; opacity: 0.6; }
+
+/* Fix contrast 2026-04-25 (contrast-master P0): #555 = 2.47:1 FAIL texto sobre #141414.
+   #B0B0B0 = 8.59:1 PASS AAA. Color hover red-bright se mantiene (4.93:1 sobre #111). */
+.akb-filter-clear {
+  color: var(--aki-gray-300, #B0B0B0);
+  font-size: 12px;
+  align-self: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.15s;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.akb-filter-clear:hover { color: var(--aki-red-bright, #FF2020); }
+
+/* ── Loading state ── */
+.shop-content.is-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.shop-content.is-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.5);
+  z-index: 10;
+  animation: filterFadeIn 0.12s ease;
+  backdrop-filter: blur(2px);
+}
+
+.shop-content.is-loading::before {
+  content: '';
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  border: 2.5px solid #222;
+  border-top-color: var(--aki-red-bright, #D90010);
+  border-radius: 50%;
+  z-index: 11;
+  animation: filterSpin 0.5s linear infinite;
+}
+
+@keyframes filterSpin { to { transform: rotate(360deg); } }
+@keyframes filterFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Clear all button ── */
+.sidebar-widget--clear {
+  background: none !important;
+  border: none !important;
+  border-bottom: 1px solid #222 !important;
+  padding: 10px 18px !important;
+}
+
+.filter-clear-btn {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  color: #666;
+  font-size: 12px;
+  border: 1px dashed #333;
+  transition: color 0.15s, border-color 0.15s;
+  text-decoration: none;
+  border-radius: 6px;
+}
+.filter-clear-btn:hover { color: var(--aki-red-bright, #FF2020); border-color: var(--aki-red-bright, #FF2020); }
+
+/* ── Mobile Fullscreen Drawer ── */
+@media (max-width: 768px) {
+  .shop-sidebar {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    z-index: var(--z-overlay, 1000);
+    background: #141414;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .shop-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  /* Sticky header — visible above scrolling filter list */
+  .shop-sidebar .sidebar-close {
+    display: flex !important;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    align-items: center;
+    gap: 10px;
+    padding: 0 18px;
+    margin: 0;
+    border-bottom: 1px solid #2a2a2a;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    /* AA sobre #141414 (drawer bg): migrado a --aki-red-bright (4.81:1) */
+    color: var(--aki-red-bright, #FF2020);
+    background: #141414;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    min-height: 52px;
+  }
+
+  /* ← back arrow */
+  .shop-sidebar .sidebar-close::before {
+    content: '←';
+    font-size: 20px;
+    line-height: 1;
+    color: #888;
+    flex-shrink: 0;
+  }
+
+  .filter-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: calc(var(--z-overlay) - 1);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* backdrop only — outside-click via composedPath in JS */
+    transition: opacity 0.28s, visibility 0.28s;
+  }
+
+  .filter-sheet-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Touch targets mínimos 44px (WCAG 2.5.5) */
+  .filter-check { padding: 11px 18px 11px 22px; min-height: 44px; box-sizing: border-box; }
+  .filter-toggle-link { padding: 12px 18px; min-height: 44px; box-sizing: border-box; }
+  .filter-pill { padding: 9px 18px; font-size: 13px; min-height: 44px; box-sizing: border-box; }
+
+  /* ══════════════════════════════════════════════════════════════════
+     UX-DRAWER-REDESIGN A1 — Sticky CTA bottom action bar (mobile only).
+     Baymard 2024: +18% filter-apply rate vs. close-and-scroll-up.
+     Sticky bottom dentro del scroll del drawer; flex con clear secundario
+     + apply primary. env(safe-area-inset-bottom) para notch iOS.
+     ══════════════════════════════════════════════════════════════════ */
+  .drawer-cta-sticky {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin-top: auto;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: #141414;
+    border-top: 1px solid #333;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45);
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .drawer-cta-sticky[hidden],
+  .drawer-cta-sticky[inert]:not(.drawer-cta-sticky--force) {
+    /* Mantener layout estable cuando drawer está cerrado: el position:sticky
+       sólo importa con el drawer abierto. Sin display:none para que aria-live
+       siga emitiendo cuando el count se actualiza con drawer cerrado.
+       A11Y FIX 2026-04-25: usamos [inert] en vez de [aria-hidden="true"]
+       (axe aria-hidden-focus). `inert` ya bloquea pointer-events nativamente,
+       pero mantenemos la regla por backward compat con el selector force. */
+    pointer-events: none;
+  }
+
+  .drawer-cta-sticky__clear {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 10px 16px;
+    background: transparent;
+    color: #d4d4d4;
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-family: var(--font-heading, inherit);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .drawer-cta-sticky__clear:hover,
+  .drawer-cta-sticky__clear:focus-visible {
+    background: #1A1A1A;
+    border-color: #555;
+    color: #fff;
+    outline: none;
+  }
+  .drawer-cta-sticky__clear[hidden] { display: none; }
+
+  .drawer-cta-sticky__clear-count {
+    display: inline-block;
+    margin-left: 4px;
+    color: var(--aki-red-bright, #FF2020);
+    font-weight: 700;
+  }
+  .drawer-cta-sticky__clear-count:empty { display: none; }
+
+  /* Fix contrast 2026-04-25 (contrast-master P0 #32): bg --aki-red-bright #FF2020
+     daba 3.83:1 con texto blanco — FAIL WCAG 1.4.3 texto bold. Cambiamos a
+     --aki-red #D90010 que da 5.31:1 PASS AA. CTA principal mobile filter. */
+  .drawer-cta-sticky__apply {
+    flex: 1;
+    min-height: 56px;
+    padding: 12px 20px;
+    background: var(--aki-red, #D90010);
+    color: #fff;
+    font-family: var(--font-heading, inherit);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .drawer-cta-sticky__apply:hover,
+  .drawer-cta-sticky__apply:focus-visible {
+    background: var(--aki-red-hover, #BB000D);
+    color: #fff;
+    outline: none;
+  }
+  .drawer-cta-sticky__apply:active {
+    transform: scale(0.98);
+  }
+  .drawer-cta-sticky__apply-count { font-weight: 800; }
+}
+
+/* Desktop: NO renderizar sticky CTA (sidebar siempre visible, no hace falta apply). */
+@media (min-width: 769px) {
+  .drawer-cta-sticky { display: none; }
+}
+
+/* F10 fix (tech-debt S1): regla FAB WhatsApp drawer movida al inline
+   inc/enqueue.php:169 (display:none+visibility:hidden wins, evita FOUC iOS). */
+
+/* ═══════════════════════════════════════════════════════════════════
+   S1-13 D3: scroll lock body cuando drawer filtros abierto.
+   overflow:hidden sólo no bloquea en iOS Safari → combinar con
+   position:fixed + width:100% (JS guarda/restaura scrollY).
+   touch-action:none bloquea gestos extra.
+   ═══════════════════════════════════════════════════════════════════ */
+body.filter-drawer-open {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   S1-7: Mobile landscape drawer — evitar fullscreen cuando la altura
+   es muy baja (iPhone girado ~375px alto). Drawer pasa a sidebar
+   lateral 60% ancho con scroll interno.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
+  .shop-sidebar {
+    width: 60%;
+    max-width: 420px;
+    height: 100dvh;
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Sticky header más compacto para no comerse altura */
+  .shop-sidebar .sidebar-close {
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+  }
+
+  /* Touch targets comprimidos (40px vs 44px) para caber más filtros sin scroll.
+     Trade-off aceptado: por debajo de 44px WCAG 2.5.5 pero sólo en landscape
+     mobile que es uso minoritario y el scroll interno queda disponible. */
+  .shop-sidebar .filter-check,
+  .shop-sidebar .filter-toggle-link {
+    min-height: 40px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
+  .shop-sidebar .filter-pill {
+    min-height: 36px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  /* Accordion body colapsado por default en landscape para ganar altura visible */
+  .shop-sidebar details:not([data-s1-7-keep-open]):not(.sidebar-accordion--price) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* Override browser default summary display */
+.shop-sidebar summary.sidebar-accordion__toggle {
+  display: flex !important;
+  list-style: none !important;
+}
+.shop-sidebar summary.sidebar-accordion__toggle::-webkit-details-marker {
+  display: none !important;
+}
+.shop-sidebar details.sidebar-accordion > summary {
+  display: flex !important;
+  list-style-type: none !important;
+}
+
+/* ── "Ver mas" overflow ── */
+.filter-check--overflow { display: none; }
+.filter-checklist.expanded .filter-check--overflow { display: block; }
+.filter-show-more {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 22px;
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s;
+  font-family: inherit;
+}
+.filter-show-more:hover { color: var(--aki-red-bright, #FF2020); }
+.filter-show-more svg { transition: transform 0.2s ease; }
+.filter-show-more[data-expanded="true"] svg { transform: rotate(180deg); }
+
+/* ── Stock toggle prominente ── */
+.sidebar-widget--stock-top {
+  padding: 8px 0;
+  border-bottom: 1px solid #222;
+}
+
+/* ── Mejoras de contraste accesibilidad ── */
+.filter-check { color: #bbb; }
+.filter-check__count { color: #9a9a9a; } /* 4.6:1 sobre #1A1A1A — pasa WCAG AA */
+.sidebar-accordion:not([open]) .accordion-chevron { color: #9a9a9a; }
+.filter-clear-btn { color: #aaa; border-color: #666; }
+
+/* ── Animacion suave accordion ── */
+.sidebar-accordion__body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.25s ease;
+  overflow: hidden;
+}
+details:not([open]) > .sidebar-accordion__body {
+  grid-template-rows: 0fr;
+}
+.sidebar-accordion__body > * {
+  overflow: hidden;
+}
+
+/* ── Filter Groups (Editorial by Country) ── */
+.filter-group {
+  border-top: 1px solid #222;
+  padding-top: 4px;
+  margin-top: 4px;
+}
+.filter-group:first-child {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.filter-group__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px 6px;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+}
+.filter-group__header:hover {
+  color: #fff;
+}
+
+/* Tri-state group checkbox */
+.filter-group__checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #444;
+  border-radius: 3px;
+  background: #0A0A0A;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+/* All selected: checkmark */
+.filter-group__checkbox.checked {
+  background: var(--aki-red, #D90010);
+  border-color: var(--aki-red-bright, #D90010);
+}
+.filter-group__checkbox.checked::after {
+  content: '';
+  width: 3.5px;
+  height: 7px;
+  border: solid #fff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 1px;
+}
+
+/* Partial selection: dash */
+.filter-group__checkbox.partial {
+  background: var(--aki-red, #D90010);
+  border-color: var(--aki-red-bright, #D90010);
+}
+.filter-group__checkbox.partial::after {
+  content: '';
+  width: 7px;
+  height: 1.5px;
+  background: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.filter-group__label {
+  flex: 1;
+  line-height: 1.3;
+}
+
+/* Indent children under group header */
+.filter-group__items {
+  max-height: none;
+}
+.filter-group__items .filter-check {
+  padding-left: 32px;
+}
+
+/* Active group header */
+.filter-group[data-group-state="all"] .filter-group__header,
+.filter-group[data-group-state="partial"] .filter-group__header {
+  color: #eee;
+}
+
+@media (max-width: 768px) {
+  .filter-group__header {
+    padding: 10px 18px 8px;
+  }
+  .filter-group__items .filter-check {
+    padding-left: 32px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SKELETON LOADING CARDS
+   ══════════════════════════════════════════════════════════════ */
+
+.skeleton-card {
+  background: var(--aki-surface, #111);
+  border: 1px solid var(--aki-border, #2A2A2A);
+  overflow: hidden;
+}
+
+.skeleton-card__image {
+  aspect-ratio: 2/3;
+  background: linear-gradient(90deg, var(--aki-surface-2, #1A1A1A) 25%, var(--aki-surface-3, #222) 50%, var(--aki-surface-2, #1A1A1A) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+}
+
+.skeleton-card__body {
+  padding: var(--space-3, 0.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+}
+
+.skeleton-card__line {
+  height: 12px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--aki-surface-2, #1A1A1A) 25%, var(--aki-surface-3, #222) 50%, var(--aki-surface-2, #1A1A1A) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+}
+
+.skeleton-card__line--short { width: 50%; }
+.skeleton-card__line--medium { width: 75%; }
+
+.skeleton-card__line--price {
+  width: 40%;
+  height: 18px;
+  margin-top: var(--space-2, 0.5rem);
+}
+
+.skeleton-card__line--btn {
+  width: 100%;
+  height: 36px;
+  margin-top: var(--space-2, 0.5rem);
+  border-radius: var(--radius-sm, 2px);
+}
+
+/* ══════════════════════════════════════════════════
+   DYNAMIC FACETED COUNTS
+   ══════════════════════════════════════════════════ */
+
+/* Dim items with zero matches */
+.filter-check--empty .filter-check {
+    opacity: 0.35;
+    pointer-events: none;
+}
+.filter-check--empty .filter-check__count {
+    color: var(--aki-gray-600);
+}
+
+/* But keep active (checked) items visible even if 0 */
+.filter-check--empty:has(.filter-check--active) {
+    opacity: 1;
+    pointer-events: auto;
+}
+.filter-check--empty .filter-check--active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Count update flash animation */
+.filter-check__count--updated {
+    animation: countFlash 0.4s ease;
+}
+
+@keyframes countFlash {
+    0% { color: var(--aki-red-bright); transform: scale(1.3); }
+    100% { color: inherit; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .filter-check__count--updated { animation: none; }
+}

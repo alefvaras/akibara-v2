@@ -1,0 +1,95 @@
+/**
+ * Product Info — Styles for template-parts/single-product/info.php
+ *
+ * Extracted from inline styles. Depends on: akibara-wc, akibara-design.
+ *
+ * @package Akibara
+ */
+
+/* Badge reserva/preventa above title */
+.badge--placed {
+    margin-bottom: 8px;
+}
+
+/* OOS (out-of-stock) CTA block */
+.product-oos-cta {
+    margin: 16px 0;
+}
+
+.product-oos-btn {
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.product-oos-note {
+    font-size: 0.75rem;
+    color: var(--aki-text-muted);
+    text-align: center;
+    margin: 0;
+}
+
+/* WhatsApp CTA in OOS block */
+.product-oos-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 8px 16px;
+    border: 1px solid rgba(37, 211, 102, 0.3);
+    border-radius: var(--radius-md, 4px);
+    color: #25d366;
+    font-size: var(--text-sm, 0.875rem);
+    font-weight: var(--weight-medium, 500);
+    text-decoration: none;
+    transition: background 150ms;
+}
+.product-oos-whatsapp:hover {
+    background: rgba(37, 211, 102, 0.08);
+}
+
+/* Compact trust microcopy below ATC button.
+ * Sprint 11 a11y fix #10: cambió de <p> con &bull; a <ul> semántica para SR.
+ * list-style:none + flex inline visualmente igual al <p> original con bullets entre items.
+ */
+.product-atc-trust {
+    margin: 6px 0 0;
+    font-size: 0.7rem;
+    color: var(--aki-gray-500, #7a7a7a);
+    text-align: center;
+    letter-spacing: 0.02em;
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+}
+.product-atc-trust li {
+    display: inline;
+}
+.product-atc-trust li:not(:last-child)::after {
+    content: " • ";
+    margin: 0 0.25em;
+    color: inherit;
+    /* Decorativo — separador visual. SR ignora ::after content por default
+     * (algunos navegadores lo leen, OK porque " • " se pronuncia "punto"
+     * audible pero no critical thanks to <li> semántico). */
+}
+
+/* "Ya tienes" badge in series hub */
+.akb-sh-card__badge--owned {
+    background: var(--aki-success, #00c853);
+    color: var(--aki-black, #000);
+}
+
+/* Owned card subtle overlay */
+.akb-sh-card--owned .akb-sh-card__cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 200, 83, 0.08);
+    pointer-events: none;
+}

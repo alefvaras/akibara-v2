@@ -1,0 +1,232 @@
+/* Pack Serie CTA */
+.pack-cta {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: 12px;
+  padding: var(--space-5);
+  margin: var(--space-6) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.pack-cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--aki-red), var(--aki-red-bright));
+}
+
+.pack-cta--compact {
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+.pack-cta--compact .pack-cta__title {
+  font-size: var(--text-base);
+}
+
+.pack-cta__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.pack-cta__header svg {
+  color: var(--aki-red-bright);
+  flex-shrink: 0;
+}
+
+.pack-cta__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  color: var(--aki-white);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.pack-cta__covers {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  justify-content: center;
+}
+
+.pack-cta__cover {
+  position: relative;
+  flex: 0 0 auto;
+  width: 90px;
+  transition: transform 0.2s ease;
+}
+
+.pack-cta__cover:hover {
+  transform: translateY(-4px);
+}
+
+.pack-cta__cover img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--aki-border);
+}
+
+.pack-cta__vol-badge {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: var(--aki-white);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.pack-cta__pricing {
+  background: var(--aki-surface-2);
+  border-radius: 8px;
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.pack-cta__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-1) 0;
+  font-size: var(--text-sm);
+  color: var(--aki-gray-300);
+}
+
+.pack-cta__row--total {
+  border-top: 1px solid var(--aki-border);
+  padding-top: var(--space-2);
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
+  color: var(--aki-white);
+  font-weight: 600;
+}
+
+.pack-cta__regular {
+  text-decoration: line-through;
+  color: var(--aki-gray-500);
+}
+
+.pack-cta__pack-price {
+  color: var(--aki-red-bright);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+}
+
+.pack-cta__badge {
+  display: inline-block;
+  background: var(--aki-red);
+  color: var(--aki-white);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+.pack-cta__savings {
+  text-align: center;
+  color: var(--aki-success);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding-top: var(--space-1);
+}
+
+.pack-cta__btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  transition: all 0.2s ease;
+}
+
+.pack-cta__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 0, 16, 0.4);
+}
+
+.pack-cta__btn-loading,
+.pack-cta__btn-done {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.pack-cta__btn--loading .pack-cta__btn-text,
+.pack-cta__btn--done .pack-cta__btn-text {
+  display: none;
+}
+
+.pack-cta__btn--loading .pack-cta__btn-loading {
+  display: flex !important;
+}
+
+.pack-cta__btn--done .pack-cta__btn-done {
+  display: flex !important;
+}
+
+.pack-cta__btn--done {
+  background: var(--aki-success) !important;
+  border-color: var(--aki-success) !important;
+}
+
+.pack-cta__spinner {
+  animation: none;
+}
+
+/* Volume discount notices */
+.akb-vol-notice {
+  padding: var(--space-3) var(--space-4);
+  border-radius: 8px;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.akb-vol-notice--active {
+  background: rgba(0, 200, 83, 0.08);
+  border: 1px solid rgba(0, 200, 83, 0.25);
+  color: var(--aki-success);
+}
+
+.akb-vol-notice--hint {
+  background: rgba(255, 215, 0, 0.06);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  color: var(--aki-yellow);
+}
+
+.akb-vol-notice--active::before {
+  content: "\1F389 ";
+}
+
+.akb-vol-notice--hint::before {
+  content: "\1F4A1 ";
+}
+
+@media (max-width: 600px) {
+  .pack-cta__covers {
+    gap: var(--space-2);
+  }
+
+  .pack-cta__cover {
+    width: 72px;
+  }
+
+  .pack-cta {
+    padding: var(--space-4);
+  }
+}
