@@ -1,7 +1,15 @@
 # Local data + secrets
 .env
 .private/
-data/
+# Solo /data/ root (docker-compose mariadb mount), NO subdir data/ dentro de plugins.
+/data/
+
+# Prod secrets — wp-config-private.php vive solo en server (chmod 600)
+# Si por alguna razón llega local (debug, descarga), nunca commit.
+wp-config-private.php
+wp-config.php
+**/wp-config-private.php
+**/wp-config.php
 
 # MCP config holds Royal API key in headers — never commit
 .mcp.json

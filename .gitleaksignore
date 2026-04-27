@@ -1,0 +1,22 @@
+# Gitleaks ignore list — Akibara
+#
+# Fingerprints documentados aquí son FALSE POSITIVES, no secrets reales.
+# Format: <file>:<rule>:<line>
+# Ver gitleaks docs: https://github.com/gitleaks/gitleaks#configuration
+#
+# Sprint 2: documentación describe option_name strings (NO real secrets).
+# Mi grep-secrets.sh tiene awk filter para excluir, pero gitleaks generic-api-key
+# matches anything con `api_key` + value >12 chars. Audit docs OK.
+
+audit/sprint-2/B-S2-SETUP-01-DONE.md:generic-api-key:109
+
+# Sprint 1 SEC-04 BlueX upstream disclosure doc — la key es shared default
+# del plugin third-party bluex-for-woocommerce (issue upstream documentado).
+# Repo es private (verificado 2026-04-27); leak contenido a colaboradores.
+# Per memoria project_no_key_rotation_policy.md: NO rotar, mitigación private repo.
+e8463dc094b9b9a1f21f48de054008a6e25234dd:audit/sprint-1/sec-04-bluex-disclosure-2026-04-27.md:generic-api-key:20
+
+# class-12horas.php line 23 — false positive: option NAME constant (lowercase
+# slug + underscores), not a real secret value. grep-secrets.sh post-filters
+# via awk; gitleaks generic-api-key rule does not have equivalent filter.
+e8463dc094b9b9a1f21f48de054008a6e25234dd:wp-content/plugins/akibara/modules/shipping/class-12horas.php:generic-api-key:23

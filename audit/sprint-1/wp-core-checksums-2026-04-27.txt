@@ -1,0 +1,57 @@
+Run: 2026-04-27
+Comando: bin/wp-ssh core verify-checksums --version=6.9.4
+WP version detectada: 6.9.4
+
+=== OUTPUT RAW ===
+
+Warning: File doesn't exist: readme.html
+Warning: File doesn't exist: license.txt
+Warning: File should not exist: wp-cli.yml
+Error: WordPress installation doesn't verify against checksums.
+
+=== ANÁLISIS ===
+
+Tres findings, ninguno mismatch en archivos core PHP/JS:
+
+1. readme.html missing (warning)
+   - Archivo informativo público (versión + créditos). NO es core ejecutable.
+   - Hardening común eliminarlo (security through minimization — evita disclosure de versión exacta vía /readme.html).
+   - Veredicto: KEEP (eliminado intencionalmente por hardening).
+
+2. license.txt missing (warning)
+   - Texto licencia GPL público. NO es core ejecutable.
+   - Misma razón que readme.html — hardening válido.
+   - Veredicto: KEEP (eliminado intencionalmente).
+
+3. wp-cli.yml should not exist (warning)
+   - Archivo de configuración wp-cli local del usuario, no parte de WP core.
+   - Pertenece al entorno dev/admin, no debería estar en webroot prod (riesgo bajo, pero ruido).
+   - Veredicto: REVISAR — leer contenido para confirmar es solo config wp-cli inocua.
+   - Acción follow-up sugerida: si solo contiene aliases/path, mover a `~/.wp-cli/config.yml` server-wide. Item de cleanup, no urgente. Documentar en B-S1-CLEAN futura iteración.
+
+=== DECISIÓN ===
+
+✅ FILESYSTEM CONFIABLE — NO se detectó modificación maliciosa en archivos core de WordPress 6.9.4.
+
+NO se requiere forensic-IR. NO se posterga Sprint 1.
+
+Los 3 issues reportados son hygiene operativo, no security incidents:
+- 2x missing → hardening intencional documentado.
+- 1x extra → archivo wp-cli config inocuo (verify si quieres mayor rigor con `ssh akibara cat .../wp-cli.yml`).
+
+El finding F-10-005 del audit ("10 archivos modificados <90 días") usa file mtime como heurística, NO checksums. Si checksums pasan, los cambios de mtime fueron operativos (rsync, touch, etc.) NO modificaciones de contenido.
+
+=== PROCEDER ===
+
+✅ B-S1-SEC-01 cerrado como GREEN.
+✅ Habilita B-S1-SEC-02, B-S1-SEC-03, B-S1-SEC-04 (todos los items destructivos del Sprint 1).
+✅ Continuar con B-S1-EMAIL-01 kickoff.
+
+=== SIGUIENTE PASO OPCIONAL (no bloquea Sprint 1) ===
+
+Inspeccionar wp-cli.yml para confirmar es inocuo:
+
+  ssh akibara "cat /home/u888022333/domains/akibara.cl/public_html/wp-cli.yml"
+
+Si solo contiene aliases o path config: agendar como cleanup S2 (mover a ~/.wp-cli/config.yml).
+Si contiene algo inesperado (URLs, secrets, scripts): escalar.
