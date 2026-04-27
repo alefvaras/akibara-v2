@@ -136,6 +136,138 @@ jobs:
         run: composer run-script test
         working-directory: wp-content/plugins/akibara
 
+  # ═══════════════════════════════════════════════════════════════════════
+  # PHPUnit — akibara-core (Bootstrap auto-recovery + AddonContract tests)
+  # Post-INCIDENT-01 (2026-04-27): verifica que el contract refactor no se
+  # rompa silenciosamente en futuros edits.
+  # ═══════════════════════════════════════════════════════════════════════
+  phpunit-akibara-core:
+    name: PHPUnit — akibara-core (AddonContract)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - name: Composer install
+        run: composer install --no-progress
+        working-directory: wp-content/plugins/akibara-core
+
+      - name: Run PHPUnit
+        run: composer run-script test
+        working-directory: wp-content/plugins/akibara-core
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # Addon activation test — INCIDENT-01 prevention (Phase D)
+  #
+  # Activa los 3 plugins akibara-* en una WordPress real (boot completo) para
+  # detectar TypeErrors / fatales en activation antes del merge a main.
+  # El bug original (INCIDENT-01) hubiera sido detectado aquí pre-merge.
+  #
+  # Verifica además que ningún addon termina en `akibara_disabled_addons`
+  # option — eso indicaría contract violation captured by auto-recovery.
+  # ═══════════════════════════════════════════════════════════════════════
+  addon-activation-test:
+    name: Addon activation test (real WP boot)
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2, wp-cli
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -P 3306 -uroot -proot --silent 2>/dev/null; then
+              echo "MySQL is ready"; break
+            fi
+            sleep 1
+          done
+
+      - name: Setup WordPress
+        run: |
+          mkdir -p /tmp/wp
+          wp core download --path=/tmp/wp --skip-content
+          wp config create \
+            --path=/tmp/wp \
+            --dbname=wordpress_test \
+            --dbuser=root \
+            --dbpass=root \
+            --dbhost=127.0.0.1
+          wp core install \
+            --path=/tmp/wp \
+            --url=http://localhost \
+            --title=Test \
+            --admin_user=admin \
+            --admin_email=test@example.com \
+            --admin_password=test123 \
+            --skip-email
+
+      - name: Symlink akibara plugins
+        run: |
+          ln -sfn ${{ github.workspace }}/wp-content/plugins/akibara-core /tmp/wp/wp-content/plugins/akibara-core
+          ln -sfn ${{ github.workspace }}/wp-content/plugins/akibara-preventas /tmp/wp/wp-content/plugins/akibara-preventas
+          ln -sfn ${{ github.workspace }}/wp-content/plugins/akibara-marketing /tmp/wp/wp-content/plugins/akibara-marketing
+
+      - name: Install WooCommerce (akibara-preventas dependency)
+        run: |
+          wp plugin install woocommerce --path=/tmp/wp --activate
+
+      - name: Activate akibara-core
+        run: |
+          wp plugin activate akibara-core --path=/tmp/wp
+
+      - name: Activate akibara-preventas
+        run: |
+          wp plugin activate akibara-preventas --path=/tmp/wp
+
+      - name: Activate akibara-marketing
+        run: |
+          wp plugin activate akibara-marketing --path=/tmp/wp
+
+      - name: Verify all 3 akibara plugins active
+        run: |
+          active=$(wp plugin list --path=/tmp/wp --status=active --field=name)
+          echo "$active"
+          echo "$active" | grep -q '^akibara-core$' || (echo "FAIL: akibara-core not active"; exit 1)
+          echo "$active" | grep -q '^akibara-preventas$' || (echo "FAIL: akibara-preventas not active"; exit 1)
+          echo "$active" | grep -q '^akibara-marketing$' || (echo "FAIL: akibara-marketing not active"; exit 1)
+
+      - name: Verify no addons in akibara_disabled_addons (auto-recovery did NOT trigger)
+        run: |
+          disabled=$(wp option get akibara_disabled_addons --path=/tmp/wp --format=json 2>/dev/null || echo '[]')
+          if [ "$disabled" != "[]" ] && [ "$disabled" != '{"":[]}' ]; then
+            echo "FAIL: Some addons were auto-disabled — contract violation detected:"
+            echo "$disabled"
+            exit 1
+          fi
+          echo "OK — 0 disabled addons, contract honored by all plugins"
+
+      - name: Verify no PHP fatal in WP boot
+        run: |
+          wp eval 'echo defined("AKIBARA_CORE_PLUGIN_LOADED") ? "core loaded\n" : "core NOT loaded\n"; echo defined("AKB_PREVENTAS_LOADED") ? "preventas loaded\n" : "preventas NOT loaded\n"; echo defined("AKB_MARKETING_LOADED") ? "marketing loaded\n" : "marketing NOT loaded\n";' --path=/tmp/wp
+
   plugin-check:
     name: WordPress plugin-check (PCP)
     runs-on: ubuntu-latest

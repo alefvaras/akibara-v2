@@ -69,21 +69,18 @@ if ( ! function_exists( 'akb_marketing_sentinel' ) ) {
 		return defined( 'AKB_MARKETING_LOADED' );
 	}
 
-	// ── Bootstrap: hook into akibara_core_init ───────────────────────────────
-	add_action(
-		'akibara_core_init',
-		static function ( $bootstrap ): void {
-			// Register plugin in the core module registry.
-			$bootstrap->modules()->declare_module( 'akibara-marketing', '1.0.0', 'addon' );
+	// ── Bootstrap via AddonContract (post-INCIDENT-01 — type-safe registration) ─
+	// Plugin class at src/Plugin.php (loaded via PSR-4 autoloader above).
+	// Bootstrap::register_addon() wraps init() in per-addon try/catch.
+	function akb_marketing_register(): void {
+		if ( ! class_exists( '\Akibara\Core\Bootstrap' ) ) {
+			return; // akibara-core not active — nothing to register against.
+		}
+		\Akibara\Core\Bootstrap::instance()->register_addon( new \Akibara\Marketing\Plugin() );
+	}
 
-			// Run DB migrations idempotently.
-			akb_marketing_maybe_run_migrations();
-
-			// Load modules.
-			akb_marketing_load_modules();
-		},
-		20
-	);
+	// Priority 20 = after akibara-core init (priority 5) + after akibara-preventas (priority 10).
+	add_action( 'plugins_loaded', 'akb_marketing_register', 20 );
 
 	// ── DB migration runner ──────────────────────────────────────────────────
 	function akb_marketing_maybe_run_migrations(): void {

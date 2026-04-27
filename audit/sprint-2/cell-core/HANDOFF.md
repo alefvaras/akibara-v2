@@ -167,25 +167,86 @@ akb_places_should_enqueue(): bool
 ## 3. PSR-4 namespace `Akibara\Core\*`
 
 ```php
-\Akibara\Core\Bootstrap            // src/Bootstrap.php — singleton, init() idempotent
-\Akibara\Core\ServiceLocator       // src/Container/ServiceLocator.php — register/get services
-\Akibara\Core\ModuleRegistry       // src/Registry/ModuleRegistry.php — declare/all modules
+\Akibara\Core\Bootstrap                     // src/Bootstrap.php — singleton, init() + register_addon()
+\Akibara\Core\Container\ServiceLocator      // src/Container/ServiceLocator.php — register/get services
+\Akibara\Core\Registry\ModuleRegistry       // src/Registry/ModuleRegistry.php — declare/all modules
+\Akibara\Core\Contracts\AddonContract       // src/Contracts/AddonContract.php — interface for addons
+\Akibara\Core\Contracts\AddonManifest       // src/Contracts/AddonManifest.php — value object
 ```
 
-**Acceso desde addons:**
+**Acceso desde addons (PREFERRED — type-safe via AddonContract):**
 
 ```php
-$bootstrap = \Akibara\Core\Bootstrap::instance();
-$bootstrap->modules()->declare_module('mi-addon', '1.0.0', 'addon');
-$bootstrap->services()->register('preorder.repository', new MyRepo());
+namespace Akibara\MyAddon;
+
+use Akibara\Core\Bootstrap;
+use Akibara\Core\Contracts\{ AddonContract, AddonManifest };
+
+final class Plugin implements AddonContract {
+    public function manifest(): AddonManifest {
+        return new AddonManifest(
+            slug: 'akibara-myaddon',
+            version: '1.0.0',
+            type: 'addon',
+            dependencies: [ 'akibara-core' => '>=1.0' ],
+        );
+    }
+
+    public function init( Bootstrap $bootstrap ): void {
+        $bootstrap->services()->register( 'myaddon.repo', new Repository() );
+        // ... addon-specific init
+    }
+}
+
+// In addon entry file:
+add_action( 'plugins_loaded', static function (): void {
+    if ( class_exists( '\Akibara\Core\Bootstrap' ) ) {
+        \Akibara\Core\Bootstrap::instance()->register_addon( new \Akibara\MyAddon\Plugin() );
+    }
+}, 10 );
 ```
 
-**Hooks:**
+**Acceso desde addons (LEGACY — deprecated 2026-04-27, mantenido para backward compat):**
 
 ```php
-do_action('akibara_core_init', $bootstrap);  // priority 5 plugins_loaded
-// Addons hook here to register services + modules
+add_action( 'akibara_core_init', static function ( \Akibara\Core\Bootstrap $bootstrap ): void {
+    $bootstrap->services()->register( 'myaddon.repo', new Repository() );
+    $bootstrap->modules()->declare_module( 'akibara-myaddon', '1.0.0', 'addon' );
+}, 10 );
 ```
+
+**Por qué preferir `register_addon()` sobre el hook:**
+- **Type safety enforced compile-time** — AddonContract interface fuerza `init(Bootstrap)` + `manifest()`. PHPStan + IDE detectan signature mismatch antes del runtime.
+- **Per-addon failure isolation** — `register_addon()` envuelve `init()` en try/catch dedicado. Si el addon viola el contract, **solo ese addon es disabled**; otros addons siguen cargando normal. El hook compartido tiene try/catch único — el primer addon que falla saltea los siguientes.
+- **Manifest as data** — version + dependencies declarados explícitamente, validable contra otras addons.
+
+**Hooks (signature canónica = código, NO esta doc):**
+
+> ⚠ **Política post-INCIDENT-01:** este doc NO duplica signatures de hooks. La fuente de verdad es siempre el código fuente. Lee `akibara-core/src/Bootstrap.php` directamente. Razón: drift entre doc y código causó incident productivo (2026-04-27).
+
+**Hook list:**
+- `akibara_core_init` — disparado en `plugins_loaded:5` post `Bootstrap::init()`. Ver `Bootstrap.php` para signature.
+- `akb_core_module_<name>_loaded` — constant signal cuando módulo file-include termina.
+
+**Patrón de uso (no la signature — el patrón):**
+
+```php
+add_action(
+    'akibara_core_init',
+    function ( \Akibara\Core\Bootstrap $bootstrap ): void {
+        // Bootstrap facade expone services() + modules() + futuras APIs sin breaking changes.
+        $bootstrap->services()->register( 'mi-addon.repo', new MyRepo() );
+        $bootstrap->modules()->declare_module( 'mi-addon', '1.0.0', 'addon' );
+    },
+    10  // priority. accepted_args default=1 — Bootstrap es facade único.
+);
+```
+
+**Prevention (post-INCIDENT-01):**
+1. **Type hint estricto** `\Akibara\Core\Bootstrap $bootstrap` — PHP runtime enforce el contract. Drift signature → fatal en activate, NO silent bug.
+2. **Bootstrap facade extensible** — agregar métodos al singleton (`->cache()`, `->logger()`) NO rompe addons existentes.
+3. **Auto-recovery** — `Bootstrap::init()` envuelve el `do_action` en `try/catch \Throwable`. Addon que viole contract es auto-deactivated (persistido en `wp_option akibara_disabled_addons`); site queda UP, otros addons cargan normal.
+4. **No olvidar `accepted_args`** — con facade single-arg, `accepted_args` default WP=1 es correcto. No hay boilerplate fácil de olvidar.
 
 ---
 
@@ -308,10 +369,17 @@ Si una cell necesita cambio en Core:
 ### Suscribirse a `akibara_core_init`
 
 ```php
-add_action('akibara_core_init', function($bootstrap) {
-    $bootstrap->services()->register('preventas.repo', new \Akibara\Preventas\Repository());
-}, 10);
+add_action(
+    'akibara_core_init',
+    function ( \Akibara\Core\Bootstrap $bootstrap ): void {
+        $bootstrap->services()->register( 'preventas.repo', new \Akibara\Preventas\Repository() );
+        $bootstrap->modules()->declare_module( 'akibara-preventas', '1.0.0', 'addon' );
+    },
+    10
+);
 ```
+
+**Type hint estricto recomendado** — `\Akibara\Core\Bootstrap $bootstrap` enforce el contract en runtime. Si en futuro Bootstrap signature cambia internamente, `Bootstrap` mantiene su contract público (services/modules + nuevas APIs) → addon NO rompe.
 
 ### Verificar core ready antes de usar API
 
