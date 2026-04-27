@@ -21,7 +21,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Akibara\\Core\\Tests\\": "tests/phpunit/"
+      "Akibara\\Core\\Tests\\": "tests/phpunit/",
+      "Akibara\\Core\\Tests\\Unit\\": "tests/phpunit/Unit/"
     }
   },
   "scripts": {
