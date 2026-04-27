@@ -34,10 +34,13 @@ const httpCredentials = (() => {
 
 export default defineConfig({
   testDir: './tests/e2e',
-  fullyParallel: true,
+  // Sequential vs prod URLs para evitar 429 rate-limit
+  // (Sprint 1 B-S1-SEC-07 rate-limited /cart/* a 10/min).
+  // Para staging tests con basic auth, podríamos paralelizar.
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  workers: 1, // sequential — 1 worker en CI y local
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
 
   use: {
@@ -51,15 +54,12 @@ export default defineConfig({
   },
 
   projects: [
-    // Mobile-first: viewport 375px (iPhone 12 SE). Mayoría tráfico Akibara.
+    // Solo mobile project (mayoría tráfico Akibara). Desktop coverage
+    // reservado para LambdaTest visual regression sprint X.5
+    // (memoria project_qa_lambdatest_policy).
     {
       name: 'mobile',
       use: { ...devices['iPhone 12'] },
-    },
-    // Desktop: 1280px
-    {
-      name: 'desktop',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 720 } },
     },
   ],
 

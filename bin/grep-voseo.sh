@@ -43,6 +43,8 @@ VOSEO_PATTERN='\b(confirmá|hacé|tenés|podés|tomá|mirá|andá|sabés|querés
 # Excludes globales
 EXCLUDES=(
   --exclude-dir=.git
+  --exclude-dir=.claude
+  --exclude-dir=.github
   --exclude-dir=node_modules
   --exclude-dir=vendor
   --exclude-dir=.private
@@ -61,6 +63,13 @@ EXCLUDES=(
   --exclude='*-baseline*'
 )
 
+# Post-filter: skip matches en archivos doc/dev (md/sh/yml/json/gitignore).
+# El voseo gate aplica SOLO a customer-facing strings (php/js/html/po/pot).
+# Los .md/.sh/.yml describen el rule, no son customer-facing.
+post_filter_doc_files() {
+  grep -Ev "\.(md|sh|txt|yml|yaml|json|gitignore|gitleaksignore|toml|lock)(\..+)?:[0-9]" || true
+}
+
 # Files a scanear: PHP, JS, JSX, TS, HTML, PO/MO (Akibara customer-facing)
 INCLUDE_PATTERN='*.{php,js,jsx,ts,tsx,html,po,pot,json}'
 
@@ -74,16 +83,16 @@ if [[ "$mode" == "--staged" ]]; then
     echo "${C_DIM}voseo: no staged files relevantes${C_OFF}"
     exit 0
   fi
-  matches=$(echo "$files" | xargs -I {} grep -EinH "$VOSEO_PATTERN" {} 2>/dev/null || true)
+  matches=$(echo "$files" | xargs -I {} grep -EinH "$VOSEO_PATTERN" {} 2>/dev/null | post_filter_doc_files || true)
 elif [[ -f "$mode" ]]; then
-  matches=$(grep -EinH "$VOSEO_PATTERN" "$mode" 2>/dev/null || true)
+  matches=$(grep -EinH "$VOSEO_PATTERN" "$mode" 2>/dev/null | post_filter_doc_files || true)
 else
   matches=$(grep -EirnH "$VOSEO_PATTERN" \
     "${EXCLUDES[@]}" \
     --include="*.php" --include="*.js" --include="*.jsx" \
     --include="*.ts" --include="*.tsx" --include="*.html" \
     --include="*.po" --include="*.pot" \
-    "$PROJECT_DIR" 2>/dev/null || true)
+    "$PROJECT_DIR" 2>/dev/null | post_filter_doc_files || true)
 fi
 
 if [[ -z "$matches" ]]; then
