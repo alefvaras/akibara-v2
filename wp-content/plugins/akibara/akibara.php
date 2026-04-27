@@ -87,8 +87,10 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 	// fatal redeclare). Check via active_plugins option (set en DB, disponible al
 	// file include time de cualquier plugin, antes de plugins_loaded hook).
 	$akb_active_plugins  = get_option( 'active_plugins', array() );
-	$akb_marketing_owned = in_array( 'akibara-marketing/akibara-marketing.php', $akb_active_plugins, true );
-	$akb_preventas_owned = in_array( 'akibara-preventas/akibara-preventas.php', $akb_active_plugins, true );
+	$akb_marketing_owned    = in_array( 'akibara-marketing/akibara-marketing.php', $akb_active_plugins, true );
+	$akb_preventas_owned    = in_array( 'akibara-preventas/akibara-preventas.php', $akb_active_plugins, true );
+	$akb_inventario_owned   = in_array( 'akibara-inventario/akibara-inventario.php', $akb_active_plugins, true );
+	$akb_mercadolibre_owned = in_array( 'akibara-mercadolibre/akibara-mercadolibre.php', $akb_active_plugins, true );
 
 	// Modules migrated to akibara-marketing addon (skip if marketing active).
 	$akb_marketing_modules = array(
@@ -101,15 +103,27 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 	// Modules migrated to akibara-preventas addon (skip if preventas active).
 	$akb_preventas_modules = array( 'next-volume', 'series-notify', 'editorial-notify' );
 
+	// Modules migrated to akibara-inventario addon (skip if inventario active) — Sprint 4.
+	$akb_inventario_modules = array( 'inventory', 'shipping', 'back-in-stock' );
+
+	// Modules migrated to akibara-mercadolibre addon (skip if mercadolibre active) — Sprint 5.
+	$akb_mercadolibre_modules = array( 'mercadolibre' );
+
 	$akb_enabled = static function ( string $key ) use (
-		$akb_marketing_owned, $akb_preventas_owned,
-		$akb_marketing_modules, $akb_preventas_modules
+		$akb_marketing_owned, $akb_preventas_owned, $akb_inventario_owned, $akb_mercadolibre_owned,
+		$akb_marketing_modules, $akb_preventas_modules, $akb_inventario_modules, $akb_mercadolibre_modules
 	): bool {
-		// Skip migrated modules — addon plugin owns the module post-Sprint-3.
+		// Skip migrated modules — addon plugin owns the module post-Sprint-3/4/5.
 		if ( $akb_marketing_owned && in_array( $key, $akb_marketing_modules, true ) ) {
 			return false;
 		}
 		if ( $akb_preventas_owned && in_array( $key, $akb_preventas_modules, true ) ) {
+			return false;
+		}
+		if ( $akb_inventario_owned && in_array( $key, $akb_inventario_modules, true ) ) {
+			return false;
+		}
+		if ( $akb_mercadolibre_owned && in_array( $key, $akb_mercadolibre_modules, true ) ) {
 			return false;
 		}
 		// Default behavior: delegate to mu-plugin if available, else enabled.
