@@ -2,8 +2,8 @@
 
 **Para:** Alejandro Vargas (solo dev Akibara)
 **Tiempo de lectura:** 5 minutos
-**Status audit:** RATIFICADO + EJECUTADO. Sprint 1, 2, 3, 3.5 ✅ DONE 2026-04-27.
-**Última revisión:** 2026-04-27 catch-up retroactivo living docs Sprint 1-3.5 + INCIDENT-01 lecciones embebidas.
+**Status audit:** RATIFICADO + EJECUTADO. Sprints 1-5 + 3.5 + 4.5 ✅ DONE 2026-04-26 / 2026-04-27. Refactor arquitectónico Core+Addons COMPLETO.
+**Última revisión:** 2026-04-27 cierre Sprint 5 + Cell H Sprint 4 deferred mockups + handoff `audit/PROJECT-COMPLETE-2026-04-27.md`.
 
 ---
 
@@ -87,9 +87,14 @@ Quality gates 17 tools: **GHA + bin/quality-gate.sh local** (Jenkins descartado)
 | **Sprint 4 esfuerzo** | ~35h estimate — real ~31h (-11%, AddonContract pattern maduro 4ta aplicación) |
 | **Sprint 4.5 status** | ✅ DONE 2026-04-26 — NO-RFC + RETROSPECTIVE + QA-SMOKE-REPORT en `audit/sprint-4.5/` |
 | **Sprint 4.5 esfuerzo** | ~4-6h estimate — real ~3h (sin RFCs ni LambdaTest baseline) |
-| **PENDIENTE MOCKUP items** | parcialmente resueltos via 10 HTML/CSS prototypes Cell H Sprint 3.5; Cell H Sprint 4 deferida (BIS form mock-10 + WhatsApp placement variants pendientes Sprint 5) |
+| **Sprint 5 status** | ✅ DONE 2026-04-27 (commits f708476 + e4ebab9) — Cell E akibara-mercadolibre v1.0.0 + Cell H Sprint 4 deferred mockups |
+| **Sprint 5 esfuerzo** | ~15-20h estimate — real ~14h transcript (-30%, 5ª aplicación AddonContract sin incidentes) |
+| **PENDIENTE MOCKUP items** | ✅ resueltos — 10 HTML/CSS prototypes Cell H Sprint 3.5 + 6 mockups Cell H Sprint 4 (commit e4d2474 vía e4ebab9): BIS form, WhatsApp placement variants, editorial palette, customer milestones email, logo canonical, stock alerts |
 | **DOBLE OK destructivos** | 8 items — 6 ejecutados S1, 2 pending (CLEAN-002/013) |
-| **PRs mergeados a main** | 13 mergesets a main (PRs #1-#11 Sprint 1-3.5 secuencial + 2 merges directos Sprint 4 paralelo Cells C+D) |
+| **PRs mergeados a main** | 15 mergesets a main (PRs #1-#11 Sprint 1-3.5 + 2 merges directos Sprint 4 + 2 merges Sprint 5 = f708476 Cell E + e4ebab9 Cell H mocks) |
+| **Plugins finales (LOC PHP)** | akibara-core 4,484 + akibara-preventas 6,855 + akibara-marketing 12,441 + akibara-inventario 4,426 + akibara-whatsapp 605 + akibara-mercadolibre 4,522 = **33,333 PHP LOC distribuidos en 6 plugins** |
+| **Tests E2E @critical** | 7 specs (golden-flow + 3 preorder-flow-* + shipping-checkout + whatsapp-button + ml-smoke) |
+| **Mockups Cell H acumulados** | 16 prototipos HTML/CSS (Sprint 3.5 ×10 + Sprint 4 ×6) — todos consumen tokens.css |
 
 ### Ratio severidad por sprint
 

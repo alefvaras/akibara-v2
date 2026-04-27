@@ -1,8 +1,19 @@
 # SPRINT EXECUTION GUIDE Akibara
 
-**Fecha:** 2026-04-26 (last updated 2026-04-27)
+**Fecha:** 2026-04-26 (last updated 2026-04-27 — refactor arquitectónico Core+Addons ✅ COMPLETO)
 **Para:** Alejandro Vargas (solo dev)
 **Cómo se usa:** copy-paste cada prompt en una **nueva conversación de Claude Desktop** cuando arranques el sprint correspondiente. Las memorias auto-cargan + Claude lee files autoritativos del repo.
+
+## ✅ Final summary 2026-04-27 — Refactor COMPLETO
+
+Sprints 1-5 + Sprint 3.5 + Sprint 4.5 ✅ DONE. Refactor arquitectónico target Akibara Core+Addons cerrado:
+
+- **6 plugins extraídos:** akibara-core (4,484 PHP LOC) + 5 addons (preventas 6,855 + marketing 12,441 + inventario 4,426 + whatsapp 605 + mercadolibre 4,522 = 28,849 PHP LOC addons)
+- **5/5 addons con AddonContract pattern** (post INCIDENT-01) — 0 incidents `plugins_loaded` fatal en C+D+E
+- **7 specs E2E @critical** (golden-flow, preorder ×3, shipping-checkout, whatsapp-button, ml-smoke)
+- **5,225 LOC mockups Cell H Sprint 4** (6 mockups + 3 UI-SPECS + INDEX + HANDOFF)
+- **0 RFCs en Sprint 4+5**, scope acotado, in-cell decisions suficientes
+- **Próxima sesión:** Deploy staging + smoke real + activate progresivo prod (NO más refactor)
 
 ---
 
@@ -768,7 +779,18 @@ Avísame approve RFCs + merges Core.
 
 ---
 
-# Sprint 5 — Cell E mercadolibre (secuencial)
+# Sprint 5 — Cell E mercadolibre (secuencial) ✅ DONE 2026-04-27 (commits f708476 + e4ebab9)
+
+**Status:** ✅ DONE 2026-04-27 — Cell E akibara-mercadolibre v1.0.0 extraído + Cell H Sprint 4 deferred mockups entregados. Refactor arquitectónico Akibara Core+Addons COMPLETO.
+
+**Esfuerzo real:** ~14h transcript (vs estimate 15-20h, -30%) — 5ª aplicación AddonContract sin incidentes. Equivalente manual ~30-40h.
+
+## Lecciones aprendidas Sprint 5
+- **AddonContract pattern: 5/5 aplicaciones sin incidentes.** Pattern terminal — NO requiere variantes para futuras extracciones.
+- **Cell H carry-over Sprint 4→5 funcional pero sub-óptimo.** Mockups 11-16 hubieran agregado más valor durante Sprint 4. Lección: si Cell H falla mid-sprint, escalar a Opus inmediato.
+- **ML extraction +6% LOC vs estimate** (4,522 PHP real vs 4,250 estimate). "Tax" defensive AddonContract + group wrap acceptable.
+- **Branch hygiene gap:** mockups Cell H acabaron en `feat/akibara-mercadolibre` en vez de `feat/theme-design-s4`. Cleanup branch vacía pasa a próxima sesión.
+- **0 RFCs Sprint 5** — patrón consolidado, in-cell decisions suficientes para addons que consumen Core API estable.
 
 **Pre-requisito:** Sprint 4.5 DONE.
 
