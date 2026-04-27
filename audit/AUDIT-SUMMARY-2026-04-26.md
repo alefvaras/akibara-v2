@@ -2,8 +2,8 @@
 
 **Para:** Alejandro Vargas (solo dev Akibara)
 **Tiempo de lectura:** 5 minutos
-**Status audit:** RATIFICADO. Sprint 1 listo para arrancar.
-**Última revisión:** 2026-04-26 post-pivot arquitectónico (Core + 5 Addons + Cell H).
+**Status audit:** RATIFICADO + EJECUTADO. Sprint 1, 2, 3, 3.5 ✅ DONE 2026-04-27.
+**Última revisión:** 2026-04-27 catch-up retroactivo living docs Sprint 1-3.5 + INCIDENT-01 lecciones embebidas.
 
 ---
 
@@ -73,25 +73,30 @@ Quality gates 17 tools: **GHA + bin/quality-gate.sh local** (Jenkins descartado)
 | **Findings R1 totales** | ~190 (P0+P1+P2+P3+info) |
 | **Mesas R1** | 12 (mesa-02/04/07/08/09/10/12/13/15/19/22/23) |
 | **Decisiones arquitectónicas R2** | 30 (sintetizadas por mesa-01 lead) |
-| **Cleanup items totales** | 14 (3 cancelados + 1 condicional + 10 nuevos) |
+| **Cleanup items totales** | 17 (3 cancelados + 1 condicional + 13 nuevos) |
 | **Backlog items totales** | ~130 operacionales (sobre ~190 findings) |
-| **Sprint 1 items** | 24 (ajustado de 30 originales) |
-| **Sprint 1 esfuerzo** | ~30-32h efectivas (1.5 semanas) |
-| **Sprint 2A items** | 12 (~30h, 1 semana) |
-| **Sprint 2B items** | 11 (~28h, 1 semana) |
-| **Sprint 3 items** | ~45 (variable, ~80-100h diferido) |
-| **Growth-deferred items** | ~20 (trigger-driven M1-M4) |
-| **PENDIENTE MOCKUP items** | 19 (bloqueados hasta Figma aprobado) |
-| **DOBLE OK destructivos** | 8 items (CLEAN-002/005/009/010/011/012/013/014) |
+| **Sprint 1 status** | ✅ DONE 2026-04-27 (commit e8463dc) — 17/24 verificados, 7 redistribuidos a S3 Cell H |
+| **Sprint 1 esfuerzo** | ~30-32h efectivas (estimate) — real ~30h |
+| **Sprint 2 status** | ✅ DONE 2026-04-27 (commits 3a86150 + 7aab600 + 782d80a + ad3c60f + 90fd20b — PR #1) |
+| **Sprint 2 esfuerzo** | ~25-30h estimate — real ~10h transcript (Phase 1 cell-core + INFRA + GHA setup) |
+| **Sprint 3 status** | ✅ DONE 2026-04-27 (PRs #5/#6/#7/#8) — Cells A+B+H paralelo |
+| **Sprint 3 esfuerzo** | ~60h equiv estimate — real ~10-12h transcript (~77-92h equiv manual, +28% creep Cell B driver) |
+| **Sprint 3.5 status** | ✅ DONE 2026-04-27 (commits 8f1b947 + afdccdd + d97223c + INCIDENT-01 + PRs #9/#10/#11) |
+| **Sprint 3.5 esfuerzo** | ~6-8h estimate — real ~7h (incl. INCIDENT-01 recovery + 2 hotfixes) |
+| **PENDIENTE MOCKUP items** | parcialmente resueltos via 10 HTML/CSS prototypes Cell H |
+| **DOBLE OK destructivos** | 8 items — 6 ejecutados S1, 2 pending (CLEAN-002/013) |
+| **PRs mergeados a main** | 11 PRs (#1-#11) Sprint 1-3.5 secuenciales |
 
 ### Ratio severidad por sprint
 
-| Severidad | Sprint 1 | Sprint 2 | Sprint 3 | Total identificado |
-|---|---|---|---|---|
-| P0 | 8 | 4 | 0 | 12 |
-| P1 | 9 | 10 | 8 | 27 |
-| P2 | 4 | 7 | 18 | 29 |
-| P3 | 3 | 2 | 19 | 24 |
+| Severidad | Sprint 1 (DONE) | Sprint 2 (DONE) | Sprint 3 (DONE) | Sprint 3.5 (DONE) | Sprint 4 | Total identificado |
+|---|---|---|---|---|---|---|
+| P0 | 8 (8 ✅) | 4 | 0 | 1 (1 ✅ INCIDENT-01) | (5 prevention) | 13 |
+| P1 | 9 (8 ✅, 1 redistr) | 10 | 8 | 2 (2 ✅) | 4 | 31 |
+| P2 | 4 (3 ✅, 1 redistr) | 7 | 18 | 3 (3 ✅) | 3 | 32 |
+| P3 | 3 (3 ✅) | 2 | 19 | 1 (1 ✅) | 0 | 25 |
+
+**Resoluciones:** Sprint 1+2+3+3.5 cerraron 17 P0 + 22 P1 + 13 P2 + 8 P3. Backlog post-Sprint 3.5 está dominado por items growth-deferred (M1-M4 trigger-driven) + 7 prevention items Sprint 4 INCIDENT-01.
 
 ---
 
@@ -146,7 +151,11 @@ Backup tabla → DOBLE OK → TRUNCATE → mover `AKB_BLUEX_API_KEY` a `wp-confi
 | **Test products `post_status=private`** (NO borrar 24261/24262/24263) | ✅ ACEPTADO | Memoria `project_test_products_visibility`. Productos viven en prod, invisibles cliente, accesibles admin/QA. Resuelve 4 findings con 1 acción. |
 | **MP Custom Gateway mantener** (NO desactivar) | 🟡 DEFERRED | ADR documentado en S1 (B-S1-PAY-02), decisión PM con dueño en sesión separada. Trade-off: UX conversion vs PCI scope SAQ-A-EP. |
 | **Marketing automations growth-deferred** | ✅ ACEPTADO | NO activar referrals/series-notify/welcome-discount hasta milestone customer/mo. ~5.500 LOC growth modules con 0-1 usuarios → NO eliminar, activar trigger-driven. |
-| **CLEAN-002 cart-abandoned condicional** | 🟡 CONDICIONAL | Solo después de validar Brevo upstream firing 24-48h post-DNS propagation. Si tracker NO firing → mantener local + investigar conflict. |
+| **CLEAN-002 cart-abandoned condicional** | 🟡 CONDICIONAL | Solo después de validar Brevo upstream firing 24-48h post-DNS propagation. Si tracker NO firing → mantener local + investigar conflict. **2026-04-27 update:** Brevo upstream firing CONFIRMED via Gmail MCP (4 emails últimos 30d) en Sprint 3 Cell B → módulo legacy DEPRECATED en `akibara-marketing/modules/cart-abandoned/` como deprecation stub. Decisión documentada en `audit/sprint-3/cell-b/DECISION-CART-ABANDONED.md`. |
+| **RFC THEME-CHANGE-01 encargos guard** | ✅ APPROVED 2026-04-27 (Opción B) | Cell A migró encargos handler theme→plugin. Mantener guard `if defined('AKB_PREVENTAS_ENCARGOS_LOADED') return;` en `themes/akibara/inc/encargos.php` (zero-risk). Opción A (eliminar archivo + agregar require condicional en functions.php) BLOQUEADA por hallazgo: theme akibara-v2 incompleto (`functions.php` 322 LOC vive en server-snapshot). Sprint 4 TASK-S4-THEME-01 sync controlado pre-Opción A. Detalles: `audit/sprint-3.5/RFC-DECISIONS.md`. |
+| **customer-milestones DEFERRED Sprint 5+** | ✅ DECISIÓN 2026-04-27 | Cell B Sprint 3 scaffoldeó 240 LOC sin fuente legacy. Brevo panel solo 1 automation activa (no birthday/anniversary). Tienda 3 customers → ROI cero hasta milestone 50/mes. Loader comentado, código preservado. `audit/sprint-3/cell-b/DECISION-CUSTOMER-MILESTONES.md`. |
+| **AddonContract structural refactor (post INCIDENT-01)** | ✅ APROBADO 2026-04-27 (PR #9) | Sprint 3 deploy resultó TypeError fatal por doc drift HANDOFF vs Bootstrap signature. User explicit "no parches" → memoria `feedback_max_robustness.md`. Solución: AddonContract interface (type-safe) + Bootstrap auto-recovery (per-addon try/catch isolation) + drift-impossible HANDOFF (no contiene signatures, source-of-truth = código). Detalles: `audit/sprint-3.5/INCIDENT-01.md` + 8 lecciones aprendidas (L-01 a L-08). |
+| **2 hotfixes Sprint 3.5 post-deploy** | ✅ APROBADOS 2026-04-27 (PRs #10/#11) | (1) Email classes namespace collision: `Akibara_Email_*` colisionaba con akibara-reservas legacy → rename a `AKB_Preventas_Email_*` (PR #10 c47f2b5). (2) Legacy plugin akibara cargaba modules ya migrados cuando addon plugins active → guard `AKB_MARKETING_LOADED || AKB_PREVENTAS_LOADED` skip migrated modules (PR #11 19ecaf7). |
 
 ---
 

@@ -67,9 +67,18 @@ Si algo falla, pausa y resuelve antes de arrancar el siguiente sprint.
 
 ---
 
-# Sprint 1 — Foundation cleanup (YA EN EJECUCIÓN)
+# Sprint 1 — Foundation cleanup ✅ DONE 2026-04-27 (commit e8463dc)
 
-**Status:** En curso en sesión paralela de Claude Desktop. Esta sección es referencia.
+**Status:** ✅ DONE 2026-04-27 — 17/24 items verificados end-to-end + 7 redistribuidos a S3 Cell H. Smoke 20/20 PASS. Sentry GREEN.
+
+**Esfuerzo real:** ~30h (vs estimate 30-32h) — within target.
+
+## Lecciones aprendidas Sprint 1
+- **DOBLE OK protocol funcionó:** 6 items destructivos (CLEAN-005/010/012 + SEC-02/03/04) ejecutados sin incidentes con backups + smoke posts.
+- **DNS propagation async OK:** B-S1-EMAIL-01 SPF/DKIM/DMARC merged en Cloudflare durante sprint, propagation passive.
+- **Visual items requieren mockup → redistribuir a Sprint 3 Cell H** (FRONT-01/02/03 + COMP-01/02/03 + SETUP-06): 7 items movidos correctamente.
+- **mu-plugins defensive cross-cutting funcionan bien:** 4 mu-plugins agregados (security-headers, bluex-logs-purge, seo-breadcrumb-fix, no-translate-guard) sin colisiones.
+- **PAY-02 MP PCI ADR es decisión PM, NO Claude work:** correctamente DEFERRED.
 
 **Esfuerzo:** ~30-32h (1.5 semanas)
 
@@ -119,7 +128,18 @@ Si algo falla, pausa y resuelve antes de arrancar el siguiente sprint.
 
 ---
 
-# Sprint 2 — Cell Core extraction + staging
+# Sprint 2 — Cell Core extraction + staging ✅ DONE 2026-04-27 (PR #1)
+
+**Status:** ✅ DONE 2026-04-27 — Phase 1 cell-core released + GHA + staging setup. Commits 3a86150 + 7aab600 + 782d80a + ad3c60f + 90fd20b.
+
+**Esfuerzo real:** ~10h transcript (vs ~25-30h estimate manual). Phase 1 only — 6 cero-refs modules migrados (search/category-urls/order/email-safety/customer-edit-address/address-autocomplete). Phase 2+ (rut/phone/product-badges/checkout-validation/health-check/series-autofill/email-template) pendiente Sprint 4+.
+
+## Lecciones aprendidas Sprint 2
+- **PHP function hoisting al parse time:** sentinel guards `if (function_exists()) return;` NO previenen redeclare cross-file. Solución: group wrap pattern (REDESIGN.md §9) — wrap top-level functions + hooks dentro de `if ( ! function_exists( 'sentinel' ) )` block.
+- **3-mesa adversarial review pre-deploy detectó P0/P1:** mesa-15 + mesa-22 + mesa-02 review (commit 7aab600) bloqueó deploy con bugs latentes. Patrón vale la pena replicar Sprint 3+.
+- **Phase 1 release de subset reduce blast radius:** 6 cero-refs modules vs 13 modules monolítico fue decisión correcta. Postmortem `cell-core/REDESIGN.md`.
+- **GHA fix iterativo:** 2 commits (0a42ce9 + d3c4068) post-launch para content-gates filtering, gitleaks permissions, playwright sequential. Esperar quality-gate red en primer push.
+- **Cell Core Phase 1 HANDOFF.md drift-impossible (post INCIDENT-01):** doc NO contiene signatures. Source-of-truth = `Bootstrap.php` directo.
 
 **Pre-requisito:** Sprint 1 DONE + Sentry 24h verde + DNS Brevo propagado.
 
@@ -252,7 +272,30 @@ Avísame cada destructivo, mockup decisión, RFC.
 
 ---
 
-# Sprint 3 — PARALELO Cell A + Cell B + Cell H high
+# Sprint 3 — PARALELO Cell A + Cell B + Cell H high ✅ DONE 2026-04-27 (PRs #5/#6/#7/#8)
+
+**Status:** ✅ DONE 2026-04-27 — 3 cells paralelo + closeout. Cell A `akibara-preventas` v1.0.0 (PR #6, commit e8a88e6), Cell B `akibara-marketing` v1.0.0 (PR #8, commits 5a22245 + 0a1c65f), Cell H Design Ops (PR #7, commits 1a49665 + a5c2e22), closeout (PR #5).
+
+**Esfuerzo real:** ~10-12h transcript (vs ~60h estimate equiv) — multiplicador real cells vs sequential ~5-7x. Equivalente manual ~77-92h (+28% creep, Cell B driver — completó 12 modules en lugar de subset).
+
+## Lecciones aprendidas Sprint 3 (CRÍTICAS — incluyen INCIDENT-01)
+
+**INCIDENT-01 — Sprint 3 plugins TypeError fatal (sitio caído ~3-4h):**
+- **L-01 Doc drift es síntoma, NO causa raíz.** HANDOFF mostraba 1-arg `$bootstrap`, código pasaba 2 args desde Sprint 2 commit inicial. Cell A escribió type hint estricto siguiendo el HANDOFF → TypeError. Solución estructural: doc NO contiene signatures, source-of-truth = código.
+- **L-02 Type system > tests + docs.** Tests pueden olvidarse, docs pueden driftear, custom PHPStan rules requieren mantenimiento. AddonContract interface fail compile-time, zero maintenance burden.
+- **L-03 Per-addon failure isolation > shared hook.** `do_action('akibara_core_init')` con try/catch único bloqueaba TODOS los addons cuando uno crasheaba. `register_addon(AddonContract)` envuelve init() en try/catch dedicado — falla aislada, otros addons siguen UP.
+- **L-04 "Backward compat" sin external consumers reales = trampa.** Mantener hook 2-arg "por backward compat" duplicaba signatures + abría camino a re-drift.
+- **L-05 Activations de plugins NO testean en CI.** GHA corre PHPCS/PHPStan/ESLint pero nunca activa plugins en WP boot real. Sprint 4 prevention: Phase D `addon-activation-test` job en GHA + PHPUnit Bootstrap auto-recovery (commits 2b614db + 4d4c14e).
+
+**Otras lecciones Sprint 3:**
+- **HANDOFF.md como contrato API entre cells funcionó** — permite Lock release sin re-read de código completo.
+- **STUBS.md + REQUESTS-FROM-{X}.md como queue inter-cell funcionaron** — Cell H pudo priorizar 3 mockups Cell A + 2 Cell B sin bloqueos.
+- **DECISION-*.md para choices que se desvían del plan funcionaron** — cart-abandoned + customer-milestones tienen audit trail con evidencia (Gmail MCP, Brevo panel).
+- **RFC mid-sprint via guard zero-risk funcionó** — THEME-CHANGE-01 NO bloqueó Cell A, workaround in-line + RFC asíncrono.
+- **Scope creep vigilante:** Cell B liftó 12 modules en lugar de subset — estimate creep +28%. Sprint 4 mantener buffer 20%.
+- **Theme akibara-v2 INCOMPLETO** descubierto solo en Sprint 3.5 review — 322 LOC `functions.php` viven en server-snapshot, no en repo. **Pre-condición Sprint 4: sync controlado.**
+- **LambdaTest baseline NUNCA creado en Sprint 1** — visual regression Sprint 3.5 no tiene comparable. DEFERRED Sprint 4.5 setup tooling completo.
+- **Tests E2E coverage gap 75%:** 4 specs vs 16 target. Cell B no agregó specs. Sprint 4 mín 1 spec/cell vertical.
 
 **Pre-requisito:** Sprint 2 DONE + staging.akibara.cl + akibara-core extraído + Sentry 24h verde.
 
@@ -417,7 +460,21 @@ Avísame cada destructivo, RFC, decisión PM, mockup approval.
 
 ---
 
-# Sprint 3.5 — Lock release + RFC consolidation + LambdaTest
+# Sprint 3.5 — Lock release + RFC consolidation + LambdaTest ✅ DONE 2026-04-27 (incluye INCIDENT-01 + 2 hotfixes)
+
+**Status:** ✅ DONE 2026-04-27 — Lock release + 5 reports + INCIDENT-01 + 3 hotfix PRs. Commits 8f1b947 + afdccdd + d97223c + 29168e5 + (PR #9 refactor robust + PR #10 email collision + PR #11 legacy skip).
+
+**Esfuerzo real:** ~7h (vs estimate 6-8h) — incluye INCIDENT-01 recovery (~3h refactor estructural).
+
+## Lecciones aprendidas Sprint 3.5 (Lock release + INCIDENT-01)
+
+- **L-06 Smoke prod automatizado funcionó (parcialmente).** F-03 fix (3 nuevos checks `/encargos/`, `/mis-reservas/`, `/wp-json/akibara/v1/health`) detectó `/mis-reservas/ 404` post-rsync. Pero NO detectó el fatal porque pre-activate el plugin no corre.
+- **L-07 Status quo bias es trampa cognitiva.** Mi razonamiento inicial "respetar la decisión de Sprint 2" era hablar de "respetar" un commit que NO TENÍA design doc justificándolo. Cuestionar status quo cuando hay justification arquitectural fuerte para refactor.
+- **L-08 User explicit "robustez máxima" supersede defaults pragmáticos.** Memoria grabada `feedback_max_robustness.md`: estructural > pragmatic, type-system > tests, per-addon isolation > shared catch.
+- **Sprint X.5 Lock release pattern funciona como diseñado:** 5 reports formales (RFC-DECISIONS + LAMBDATEST-REPORT + RETROSPECTIVE + QA-SMOKE-REPORT + SPRINT-4-READINESS) producen audit trail completo + recomendación arrancar Sprint 4.
+- **Email classes namespace collision (PR #10):** `Akibara_Email_*` colisionaba con `akibara-reservas` legacy plugin que sigue activo en prod hasta Sprint 5. Lección: addon plugins con names compartidos requieren prefix únicos (`AKB_Preventas_Email_*`, `AKB_Marketing_*`).
+- **Legacy plugin coexistencia (PR #11):** plugin `akibara` legacy carga modules ya migrados → guard `AKB_MARKETING_LOADED || AKB_PREVENTAS_LOADED` en `akibara.php` skip migrated modules. Lección: durante migración progresiva, plugin source siempre necesita guard de plugin destination.
+- **Living docs update policy grabada (commit 29168e5):** memoria `project_living_docs_update_policy.md` para que TODOS los agentes mantengan BACKLOG/CLEANUP-PLAN/AUDIT-SUMMARY/SPRINT-EXECUTION-GUIDE updated en tiempo real (NO acumular).
 
 **Pre-requisito:** Sprint 3 cells DONE (3 PRs merged a main).
 
@@ -770,6 +827,14 @@ Avísame destructivos + decisión PM 3 rows + sandbox MLC.
 | RFC rechazado, cell ya implementó workaround | Workaround se mantiene; RFC re-considerado en Sprint X+1.5 |
 | Staging.akibara.cl down | bin/sync-staging.sh re-genera + verify Hostinger panel |
 | User backdoor encontrado mid-Sprint | Pausa sprint + IR forensic + escalate Sentry |
+| **TypeError fatal post-deploy plugin activate (INCIDENT-01)** | wp-cli `plugin deactivate` falla cuando WP boot está roto. Usar `bin/emergency-disable-plugin.sh` SSH+mv (creado post-INCIDENT-01). Doc drift root cause → refactor estructural (NO hotfix forward). |
+| **Doc drift HANDOFF vs código (INCIDENT-01)** | HANDOFF.md NO debe duplicar signatures de hooks. Source-of-truth = código. Política grabada en `audit/sprint-2/cell-core/HANDOFF.md` post-INCIDENT-01. |
+| **Plugin namespace collision (akibara-reservas legacy + akibara-preventas)** | Rename addon classes a prefix único (`AKB_Preventas_*`, `AKB_Marketing_*`). PR #10 c47f2b5 ejemplo. |
+| **Legacy plugin carga modules migrados cuando addons activos** | Guard en plugin source: `if defined('AKB_<DEST>_LOADED') skip module`. PR #11 19ecaf7 ejemplo. |
+| **Smoke prod NO detecta fatal en plugin activate** | Plugin pre-activate no corre código. Sprint 4 prevention: addon-activation-test job en GHA + staging activación pre-prod (commit 2b614db). |
+| **Theme akibara-v2 incompleto (descubierto Sprint 3.5 review)** | functions.php (322 LOC) vive en server-snapshot, NO en repo. Crear functions.php en akibara-v2 sobreescribiría prod → tienda caída. Sprint 4 TASK-S4-THEME-01 sync controlado pre-cualquier theme delta. |
+| **PHP function hoisting cross-file redeclare** | sentinel guards `if (function_exists()) return;` NO previenen. Aplicar group wrap pattern (REDESIGN.md §9). |
+| **Living docs no updateados durante execution** | Memoria `project_living_docs_update_policy.md` (post-Sprint 3.5): TODOS los agentes mantienen BACKLOG/CLEANUP-PLAN/AUDIT-SUMMARY/SPRINT-EXECUTION-GUIDE updated en tiempo real. Sprint X.5 closeout incluye verify catch-up. |
 
 ---
 

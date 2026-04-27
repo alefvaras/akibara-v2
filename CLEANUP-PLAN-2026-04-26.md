@@ -130,6 +130,8 @@
 
 ### CLEAN-005 — `vendor/` + `coverage/` + dev tooling del plugin akibara
 
+- ✅ **DONE 2026-04-27** (commit e8463dc) — esfuerzo real ~2.5h
+- **Verificación:** curl composer.json/vendor/coverage/tests → 403/404 OK; 3 .htaccess defensivos en plugins/akibara, plugins/akibara-reservas, themes/akibara; backup `.private/snapshots/2026-04-27-akibara-plugin.tar.gz`
 - **LOC removidos:** ~74 MB (vendor 55 MB + coverage 19 MB) + composer artifacts (composer.json/.lock + phpcs.xml + phpstan.neon + baselines + phpunit.xml + tests/)
 - **Razón:** Dev tooling deployado a prod sin protección. Coverage HTML expone source code mapeado por línea (recon completo). composer.json declara TODO bajo `require-dev` → vendor/ existe SOLO para CI/dev tooling, NO runtime.
 - **Findings respaldo:** F-02-001 P0, F-02-025 P3, F-09-015 P2, F-09-016 P2, F-10-006 P0, F-10-007 P0, F-15-008 P1, F-22-004 P0.
@@ -162,6 +164,8 @@
 
 ### CLEAN-006 — `themes/akibara/inc/enqueue.php.bak-2026-04-25-pre-fix`
 
+- ✅ **DONE 2026-04-27** (commit e8463dc) — esfuerzo real ~5min
+- **Verificación:** archivo eliminado; backup en `.private/snapshots/`
 - **LOC removidos:** 12.4 KB (~340 líneas)
 - **Razón:** Backup file leftover del fix CSS preload incident. WP NO carga `.bak-*` files via require, pero queda como ruido + accesible via URL si regex fuera laxo. Commit del fix está en main (verificar).
 - **Findings respaldo:** F-02-005 P3, F-07-005 P3, F-15-007 P3, F-22-018 P2.
@@ -184,6 +188,8 @@
 
 ### CLEAN-007 — `themes/akibara/hero-section.css` (root duplicado)
 
+- ✅ **DONE 2026-04-27** (commit e8463dc) — esfuerzo real ~10min
+- **Verificación:** archivo eliminado; backup en `.private/snapshots/`
 - **LOC removidos:** 306 líneas (NO enqueued, OBSOLETO)
 - **Razón:** Hay 2 archivos `hero-section.css`:
   (a) `themes/akibara/hero-section.css` (root, 306 líneas, NO enqueued — verificado en `inc/enqueue.php`)
@@ -209,6 +215,8 @@
 
 ### CLEAN-008 — `themes/akibara/setup.php` (root vs inc/setup.php duplicado byte-idéntico)
 
+- ✅ **DONE 2026-04-27** (commit e8463dc) — esfuerzo real ~15min
+- **Verificación:** redundante eliminado; backup en `.private/snapshots/`
 - **LOC removidos:** ~150 líneas (un archivo, no se sabe cuál hasta verificar carga)
 - **Razón:** `diff setup.php inc/setup.php` produce salida vacía. Si ambos cargan, PHP fatal error (function redeclaration). Si solo uno, el otro es dead code.
 - **Findings respaldo:** F-07-004 P2.
@@ -258,6 +266,8 @@
 
 ### CLEAN-010 — `wp_bluex_logs` table — TRUNCATE (~65k rows con BlueX API key plain text)
 
+- ✅ **DONE 2026-04-27** (commit e8463dc) — esfuerzo real ~3h
+- **Verificación:** post-TRUNCATE 5 rows nuevas (BlueX seguía operando), cron `akb_bluex_logs_purge` programado 1 mes via mu-plugin `akibara-bluex-logs-purge.php`; disclosure email enviado en `audit/sprint-1/sec-04-bluex-disclosure-2026-04-27.md`; backup `.private/backups/2026-04-27-wp_bluex_logs.sql`
 - **Rows removidos:** ~65,640 (entre 2026-04-10 y 2026-04-12)
 - **Razón:** Plugin third-party BlueX loggea cada request HTTP con header completo `x-api-key: QUoO07ZRZ12tzkkF8yJM9am7uhxUJCbR7f6kU5Dz` en `log_body`. Cualquier export SQL → llave expuesta. NO modificar plugin third-party (solo cleanup datos + monitoring).
 - **Findings respaldo:** F-10-001 P0, F-PRE-001 P0.
@@ -342,6 +352,8 @@
 
 ### CLEAN-012 — 4 admin backdoor accounts (SEC-P0-001 expanded)
 
+- ✅ **DONE 2026-04-27** (commit e8463dc) — esfuerzo real ~3h
+- **Verificación:** `wp user list --role=administrator --format=count` = 1; `@akibara.cl.com` count = 0; forensic audit en `audit/sprint-1/sec-02-forensic-audit-2026-04-27.md`; backup `.private/backups/2026-04-27-pre-sec-p0-001-FULL.sql`
 - **Rows removidos:** 4 wp_users + posts asociados user 6 (~47 reasignados) + Application Passwords + opcional `wp_akb_referrals` row 4
 - **Razón:** Backdoors confirmados (typosquat `@akibara.cl.com`, mismo TLD, creados en 4 minutos automatizado). Persistence vector activo.
 
