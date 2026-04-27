@@ -171,3 +171,84 @@ Mesa-15 y mesa-22 alineadas en F. Sin otras discrepancias.
 ---
 
 **Estado final:** Outcome F vinculante. PR #1 progresa. Sprint 2 cierra +1 día tarde. Sprint 3 unblocked tras deploy verde + 24h Sentry watch.
+
+---
+
+## 9. POSTMORTEM 2026-04-27 ~12:30 UTC-4 — F-pivot sentinel BROKEN, group wrap fix
+
+**Bug encontrado durante deploy staging:** la implementación inicial F-pivot sentinel (`if (function_exists('akb_sinonimos')) return;` antes de los constants) NO funciona porque **PHP hoists top-level function declarations a parse time**.
+
+**Test reproducible (docker php:8.1-cli):**
+
+```php
+<?php
+echo "function_exists foo: " . (function_exists('foo') ? 'YES' : 'NO') . "\n";
+return;
+function foo() {}
+// → "function_exists foo: YES" (hoisted antes del return)
+```
+
+**Consecuencia en staging:** `function_exists('akb_sinonimos')` devolvía `TRUE` en CADA load de `akibara-core/includes/akibara-search.php` (porque PHP las hoistea), el sentinel siempre firing, los `define()` siguientes (AKB_TABLE etc.) NUNCA corrían → fatal "Undefined AKB_TABLE" cuando activation hook llamaba `akb_create_index_table()`.
+
+**Fix robusto aplicado (group wrap):**
+
+```php
+// constants defined first
+if (! defined('AKB_TABLE')) { define('AKB_TABLE', $wpdb->prefix . 'akibara_index'); }
+// ... other constants ...
+
+// Group wrap — PHP NO hoistea functions DENTRO de un if block
+if ( ! function_exists( 'akb_sinonimos' ) ) {
+
+    function akb_sinonimos() {...}
+    function akb_create_index_table() {...}
+    // ... 17 more functions + 11 hooks ...
+
+} // end group wrap
+```
+
+**Verificación robusta:**
+
+```php
+// Test docker php:8.1-cli: include twice, second time skips, no fatal
+include "search-like.php"; // declares foo
+include "search-like.php"; // foo already exists, skipped, no redeclare
+```
+
+**Aplicado a 3 archivos:**
+
+| File | Functions wrapped | Hooks wrapped |
+|---|---|---|
+| `akibara-core/includes/akibara-search.php` | 19 | 11 |
+| `akibara-core/modules/customer-edit-address/module.php` | 9 | 2 |
+| `akibara-core/modules/address-autocomplete/module.php` | 4 | 2 |
+
+**Defensa-en-profundidad final (4 capas):**
+
+1. AKB_*_LOADED check (file-level dedup vía `require_once` realpath)
+2. mu-plugin akibara-00-core-bootstrap.php define AKIBARA_CORE_PLUGIN_LOADED early
+3. legacy akibara/akibara.php skipea includes cuando AKIBARA_CORE_PLUGIN_LOADED set
+4. **group wrap** dentro de `if ( ! function_exists() )` → symbol-level dedup conditional declarations
+
+**Adicional fix descubrió otro bug:** el legacy `akibara/akibara.php` línea 53 cargaba `includes/akibara-core.php` (declara `akb_editorial_pattern` etc.) UNCONDITIONALLY. Wrapped también en el check `! defined('AKIBARA_CORE_PLUGIN_LOADED')` (commit en mismo PR).
+
+**Resultado staging deploy:**
+
+```
+Plugin 'akibara-core' activated.
+Success: Activated 1 of 1 plugins.
+
+AKIBARA_CORE_PLUGIN_LOADED: YES
+AKB_TABLE: wpstg_akibara_index
+AKB_SEARCH_LOADED: 10.0.0
+akb_sinonimos: YES, akb_create_index_table: YES
+akb_cea_can_edit: YES, akb_places_is_enabled: YES
+wpstg_akibara_index: 1371 records
+HTTP 200 | size 210KB
+```
+
+**Lessons:**
+
+- PHP hoisting es trampa silenciosa: 3 mesas + adversarial review NO la detectaron porque no leyeron el código con ojo de "qué pasa con un return entre constants y function declarations en PHP 8".
+- Tests local con docker php:8.1-cli debería ser parte del Definition-of-Done para cada cambio que toque load order o function declarations.
+- Group wrap pattern es el patrón idiomático WP correcto para shareable plugin code (helpers.php ya lo usaba).
