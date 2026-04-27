@@ -1,0 +1,19 @@
+# Sprint 2 B-S2-SETUP-01 — Prettier ignore
+node_modules/
+vendor/
+**/*.min.*
+.private/
+audit/
+server-snapshot/
+data/
+snapshots/
+.staging-agents/
+test-results/
+playwright-report/
+coverage/
+wp-content/plugins/akibara/coverage/
+wp-content/plugins/akibara/vendor/
+wp-content/plugins/akibara/tests/
+*-baseline*
+*.log
+.git/

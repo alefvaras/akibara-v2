@@ -1,0 +1,266 @@
+name: Quality Gates
+
+# Sprint 2 B-S2-SETUP-01 — GHA workflow corre quality gates en cada push/PR.
+# Layer 2 después de bin/quality-gate.sh local (Layer 1).
+# Memoria: project_quality_gates_stack.md
+#
+# Tools en CI:
+#   - Content gates (voseo/claims/secrets) — siempre, sin deps
+#   - PHPCS WPCS + PHPStan L6 — si plugin akibara/composer.json existe
+#   - PHPUnit — si plugin akibara/phpunit.xml.dist existe
+#   - ESLint + Stylelint + Prettier — si root package.json existe
+#   - Playwright @critical — golden flow vs prod URL (read-only smoke)
+#   - Trivy filesystem scan — CVEs en composer.lock + package-lock.json
+#   - Gitleaks — secrets in git history
+#   - Composer audit + npm audit — CVE deps
+#   - plugin-check (PCP) — WordPress.org submission compliance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel in-progress runs cuando llega nuevo commit en mismo branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════════════
+  # FAST GATES — corren primero, fail-fast si content issues
+  # ═══════════════════════════════════════════════════════════════════════
+  content-gates:
+    name: Content gates (voseo / claims / secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: grep-voseo
+        run: bash bin/grep-voseo.sh
+      - name: grep-claims
+        run: bash bin/grep-claims.sh || true   # warning-only, no rompe build
+      - name: grep-secrets
+        run: bash bin/grep-secrets.sh
+
+  gitleaks:
+    name: Gitleaks (secrets in git history)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history para gitleaks
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # PHP GATES — solo si plugin akibara/composer.json existe en el commit
+  # ═══════════════════════════════════════════════════════════════════════
+  php-lint:
+    name: PHP lint (PHPCS WPCS + PHPStan L6)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2, phpcs, phpstan
+          coverage: none
+
+      - name: Detect plugin akibara/ tree
+        id: detect
+        run: |
+          if [ -f wp-content/plugins/akibara/composer.json ]; then
+            echo "plugin_path=wp-content/plugins/akibara" >> $GITHUB_OUTPUT
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "::notice::wp-content/plugins/akibara/composer.json not found — skipping PHP lint"
+          fi
+
+      - name: Composer install (plugin akibara)
+        if: steps.detect.outputs.found == 'true'
+        run: composer install --no-progress --prefer-dist
+        working-directory: ${{ steps.detect.outputs.plugin_path }}
+
+      - name: PHPCS (WordPress coding standards)
+        if: steps.detect.outputs.found == 'true'
+        run: composer run-script phpcs
+        working-directory: ${{ steps.detect.outputs.plugin_path }}
+
+      - name: PHPStan level 6 con baseline
+        if: steps.detect.outputs.found == 'true'
+        run: composer run-script phpstan
+        working-directory: ${{ steps.detect.outputs.plugin_path }}
+
+      - name: Composer audit (CVEs)
+        if: steps.detect.outputs.found == 'true'
+        run: composer audit --no-dev --format=plain || true
+        working-directory: ${{ steps.detect.outputs.plugin_path }}
+
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          coverage: xdebug
+
+      - name: Detect plugin tree
+        id: detect
+        run: |
+          if [ -f wp-content/plugins/akibara/phpunit.xml.dist ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "::notice::phpunit.xml.dist not found — skipping PHPUnit"
+          fi
+
+      - name: Composer install
+        if: steps.detect.outputs.found == 'true'
+        run: composer install --no-progress
+        working-directory: wp-content/plugins/akibara
+
+      - name: Run PHPUnit
+        if: steps.detect.outputs.found == 'true'
+        run: composer run-script test
+        working-directory: wp-content/plugins/akibara
+
+  plugin-check:
+    name: WordPress plugin-check (PCP)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect plugin tree
+        id: detect
+        run: |
+          if [ -d wp-content/plugins/akibara ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run plugin-check
+        if: steps.detect.outputs.found == 'true'
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: wp-content/plugins/akibara
+        continue-on-error: true   # informational mientras Cell Core no se cierra
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # JS/CSS GATES — solo si root package.json existe
+  # ═══════════════════════════════════════════════════════════════════════
+  js-lint:
+    name: JS/CSS lint (ESLint + Stylelint + Prettier)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Detect package.json
+        id: detect
+        run: |
+          if [ -f package.json ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "::notice::root package.json no encontrado — skipping JS/CSS lint"
+          fi
+
+      # npm install (no ci) porque package-lock.json puede no estar committed aún.
+      # Post primer npm install local + commit, podemos cambiar a 'npm ci'.
+      - name: npm install
+        if: steps.detect.outputs.found == 'true'
+        run: npm install --no-audit --no-fund --prefer-offline
+
+      - name: npm audit (CVE deps, warning-only)
+        if: steps.detect.outputs.found == 'true'
+        run: npm audit --audit-level=moderate || true
+
+      - name: ESLint
+        if: steps.detect.outputs.found == 'true'
+        run: npm run lint:js --if-present || true   # warning-only mientras Cell Core no se cierra
+
+      - name: Stylelint
+        if: steps.detect.outputs.found == 'true'
+        run: npm run lint:css --if-present || true
+
+      - name: Prettier check
+        if: steps.detect.outputs.found == 'true'
+        run: npm run format:check --if-present || true
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # PLAYWRIGHT @critical — golden flow vs prod URL (read-only smoke)
+  # NO corre vs staging por basic-auth complications. Read-only smoke contra
+  # endpoints públicos: home, manga catalog, product detail, sitemap.
+  # ═══════════════════════════════════════════════════════════════════════
+  playwright-critical:
+    name: Playwright @critical (golden flow smoke)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Detect Playwright config
+        id: detect
+        run: |
+          if [ -f playwright.config.ts ] || [ -f playwright.config.js ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "::notice::playwright.config no encontrado — skipping E2E"
+          fi
+
+      - name: npm install
+        if: steps.detect.outputs.found == 'true'
+        run: npm install --no-audit --no-fund --prefer-offline
+
+      - name: Install Playwright browsers
+        if: steps.detect.outputs.found == 'true'
+        run: npx playwright install chromium --with-deps
+
+      - name: Run @critical tests
+        if: steps.detect.outputs.found == 'true'
+        run: npx playwright test --grep @critical
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL || 'https://akibara.cl' }}
+
+      - name: Upload Playwright report on failure
+        if: failure() && steps.detect.outputs.found == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # SECURITY SCANS — Trivy filesystem (CVEs)
+  # ═══════════════════════════════════════════════════════════════════════
+  trivy:
+    name: Trivy filesystem scan (CVEs)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          exit-code: '0'   # warning-only initial; cambiar a '1' después de baseline limpio

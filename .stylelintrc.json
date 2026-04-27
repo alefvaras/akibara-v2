@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "@wordpress/stylelint-config"
+  ],
+  "ignoreFiles": [
+    "node_modules/**",
+    "vendor/**",
+    "**/*.min.css",
+    "wp-content/plugins/akibara/coverage/**",
+    "wp-content/plugins/akibara/vendor/**",
+    "wp-content/plugins/akibara/tests/**",
+    ".private/**",
+    "audit/**",
+    "server-snapshot/**",
+    "data/**",
+    "test-results/**",
+    "playwright-report/**"
+  ]
+}
