@@ -29,13 +29,15 @@ if ( defined( 'AKB_CORE_CEA_LOADED' ) ) {
 }
 define( 'AKB_CORE_CEA_LOADED', '1.0.0' );
 
-// F-pivot defensive guard (mesa-01 vote 2026-04-27): if functions already declared
-// via another load path (legacy plugin akibara/, double-include during activation,
-// etc.), skip this module to prevent fatal redeclare. AKB_CORE_CEA_LOADED above
-// covers file-level dedup; this covers symbol-level dedup. Belt-and-suspenders.
-if ( function_exists( 'akb_cea_editable_statuses' ) ) {
-	return;
-}
+// F-pivot defensive layer (REDESIGN.md 2026-04-27 + staging deploy postmortem):
+// Group wrap todas las top-level function declarations + hook registrations
+// dentro de `if ( ! function_exists( 'akb_cea_editable_statuses' ) )`. PHP NO
+// hoistea functions dentro de un if block (verificado con docker php:8.1-cli),
+// así que esto previene fatal redeclare cross-file aunque mu-plugin loader esté
+// removed. AKB_CORE_CEA_LOADED arriba cubre file-level dedup vía require_once
+// realpath; este wrap cubre symbol-level dedup belt-and-suspenders.
+if ( ! function_exists( 'akb_cea_editable_statuses' ) ) {
+
 /**
  * Estados en los que el cliente puede editar la dirección.
  */
@@ -421,3 +423,5 @@ add_action(
 	},
 	5
 );
+
+} // end if ( ! function_exists( 'akb_cea_editable_statuses' ) )

@@ -30,11 +30,12 @@ if ( defined( 'AKB_CORE_PLACES_LOADED' ) ) {
 }
 define( 'AKB_CORE_PLACES_LOADED', '1.0.0' );
 
-// F-pivot defensive guard (mesa-01 vote 2026-04-27): if functions already declared
-// via another load path, skip this module to prevent fatal redeclare.
-if ( function_exists( 'akb_places_is_enabled' ) ) {
-	return;
-}
+// F-pivot defensive layer (REDESIGN.md 2026-04-27 + staging deploy postmortem):
+// Group wrap todas las top-level function declarations + hook registrations
+// dentro de `if ( ! function_exists( 'akb_places_is_enabled' ) )`. PHP NO
+// hoistea functions dentro de un if block. Belt-and-suspenders symbol-level.
+if ( ! function_exists( 'akb_places_is_enabled' ) ) {
+
 /**
  * ¿Está configurada la API key?
  */
@@ -209,3 +210,5 @@ add_action(
 		<?php
 	}
 );
+
+} // end if ( ! function_exists( 'akb_places_is_enabled' ) )

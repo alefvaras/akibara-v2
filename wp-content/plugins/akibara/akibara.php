@@ -49,10 +49,14 @@ require_once AKIBARA_DIR . 'includes/helpers/ajax.php';
 // directamente (no van por registry) para garantizar disponibilidad.
 //
 // Sprint 2 Cell Core Phase 1 (2026-04-27): si akibara-core plugin loaded,
-// estos 4 modules ya cargaron desde plugins/akibara-core/. Skip duplicate require.
-require_once AKIBARA_DIR . 'includes/akibara-core.php'; // internal file, NO related a plugin akibara-core/
+// estos modules ya cargaron desde plugins/akibara-core/. Skip duplicate require.
+//
+// PR #2 fix 2026-04-27: legacy akibara/includes/akibara-core.php declares 3
+// helpers (akb_editorial_pattern, akb_edition_pattern, akb_extract_info) que
+// también están en akibara-core/includes/akibara-helpers.php. Sin este wrap,
+// fatal redeclare al activar akibara-core plugin. Confirmado en staging deploy.
 if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
-	// Migrated to plugin akibara-core/ Phase 1 — load aquí solo si akibara-core no active.
+	require_once AKIBARA_DIR . 'includes/akibara-core.php'; // internal helpers (akb_editorial_pattern, etc.)
 	require_once AKIBARA_DIR . 'includes/akibara-category-urls.php';
 	require_once AKIBARA_DIR . 'includes/akibara-search.php';
 	require_once AKIBARA_DIR . 'includes/akibara-order.php';
