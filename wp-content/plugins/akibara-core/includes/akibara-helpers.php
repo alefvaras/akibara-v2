@@ -31,6 +31,18 @@ if ( defined( 'AKB_CORE_HELPERS_LOADED' ) ) {
 }
 define( 'AKB_CORE_HELPERS_LOADED', '1.0.0' );
 
+// CRITICAL coordination con legacy plugin akibara/:
+// El plugin legacy carga su propio `includes/akibara-core.php` que tiene guard
+// `if ( defined( 'AKIBARA_CORE_LOADED' ) ) return;` y define las MISMAS funciones
+// (akb_editorial_pattern, akb_edition_pattern, akb_extract_info). Si NO definimos
+// AKIBARA_CORE_LOADED aquí, legacy re-declara las funciones → fatal "Cannot redeclare".
+//
+// Definimos AKIBARA_CORE_LOADED con marker para que legacy guard skip su load.
+// Mi plugin akibara-core usa AKIBARA_CORE_PLUGIN_LOADED (boolean) — diferente significado.
+if ( ! defined( 'AKIBARA_CORE_LOADED' ) ) {
+	define( 'AKIBARA_CORE_LOADED', '1.0.0-from-akibara-core-plugin' );
+}
+
 // ═══════════════════════════════════════════════════════════════
 // NORMALIZACIÓN — carga desde data/normalize.php (fuente única)
 // ═══════════════════════════════════════════════════════════════
