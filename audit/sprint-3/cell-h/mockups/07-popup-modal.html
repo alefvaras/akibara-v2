@@ -1,0 +1,629 @@
+<!--
+  Item 7 — Popup Modal (Reusable base, 3 variantes)
+  Spec: audit/sprint-3/cell-h/UI-SPECS-marketing.md#item-7
+  Date: 2026-04-27
+  Consumer: Cell B — wp-content/plugins/akibara-marketing/
+  Variants: newsletter-signup / discount-promo / review-request
+  What this previews: 3 variant layouts + close interactions + focus trap
+  + responsive (mobile full-width / desktop centered).
+  A11y: role=dialog · aria-modal · focus trap · Escape closes.
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 7 — Popup Modal | Akibara Cell H Mockup</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback inline tokens ── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+  --z-overlay: 300; --z-modal: 400;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.prototype-header, .prototype-annotations {
+  background: var(--aki-surface);
+  padding: var(--space-6);
+  margin: 0 auto var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 1200px;
+}
+.prototype-header { border-left: 4px solid var(--aki-red); }
+.prototype-annotations { border: 1px solid var(--aki-border); }
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  max-width: 1200px;
+  margin: 0 auto var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  position: relative;
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+.state-label {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Modal stage — for prototype, modal is positioned within stage instead of fixed */
+.modal-stage {
+  position: relative;
+  height: 600px;
+  background:
+    linear-gradient(135deg, var(--aki-surface-2) 25%, transparent 25%),
+    linear-gradient(225deg, var(--aki-surface-2) 25%, transparent 25%),
+    var(--aki-surface);
+  background-size: 24px 24px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT — .aki-modal
+   ══════════════════════════════════════════════════════ */
+.aki-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  z-index: var(--z-overlay);
+}
+
+.aki-modal__container {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: min(500px, calc(100% - 32px));
+  max-height: 80%;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalIn 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.aki-modal__header {
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--aki-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+.aki-modal__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--aki-white);
+}
+.aki-modal__close {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--aki-gray-300);
+  font-size: 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--transition-base), background var(--transition-base);
+  flex-shrink: 0;
+}
+.aki-modal__close:hover {
+  color: var(--aki-white);
+  background: var(--aki-surface-2);
+}
+.aki-modal__close:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+.aki-modal__body {
+  padding: var(--space-8) var(--space-6);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.aki-modal__footer {
+  padding: var(--space-5) var(--space-6);
+  border-top: 1px solid var(--aki-border);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+@media (max-width: 480px) {
+  .aki-modal__footer { flex-direction: column-reverse; }
+  .aki-modal__footer button { width: 100%; }
+}
+
+.aki-modal__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  min-height: var(--touch-target-min);
+  border: 1px solid transparent;
+  transition: background var(--transition-base);
+  text-decoration: none;
+}
+.aki-modal__button--primary {
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-color: var(--aki-red);
+}
+.aki-modal__button--primary:hover { background: var(--aki-red-hover); border-color: var(--aki-red-hover); }
+.aki-modal__button--secondary {
+  background: transparent;
+  color: var(--aki-white);
+  border-color: var(--aki-border-aa);
+}
+.aki-modal__button--secondary:hover {
+  background: var(--aki-surface-2);
+  border-color: var(--aki-white);
+}
+.aki-modal__button:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+/* Variant-specific styling */
+.aki-modal--newsletter .aki-modal__hero {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+.aki-modal__copy {
+  font-size: var(--text-base);
+  color: var(--aki-gray-200);
+  line-height: 1.6;
+  text-align: center;
+}
+.aki-modal__copy strong { color: var(--aki-white); }
+
+.aki-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.aki-modal__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--aki-gray-200);
+}
+.aki-modal__input {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--aki-white);
+  min-height: var(--touch-target-min);
+}
+.aki-modal__input:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+  border-color: var(--aki-red);
+}
+
+.aki-modal__discount-code {
+  background: var(--aki-black);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  padding: var(--space-4);
+  border: 2px dashed var(--aki-yellow);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* Star rating (review variant) */
+.aki-modal__stars {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: 32px;
+  color: var(--aki-gray-400);
+}
+.aki-modal__stars button {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+.aki-modal__stars button:hover, .aki-modal__stars button.active { color: var(--aki-yellow); }
+.aki-modal__stars button:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+/* Annotations */
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+  .aki-modal__container { animation: none !important; }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 7 — Popup Modal (3 variantes)</h1>
+  <p>
+    Spec: <code>UI-SPECS-marketing.md#item-7</code> · Consumer: Cell B
+    (<code>wp-content/plugins/akibara-marketing/</code>) · Fecha: 2026-04-27<br>
+    Reusable base + 3 variants: newsletter-signup, discount-promo, review-request.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══════════════════════════════════════
+       VARIANT 1 — NEWSLETTER SIGNUP
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Variant 1: Newsletter signup</h2>
+    <span class="state-label">role=dialog · aria-labelledby=modal-1-title · entrance fade+scale 300ms</span>
+
+    <div class="modal-stage">
+      <div class="aki-modal__backdrop"></div>
+      <div class="aki-modal__container aki-modal--newsletter" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+        <header class="aki-modal__header">
+          <h3 class="aki-modal__title" id="modal-1-title">Únete al club Akibara</h3>
+          <button type="button" class="aki-modal__close" aria-label="Cerrar diálogo">
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+        <div class="aki-modal__body">
+          <div class="aki-modal__hero" aria-hidden="true">📬</div>
+          <p class="aki-modal__copy">
+            Recibe lanzamientos, ofertas exclusivas y un <strong>10% descuento</strong>
+            en tu primera compra.
+          </p>
+          <div class="aki-modal__field">
+            <label for="m1-email" class="aki-modal__label">Tu email</label>
+            <input type="email" id="m1-email" class="aki-modal__input" placeholder="tu@correo.cl">
+          </div>
+        </div>
+        <footer class="aki-modal__footer">
+          <button type="button" class="aki-modal__button aki-modal__button--secondary">No, gracias</button>
+          <button type="button" class="aki-modal__button aki-modal__button--primary">Suscribirme</button>
+        </footer>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       VARIANT 2 — DISCOUNT PROMO
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Variant 2: Discount promo (exit intent)</h2>
+    <span class="state-label">role=dialog · aria-labelledby=modal-2-title · trigger: mouseleave Y &lt; 0</span>
+
+    <div class="modal-stage">
+      <div class="aki-modal__backdrop"></div>
+      <div class="aki-modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-2-title">
+        <header class="aki-modal__header">
+          <h3 class="aki-modal__title" id="modal-2-title">¡Espera, no te vayas!</h3>
+          <button type="button" class="aki-modal__close" aria-label="Cerrar diálogo">
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+        <div class="aki-modal__body">
+          <p class="aki-modal__copy">
+            Por ser tu primera visita, llévate <strong>15% descuento</strong> en cualquier
+            manga. Usa este código al finalizar tu compra:
+          </p>
+          <div class="aki-modal__discount-code" role="region" aria-label="Código de descuento">
+            FIRSTORDER15
+          </div>
+          <p class="aki-modal__copy" style="font-size: var(--text-xs); color: var(--aki-text-muted);">
+            Válido por 24 horas. Mínimo $10.000 CLP.
+          </p>
+        </div>
+        <footer class="aki-modal__footer">
+          <button type="button" class="aki-modal__button aki-modal__button--secondary">Seguir mirando</button>
+          <button type="button" class="aki-modal__button aki-modal__button--primary"
+                  data-copy="FIRSTORDER15">
+            <span aria-hidden="true">📋</span> Copiar y comprar
+          </button>
+        </footer>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       VARIANT 3 — REVIEW REQUEST
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Variant 3: Review request (post-delivery)</h2>
+    <span class="state-label">role=dialog · trigger: order delivered + 7d + no review yet</span>
+
+    <div class="modal-stage">
+      <div class="aki-modal__backdrop"></div>
+      <div class="aki-modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-3-title">
+        <header class="aki-modal__header">
+          <h3 class="aki-modal__title" id="modal-3-title">¿Cómo fue tu experiencia?</h3>
+          <button type="button" class="aki-modal__close" aria-label="Cerrar diálogo">
+            <span aria-hidden="true">×</span>
+          </button>
+        </header>
+        <div class="aki-modal__body">
+          <p class="aki-modal__copy">
+            Tu pedido <strong>#2406</strong> ya fue entregado. ¿Nos cuentas qué te pareció?
+          </p>
+          <div class="aki-modal__stars" role="radiogroup" aria-label="Calificación">
+            <button type="button" role="radio" aria-checked="false" aria-label="1 estrella">★</button>
+            <button type="button" role="radio" aria-checked="false" aria-label="2 estrellas">★</button>
+            <button type="button" role="radio" aria-checked="false" aria-label="3 estrellas">★</button>
+            <button type="button" role="radio" aria-checked="true" class="active" aria-label="4 estrellas">★</button>
+            <button type="button" class="active" role="radio" aria-checked="false" aria-label="5 estrellas">★</button>
+          </div>
+          <div class="aki-modal__field">
+            <label for="m3-comment" class="aki-modal__label">Comentario (opcional)</label>
+            <textarea id="m3-comment" class="aki-modal__input" rows="3" placeholder="¿Qué te gustó? ¿Qué mejorarías?"></textarea>
+          </div>
+        </div>
+        <footer class="aki-modal__footer">
+          <button type="button" class="aki-modal__button aki-modal__button--secondary">Más tarde</button>
+          <button type="button" class="aki-modal__button aki-modal__button--primary">Enviar reseña</button>
+        </footer>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell B">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-surface</code> + <code>--shadow-lg</code> — modal container elevation</li>
+      <li><code>rgba(0,0,0,0.6)</code> + <code>backdrop-filter: blur(2px)</code> — backdrop</li>
+      <li><code>--z-overlay</code> (300) backdrop / <code>--z-modal</code> (400) container</li>
+      <li><code>--aki-red</code>, <code>--aki-red-hover</code> — primary button + focus accent</li>
+      <li><code>--aki-yellow</code> — discount code highlight</li>
+      <li><code>--touch-target-min</code> (44px) en close + buttons + stars</li>
+      <li><code>--transition-base</code> (250ms) + custom 300ms entrance</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell B</summary>
+    <pre><code>.aki-modal                    /* outer wrapper, can be portal'd to body */
+.aki-modal--open              /* shown state */
+.aki-modal--newsletter        /* variant: newsletter signup */
+.aki-modal--discount          /* variant: exit-intent discount */
+.aki-modal--review            /* variant: review request */
+.aki-modal__backdrop          /* dimmer */
+.aki-modal__container         /* dialog box */
+.aki-modal__header
+.aki-modal__title
+.aki-modal__close             /* × button */
+.aki-modal__body              /* scrollable content */
+.aki-modal__footer            /* button row */
+.aki-modal__button
+.aki-modal__button--primary
+.aki-modal__button--secondary
+.aki-modal__hero              /* large emoji/icon */
+.aki-modal__copy              /* description text */
+.aki-modal__field             /* form field wrapper */
+.aki-modal__label
+.aki-modal__input             /* input + textarea */
+.aki-modal__discount-code     /* highlighted code box */
+.aki-modal__stars             /* radiogroup */</code></pre>
+  </details>
+  <details>
+    <summary>A11y rules (CRITICAL)</summary>
+    <pre><code>// Cell B implementa wp-content/plugins/akibara-marketing/assets/js/modal.js
+//
+// 1. role + aria
+//    role="dialog" aria-modal="true" aria-labelledby="<title-id>"
+//    backdrop has aria-hidden="true"
+//
+// 2. Focus trap (cycle Tab within modal):
+//    const focusable = modal.querySelectorAll(
+//      'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+//    );
+//    on Tab key → if last+shift OR first+!shift, wrap to opposite end
+//
+// 3. Open behavior:
+//    - Save document.activeElement (trigger) to restore on close
+//    - inert attribute on body siblings (or aria-hidden=true on root)
+//    - Move focus to first focusable in modal (or close button)
+//
+// 4. Close behavior:
+//    - Escape key → close
+//    - Click backdrop → close (configurable per variant; review variant disables this)
+//    - Click .aki-modal__close → close
+//    - On close: remove inert/aria-hidden, return focus to trigger
+//
+// 5. prefers-reduced-motion:
+//    - Disable scale/fade animation, just show/hide</code></pre>
+  </details>
+  <details>
+    <summary>Trigger logic (Cell B implementa)</summary>
+    <pre><code>// Newsletter (variant 1):
+//   - Time delay: 30s after page load OR scroll depth >50%
+//   - Once per 7 days (localStorage akibara_modal_newsletter_shown)
+//   - NOT on /checkout, /mi-cuenta
+//
+// Discount promo (variant 2):
+//   - Exit-intent: mouseleave with clientY <= 0
+//   - Once per session
+//   - NOT logged-in users (already have welcome notice item 6)
+//
+// Review request (variant 3):
+//   - Order status delivered + 7 days passed + customer hasn't reviewed
+//   - Account dashboard ONLY (not popup on shop pages)
+//   - Click "Más tarde" → defer 30 days
+//   - Submit → POST /wp-json/akibara/v1/reviews + close modal</code></pre>
+  </details>
+  <details>
+    <summary>Edge cases / TODOs</summary>
+    <ul>
+      <li>backdrop-filter perf: si Lighthouse FID degrada en mobile, fallback a opacity 0.6 sin blur</li>
+      <li>z-index conflict con cookie banner (item 2) — modal z=400 always above banner z=300</li>
+      <li>iOS Safari clipboard requires user gesture — copy code button must be direct click handler</li>
+      <li>TODO Cell B: A/B test newsletter vs discount triggers (analytics event tracking)</li>
+      <li>Voseo grep: "Únete" / "Recibe" / "no te vayas" / "Cerrar" / "Enviar" → tuteo neutro ✓</li>
+      <li>NOTE: review variant disables backdrop-click close (force user to choose action)</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

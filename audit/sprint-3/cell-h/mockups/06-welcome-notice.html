@@ -1,0 +1,522 @@
+<!--
+  Item 6 — Welcome "Bienvenida" Transactional Notice
+  Spec: audit/sprint-3/cell-h/UI-SPECS-marketing.md#item-6
+  Date: 2026-04-27
+  Consumer: Cell B — wp-content/plugins/akibara-marketing/
+  Trigger: post-confirmation email (DOI complete) → render in customer dashboard
+  + thank-you page if first order.
+  What this previews: default notice + copied-state toast + dismissed (hidden) +
+  responsive layout (account dashboard context).
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 6 — Welcome Notice | Akibara Cell H Mockup</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback inline tokens ── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+  --z-toast: 500;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.prototype-header, .prototype-annotations {
+  background: var(--aki-surface);
+  padding: var(--space-6);
+  margin: 0 auto var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 1200px;
+}
+.prototype-header { border-left: 4px solid var(--aki-red); }
+.prototype-annotations { border: 1px solid var(--aki-border); }
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  max-width: 1200px;
+  margin: 0 auto var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+.state-label {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Fake account dashboard context */
+.fake-dashboard {
+  background: var(--aki-surface-2);
+  border: 1px dashed var(--aki-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--aki-text-muted);
+}
+.fake-dashboard__head {
+  font-family: var(--font-mono);
+  color: var(--aki-yellow);
+  margin-bottom: var(--space-2);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT — .aki-welcome-notice
+   ══════════════════════════════════════════════════════ */
+.aki-welcome-notice {
+  background: var(--aki-surface-2);
+  border-left: 4px solid var(--aki-red);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  display: grid;
+  gap: var(--space-4);
+  position: relative;
+}
+
+.aki-welcome-notice__heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.aki-welcome-notice__icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.aki-welcome-notice__body {
+  font-size: var(--text-base);
+  color: var(--aki-gray-200);
+  line-height: 1.6;
+}
+.aki-welcome-notice__code {
+  display: inline-block;
+  background: var(--aki-black);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  padding: var(--space-1) var(--space-3);
+  border: 1px dashed var(--aki-yellow);
+  border-radius: var(--radius-sm);
+  letter-spacing: 1px;
+}
+
+.aki-welcome-notice__buttons {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.aki-welcome-notice__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  min-height: var(--touch-target-min);
+  border: 1px solid transparent;
+  transition: background var(--transition-base), color var(--transition-base);
+  text-decoration: none;
+}
+.aki-welcome-notice__button--primary {
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-color: var(--aki-red);
+}
+.aki-welcome-notice__button--primary:hover {
+  background: var(--aki-red-hover);
+  border-color: var(--aki-red-hover);
+}
+.aki-welcome-notice__button--secondary {
+  background: transparent;
+  color: var(--aki-white);
+  border-color: var(--aki-border-aa);
+}
+.aki-welcome-notice__button--secondary:hover {
+  background: var(--aki-surface);
+  border-color: var(--aki-white);
+}
+.aki-welcome-notice__button:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.aki-welcome-notice__button--success {
+  background: var(--aki-success);
+  color: var(--aki-black);
+  border-color: var(--aki-success);
+  pointer-events: none;
+}
+
+/* Toast (post-copy feedback) */
+.aki-toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: var(--aki-success);
+  color: var(--aki-black);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-weight: var(--weight-semibold);
+  z-index: var(--z-toast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-lg);
+}
+.aki-toast--inline {
+  position: static;
+  display: inline-flex;
+  margin-top: var(--space-2);
+}
+
+/* Annotations */
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 6 — Welcome Bienvenida Notice</h1>
+  <p>
+    Spec: <code>UI-SPECS-marketing.md#item-6</code> · Consumer: Cell B
+    (<code>wp-content/plugins/akibara-marketing/</code>) · Fecha: 2026-04-27<br>
+    Trigger: post-DOI confirm (Brevo webhook) → render <code>/mi-cuenta</code> top
+    + thank-you page if first order.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══════════════════════════════════════
+       STATE 1 — DEFAULT
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Estado: Default (visible after DOI confirm)</h2>
+    <span class="state-label">role=region · aria-label=Bienvenida</span>
+
+    <div class="fake-dashboard">
+      <div class="fake-dashboard__head">[Customer dashboard /mi-cuenta · top section]</div>
+      Saludos, María R. · Pedidos recientes: 0 · Wishlist: 3 items
+    </div>
+
+    <aside class="aki-welcome-notice" role="region" aria-label="Bienvenida">
+      <h3 class="aki-welcome-notice__heading">
+        <span class="aki-welcome-notice__icon" aria-hidden="true">🎁</span>
+        ¡Bienvenido a Akibara!
+      </h3>
+      <div class="aki-welcome-notice__body">
+        <p>Tu suscripción está activa. Usa el código
+        <span class="aki-welcome-notice__code">WELCOME10</span>
+        para 10% descuento en tu primera compra.</p>
+      </div>
+      <div class="aki-welcome-notice__buttons">
+        <button type="button" class="aki-welcome-notice__button aki-welcome-notice__button--primary"
+                data-copy="WELCOME10" aria-label="Copiar código WELCOME10">
+          <span aria-hidden="true">📋</span> Copiar código
+        </button>
+        <button type="button" class="aki-welcome-notice__button aki-welcome-notice__button--secondary"
+                aria-label="Descartar aviso">
+          Descartar
+        </button>
+      </div>
+    </aside>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 2 — POST-COPY (toast feedback)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Estado: Post-copy (toast inline para preview)</h2>
+    <span class="state-label">aria-live=polite · navigator.clipboard.writeText('WELCOME10')</span>
+
+    <aside class="aki-welcome-notice" role="region" aria-label="Bienvenida">
+      <h3 class="aki-welcome-notice__heading">
+        <span class="aki-welcome-notice__icon" aria-hidden="true">🎁</span>
+        ¡Bienvenido a Akibara!
+      </h3>
+      <div class="aki-welcome-notice__body">
+        <p>Tu suscripción está activa. Usa el código
+        <span class="aki-welcome-notice__code">WELCOME10</span>
+        para 10% descuento en tu primera compra.</p>
+      </div>
+      <div class="aki-welcome-notice__buttons">
+        <button type="button" class="aki-welcome-notice__button aki-welcome-notice__button--success"
+                aria-label="Código copiado">
+          <span aria-hidden="true">✓</span> Código copiado
+        </button>
+        <button type="button" class="aki-welcome-notice__button aki-welcome-notice__button--secondary">
+          Descartar
+        </button>
+      </div>
+      <div class="aki-toast aki-toast--inline" role="status" aria-live="polite">
+        <span aria-hidden="true">✓</span>
+        Código WELCOME10 copiado al portapapeles
+      </div>
+    </aside>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 3 — DISMISSED
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Estado: Descartado (localStorage akibara_welcome_notice_dismissed=1)</h2>
+    <span class="state-label">notice removed from DOM · banner queda invisible siguiente sesión</span>
+    <div class="fake-dashboard">
+      <div class="fake-dashboard__head">[Customer dashboard /mi-cuenta · top section — notice ya descartado]</div>
+      Saludos, María R. · Pedidos recientes: 0 · Wishlist: 3 items
+      <p style="margin-top: var(--space-3); color: var(--aki-text-muted);">
+        <em>(Notice no se renderiza — localStorage flag activo)</em>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 4 — THANK-YOU PAGE VARIANT
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Variante: Thank-you page post-checkout (first order)</h2>
+    <span class="state-label">Si is_first_order(customer_id) → render</span>
+
+    <div class="fake-dashboard">
+      <div class="fake-dashboard__head">[/checkout/order-received page]</div>
+      Pedido #2406 confirmado · Total $24.990 · Email enviado a maria@ejemplo.cl
+    </div>
+
+    <aside class="aki-welcome-notice" role="region" aria-label="Bienvenida primer pedido">
+      <h3 class="aki-welcome-notice__heading">
+        <span class="aki-welcome-notice__icon" aria-hidden="true">🎉</span>
+        ¡Gracias por tu primer pedido!
+      </h3>
+      <div class="aki-welcome-notice__body">
+        <p>Como nuevo cliente, te enviamos un código exclusivo para tu próxima compra.
+        Usa <span class="aki-welcome-notice__code">RETURN15</span> dentro de 30 días para 15% descuento.</p>
+      </div>
+      <div class="aki-welcome-notice__buttons">
+        <button type="button" class="aki-welcome-notice__button aki-welcome-notice__button--primary">
+          <span aria-hidden="true">📋</span> Copiar código
+        </button>
+        <a href="#" class="aki-welcome-notice__button aki-welcome-notice__button--secondary">
+          Seguir comprando
+        </a>
+      </div>
+    </aside>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell B">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-red</code> — border-left accent + primary button</li>
+      <li><code>--aki-yellow</code> — código highlight (dashed border)</li>
+      <li><code>--aki-success</code> — toast bg + post-copy button</li>
+      <li><code>--aki-surface-2</code> — notice bg</li>
+      <li><code>--aki-border-aa</code> — secondary button border (AA contrast)</li>
+      <li><code>--font-heading</code> en heading · <code>--font-mono</code> en código</li>
+      <li><code>--touch-target-min</code> 44px en buttons</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell B</summary>
+    <pre><code>.aki-welcome-notice                    /* outer wrapper */
+.aki-welcome-notice__heading           /* h3 with icon */
+.aki-welcome-notice__icon
+.aki-welcome-notice__body              /* description */
+.aki-welcome-notice__code              /* WELCOME10 highlight */
+.aki-welcome-notice__buttons           /* CTA group */
+.aki-welcome-notice__button
+.aki-welcome-notice__button--primary   /* "Copiar código" */
+.aki-welcome-notice__button--secondary /* "Descartar" */
+.aki-welcome-notice__button--success   /* post-copy state */
+.aki-toast                             /* feedback toast */
+.aki-toast--inline                     /* inline preview variant */</code></pre>
+  </details>
+  <details>
+    <summary>Comportamiento JS / data binding (Cell B)</summary>
+    <pre><code>// Cell B implementa wp-content/plugins/akibara-marketing/includes/welcome-notice.php
+//
+// 1. Visibility check (PHP):
+//    $shown = get_user_meta($user_id, 'akibara_welcome_notice_shown', true);
+//    $dismissed = isset($_COOKIE['akibara_welcome_notice_dismissed']);
+//    if (!$shown && !$dismissed && is_user_logged_in()) {
+//      include 'templates/welcome-notice.php';
+//    }
+//
+// 2. Variants:
+//    - Account dashboard: /mi-cuenta top — code WELCOME10
+//    - Thank-you page: /checkout/order-received first-order — code RETURN15
+//
+// 3. JS (wp-content/plugins/akibara-marketing/assets/js/welcome-notice.js):
+//    document.querySelectorAll('.aki-welcome-notice__button[data-copy]').forEach(btn => {
+//      btn.addEventListener('click', async (e) => {
+//        const code = e.currentTarget.dataset.copy;
+//        await navigator.clipboard.writeText(code);
+//        btn.classList.add('aki-welcome-notice__button--success');
+//        btn.innerHTML = '<span aria-hidden="true">✓</span> Código copiado';
+//        showToast(`Código ${code} copiado al portapapeles`);
+//      });
+//    });
+//
+//    document.querySelector('.aki-welcome-notice__button--secondary')?.addEventListener('click', () => {
+//      localStorage.setItem('akibara_welcome_notice_dismissed', '1');
+//      document.querySelector('.aki-welcome-notice').remove();
+//    });
+//
+// 4. WELCOME10 código wired en Cell B `welcome-discount` module.
+//    Verify código está activo + 10% percentage_product type en WC coupon admin.</code></pre>
+  </details>
+  <details>
+    <summary>Edge cases / TODOs</summary>
+    <ul>
+      <li>Cross-tab sync: si user dismisses en tab A, tab B debe esconderlo — listen storage event</li>
+      <li>Mobile clipboard fallback: navigator.clipboard requires HTTPS — ya cumplido en prod (akibara.cl)</li>
+      <li>TODO: i18n — copy es-CL hard-coded, futuro Phase 2 multi-idioma con WP __()</li>
+      <li>Voseo grep: "Tu suscripción está activa" / "Usa el código" / "Bienvenido" → tuteo neutro ✓</li>
+      <li>NO "Tu suscripción quedó activa" (voseo subtle) ✗</li>
+      <li>TODO Cell B: validate WELCOME10 + RETURN15 cupones existen en WC admin antes de surface notice</li>
+      <li>TODO: tracking Brevo event "welcome_notice_dismissed" para funnel analytics</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

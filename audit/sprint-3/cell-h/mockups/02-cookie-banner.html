@@ -1,0 +1,587 @@
+<!--
+  Item 2 — Cookie Consent Banner
+  Spec: audit/sprint-3/cell-h/UI-SPECS-marketing.md#item-2
+  Date: 2026-04-27
+  Consumer: Cell B — wp-content/plugins/akibara-marketing/
+  Compliance: GDPR + Ley 19.628 Chile
+  What this previews: fixed-bottom banner default + visible (slide-in) +
+  "Personalizar" expanded preferences panel + responsive 375 / 768 / 1024.
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 2 — Cookie Banner | Akibara Cell H Mockup</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback inline tokens ── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+  --z-overlay: 300;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fake page bg behind banner — show context */
+.fake-page {
+  background:
+    linear-gradient(135deg, var(--aki-surface-2) 25%, transparent 25%),
+    linear-gradient(225deg, var(--aki-surface-2) 25%, transparent 25%),
+    linear-gradient(45deg, var(--aki-surface-2) 25%, transparent 25%),
+    linear-gradient(315deg, var(--aki-surface-2) 25%, var(--aki-surface) 25%);
+  background-position: 10px 0, 10px 0, 0 0, 0 0;
+  background-size: 20px 20px;
+  background-repeat: repeat;
+  border-radius: var(--radius-lg);
+  padding: var(--space-12) var(--space-6);
+  min-height: 200px;
+  position: relative;
+  margin-bottom: var(--space-6);
+}
+.fake-page__label {
+  position: absolute;
+  top: var(--space-3); right: var(--space-3);
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-weight: var(--weight-bold);
+}
+
+.prototype-header, .prototype-annotations {
+  background: var(--aki-surface);
+  border-left: 4px solid var(--aki-red);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.prototype-annotations {
+  border-left: none;
+  border: 1px solid var(--aki-border);
+}
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  max-width: 1200px;
+  margin: 0 auto var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.prototype-section {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.prototype-section h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.prototype-section h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+.state-label {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT — .aki-cookie-banner
+   ══════════════════════════════════════════════════════ */
+.aki-cookie-banner-stage {
+  position: relative;
+  /* container is fake-page with relative positioning so banner sits inside */
+}
+
+.aki-cookie-banner {
+  /* For prototype: positioned within stage. In production: position: fixed */
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-overlay);
+  width: min(600px, calc(100% - 40px));
+  background: rgba(17, 17, 17, 0.95);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg);
+  color: var(--aki-white);
+  opacity: 1;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+.aki-cookie-banner--hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(40px);
+  pointer-events: none;
+}
+
+.aki-cookie-banner__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.aki-cookie-banner__icon {
+  font-size: 28px;
+  line-height: 1;
+}
+.aki-cookie-banner__text {
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--aki-gray-200);
+}
+.aki-cookie-banner__text strong {
+  color: var(--aki-white);
+  font-weight: var(--weight-semibold);
+  display: block;
+  font-size: var(--text-base);
+  margin-bottom: var(--space-1);
+}
+.aki-cookie-banner__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.aki-cookie-banner__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  min-height: var(--touch-target-min);
+  min-width: 100px;
+  border: 1px solid transparent;
+  transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base);
+  text-decoration: none;
+}
+.aki-cookie-banner__button--primary {
+  background: var(--aki-red);
+  color: var(--aki-white);
+  border-color: var(--aki-red);
+}
+.aki-cookie-banner__button--primary:hover {
+  background: var(--aki-red-hover);
+  border-color: var(--aki-red-hover);
+}
+.aki-cookie-banner__button--secondary {
+  background: transparent;
+  color: var(--aki-white);
+  border-color: var(--aki-border-aa);
+}
+.aki-cookie-banner__button--secondary:hover {
+  background: var(--aki-surface-2);
+  border-color: var(--aki-white);
+}
+.aki-cookie-banner__button--tertiary {
+  background: transparent;
+  color: var(--aki-red);
+  text-decoration: underline;
+  border-color: transparent;
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+  min-width: auto;
+}
+.aki-cookie-banner__button--tertiary:hover {
+  color: var(--aki-red-bright);
+}
+.aki-cookie-banner__button:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.aki-cookie-banner__link {
+  font-size: var(--text-xs);
+  color: var(--aki-gray-300);
+  text-decoration: underline;
+  display: inline-block;
+  padding: var(--space-2) 0;
+}
+.aki-cookie-banner__link:hover { color: var(--aki-white); }
+.aki-cookie-banner__link:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+/* Preferences panel (expanded "Personalizar") */
+.aki-cookie-banner__prefs {
+  border-top: 1px solid var(--aki-border);
+  padding-top: var(--space-4);
+  margin-top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.aki-cookie-banner__pref-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  background: var(--aki-surface-2);
+  border-radius: var(--radius-sm);
+}
+.aki-cookie-banner__pref-row input[type="checkbox"] {
+  width: 22px; height: 22px;
+  margin-top: 2px;
+  accent-color: var(--aki-red);
+  cursor: pointer;
+}
+.aki-cookie-banner__pref-row input[type="checkbox"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.aki-cookie-banner__pref-row label { flex: 1; cursor: pointer; }
+.aki-cookie-banner__pref-row strong {
+  color: var(--aki-white);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+.aki-cookie-banner__pref-row span {
+  display: block;
+  color: var(--aki-text-muted);
+  font-size: var(--text-xs);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+.aki-cookie-banner__pref-required {
+  display: inline-block;
+  background: var(--aki-success);
+  color: var(--aki-black);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  margin-left: var(--space-2);
+  text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+  .aki-cookie-banner__buttons { flex-direction: column; }
+  .aki-cookie-banner__button { width: 100%; }
+}
+
+/* Annotations */
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 2 — Cookie Consent Banner</h1>
+  <p>
+    Spec: <code>UI-SPECS-marketing.md#item-2</code> · Consumer: Cell B
+    (<code>wp-content/plugins/akibara-marketing/</code>) · Fecha: 2026-04-27<br>
+    Compliance: GDPR + Ley 19.628 Chile · Persistencia: <code>localStorage.akibara_cookie_consent</code>
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ═══════════════════════════════════════
+       STATE 1 — DEFAULT (visible)
+       ═══════════════════════════════════════ -->
+  <section class="prototype-section">
+    <h2>Estado: Visible (default first visit)</h2>
+    <span class="state-label">slide-in 300ms · backdrop-filter blur(8px)</span>
+    <div class="aki-cookie-banner-stage">
+      <div class="fake-page">
+        <span class="fake-page__label">Página simulada (background)</span>
+      </div>
+      <aside class="aki-cookie-banner" role="region" aria-label="Aviso de cookies" id="cookie-banner-1">
+        <div class="aki-cookie-banner__header">
+          <span class="aki-cookie-banner__icon" aria-hidden="true">🍪</span>
+          <div class="aki-cookie-banner__text">
+            <strong>Usamos cookies</strong>
+            Las usamos para mejorar tu experiencia, analizar el tráfico y personalizar contenido.
+            Puedes aceptar todo, rechazar opcionales o personalizar tus preferencias.
+          </div>
+        </div>
+        <div class="aki-cookie-banner__buttons">
+          <button type="button" class="aki-cookie-banner__button aki-cookie-banner__button--primary">Aceptar todo</button>
+          <button type="button" class="aki-cookie-banner__button aki-cookie-banner__button--secondary">Rechazar opcionales</button>
+          <button type="button" class="aki-cookie-banner__button aki-cookie-banner__button--tertiary" aria-expanded="false" aria-controls="cookie-prefs-1">Personalizar</button>
+        </div>
+        <a href="/politica-privacidad" class="aki-cookie-banner__link">
+          Política de privacidad
+          <span aria-hidden="true">→</span>
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STATE 2 — EXPANDED PREFERENCES
+       ═══════════════════════════════════════ -->
+  <section class="prototype-section">
+    <h2>Estado: Personalizar expandido</h2>
+    <span class="state-label">aria-expanded=true · 4 categorías</span>
+    <div class="aki-cookie-banner-stage" style="min-height: 540px;">
+      <div class="fake-page" style="min-height: 540px;">
+        <span class="fake-page__label">Página simulada</span>
+      </div>
+      <aside class="aki-cookie-banner" role="region" aria-label="Aviso de cookies" id="cookie-banner-2"
+             style="bottom: 20px; max-width: min(600px, calc(100% - 40px));">
+        <div class="aki-cookie-banner__header">
+          <span class="aki-cookie-banner__icon" aria-hidden="true">🍪</span>
+          <div class="aki-cookie-banner__text">
+            <strong>Personaliza tus cookies</strong>
+            Elige qué tipos de cookies aceptas. Las esenciales no se pueden desactivar.
+          </div>
+        </div>
+        <div class="aki-cookie-banner__prefs" id="cookie-prefs-2">
+          <div class="aki-cookie-banner__pref-row">
+            <input type="checkbox" id="pref-essential" checked disabled>
+            <label for="pref-essential">
+              <strong>Esenciales <span class="aki-cookie-banner__pref-required">Obligatorias</span></strong>
+              <span>Necesarias para el funcionamiento del sitio (carrito, sesión, seguridad).</span>
+            </label>
+          </div>
+          <div class="aki-cookie-banner__pref-row">
+            <input type="checkbox" id="pref-analytics" checked>
+            <label for="pref-analytics">
+              <strong>Analíticas</strong>
+              <span>Google Analytics 4 — nos ayuda a entender cómo se usa el sitio (anónimo).</span>
+            </label>
+          </div>
+          <div class="aki-cookie-banner__pref-row">
+            <input type="checkbox" id="pref-marketing">
+            <label for="pref-marketing">
+              <strong>Marketing</strong>
+              <span>Brevo, retargeting — para mostrarte ofertas relevantes.</span>
+            </label>
+          </div>
+          <div class="aki-cookie-banner__pref-row">
+            <input type="checkbox" id="pref-prefs">
+            <label for="pref-prefs">
+              <strong>Preferencias</strong>
+              <span>Recordar tu idioma, región y otras configuraciones.</span>
+            </label>
+          </div>
+        </div>
+        <div class="aki-cookie-banner__buttons" style="margin-top: var(--space-4);">
+          <button type="button" class="aki-cookie-banner__button aki-cookie-banner__button--primary">Guardar selección</button>
+          <button type="button" class="aki-cookie-banner__button aki-cookie-banner__button--secondary">Aceptar todo</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       STATE 3 — HIDDEN (post-consent)
+       ═══════════════════════════════════════ -->
+  <section class="prototype-section">
+    <h2>Estado: Oculto (post-consent saved)</h2>
+    <span class="state-label">opacity 0 · transform translateY(40px)</span>
+    <div class="aki-cookie-banner-stage">
+      <div class="fake-page">
+        <span class="fake-page__label">Página simulada — banner ya dismissed</span>
+      </div>
+      <aside class="aki-cookie-banner aki-cookie-banner--hidden" aria-hidden="true">
+        <span style="color:var(--aki-gray-400)">[Banner hidden]</span>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell B">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-red</code>, <code>--aki-red-hover</code> — primary button + tertiary link</li>
+      <li><code>--aki-surface</code> 95% opacity + <code>backdrop-filter: blur(8px)</code> — glassmorphism</li>
+      <li><code>--aki-border</code>, <code>--aki-border-aa</code> — borders (AA contrast)</li>
+      <li><code>--shadow-lg</code> — banner elevation</li>
+      <li><code>--z-overlay</code> (300) — stacking</li>
+      <li><code>--touch-target-min</code> (44px) — botones</li>
+      <li><code>--radius-lg</code>, <code>--space-{2,3,4,5,6}</code></li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell B</summary>
+    <pre><code>.aki-cookie-banner                    /* fixed bottom wrapper */
+.aki-cookie-banner--visible           /* shown state (entrance) */
+.aki-cookie-banner--hidden            /* dismissed state */
+.aki-cookie-banner__header            /* icon + text */
+.aki-cookie-banner__icon              /* emoji 🍪 */
+.aki-cookie-banner__text              /* description */
+.aki-cookie-banner__buttons           /* CTA group */
+.aki-cookie-banner__button
+.aki-cookie-banner__button--primary   /* "Aceptar todo" */
+.aki-cookie-banner__button--secondary /* "Rechazar" */
+.aki-cookie-banner__button--tertiary  /* "Personalizar" */
+.aki-cookie-banner__link              /* "Política de privacidad" */
+.aki-cookie-banner__prefs             /* expanded preferences */
+.aki-cookie-banner__pref-row          /* category row */
+.aki-cookie-banner__pref-required     /* "obligatorias" pill */</code></pre>
+  </details>
+  <details>
+    <summary>Comportamiento JS / persistencia (Cell B implementa)</summary>
+    <pre><code>// Cell B implementa en wp-content/plugins/akibara-marketing/assets/js/cookie-consent.js
+//
+// 1. On page load:
+//    const consent = JSON.parse(localStorage.getItem('akibara_cookie_consent'));
+//    if (!consent || Date.now() > consent.expires) showBanner();
+//
+// 2. Persistencia:
+//    {
+//      essential: true,        // always
+//      analytics: bool,
+//      marketing: bool,
+//      preferences: bool,
+//      timestamp: ISOString,
+//      expires: timestamp + 365*86400*1000
+//    }
+//
+// 3. Wire to GA4 + Brevo:
+//    - if !consent.analytics → window['ga-disable-G-XXX']=true
+//    - if !consent.marketing → skip Brevo tracking pixel
+//
+// 4. A11y:
+//    - role="region" aria-label="Aviso de cookies"
+//    - Tab cycles entre 3 buttons + link
+//    - Escape closes (with focus return to last focused element pre-banner)
+//    - aria-expanded en "Personalizar" toggles prefs panel
+//
+// 5. Re-open: usuario puede abrir pref panel desde footer link
+//    "Configurar cookies" → triggers showBanner() with prefs expanded.</code></pre>
+  </details>
+  <details>
+    <summary>Edge cases / TODOs</summary>
+    <ul>
+      <li>Compliance Ley 19.628 Chile: opt-in explícito antes de tracking — banner visible BEFORE GA4 fires</li>
+      <li>backdrop-filter perf: si Lighthouse FID degrada en mobile, fallback a opacity 0.95 sin blur</li>
+      <li>Re-prompt: si user click "Rechazar opcionales" y luego cambia mind, debe poder re-abrir desde footer</li>
+      <li>TODO Cell B: decidir si banner aparece en /checkout (compliance complica) o solo en first non-checkout page</li>
+      <li>TODO: i18n future-proof — copy en es-CL hoy, posible en-US Phase 2</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>

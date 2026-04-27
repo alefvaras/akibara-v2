@@ -1,0 +1,532 @@
+<!--
+  Item 5 — Auto-OOS Preventa "Fecha por confirmar"
+  Spec: audit/sprint-3/cell-h/UI-SPECS-preventas.md#item-5 (Request A-03)
+  Date: 2026-04-27
+  Consumer: Cell A — wp-content/plugins/akibara-preventas/
+  What this previews: single-product page section that REPLACES default
+  WC "Out of stock" badge when product has _allow_preventa=yes meta.
+  Variants: with date / without date (default "fecha por confirmar")
+  + comparison with default WC OOS badge.
+-->
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item 5 — Auto-OOS Preventa | Akibara Cell H Mockup</title>
+<link rel="stylesheet" href="../../../../wp-content/themes/akibara/assets/css/tokens.css">
+<style>
+/* ── Fallback inline tokens ── */
+:root {
+  --aki-red: #D90010; --aki-red-hover: #BB000D; --aki-red-bright: #FF2020;
+  --aki-yellow: #FFD700;
+  --aki-success: #00C853; --aki-warning: #F59E0B; --aki-error: #FF3B3B; --aki-info: #3B82F6;
+  --aki-black: #0A0A0A; --aki-surface: #111111; --aki-surface-2: #1A1A1A; --aki-surface-3: #222222;
+  --aki-border: #2A2A2E; --aki-border-light: #333333; --aki-border-aa: #6A6A6A;
+  --aki-white: #FFFFFF; --aki-gray-200: #E0E0E0; --aki-gray-300: #B0B0B0; --aki-gray-400: #8A8A8A;
+  --aki-text-muted: #8A8A8A;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4); --shadow-md: 0 4px 12px rgba(0,0,0,0.5); --shadow-lg: 0 8px 30px rgba(0,0,0,0.6);
+  --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  --text-lg: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --text-xl: clamp(1.15rem, 1.05rem + 0.4vw, 1.25rem);
+  --text-2xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  --weight-normal: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --aki-focus-outline: 3px solid var(--aki-red); --aki-focus-offset: 2px;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --touch-target-min: 44px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--aki-black);
+  color: var(--aki-white);
+  padding: var(--space-8);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.prototype-header, .prototype-annotations {
+  background: var(--aki-surface);
+  padding: var(--space-6);
+  margin: 0 auto var(--space-8);
+  border-radius: var(--radius-md);
+  max-width: 1200px;
+}
+.prototype-header { border-left: 4px solid var(--aki-red); }
+.prototype-annotations { border: 1px solid var(--aki-border); }
+.prototype-header h1 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-2xl);
+  letter-spacing: 1px;
+  color: var(--aki-red);
+  margin-bottom: var(--space-2);
+}
+.prototype-header p { color: var(--aki-gray-300); font-size: var(--text-sm); line-height: 1.5; }
+.prototype-header code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.prototype-grid {
+  max-width: 1200px;
+  margin: 0 auto var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.section-wrapper {
+  background: var(--aki-surface);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.section-wrapper h2 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-wrapper h2::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--aki-red);
+  border-radius: 50%;
+}
+.state-label {
+  display: inline-block;
+  background: var(--aki-yellow);
+  color: var(--aki-black);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-mono);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════════════
+   FAKE WC PRODUCT PAGE (context for OOS section)
+   ══════════════════════════════════════════════════════ */
+.product-page {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+@media (min-width: 768px) {
+  .product-page { grid-template-columns: 320px 1fr; }
+}
+.product-page__image {
+  aspect-ratio: 4 / 5;
+  background:
+    linear-gradient(135deg, var(--aki-surface-3) 25%, transparent 25%),
+    linear-gradient(225deg, var(--aki-surface-3) 25%, transparent 25%),
+    var(--aki-surface-2);
+  background-size: 16px 16px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  color: var(--aki-gray-400);
+  font-size: var(--text-sm);
+}
+.product-page__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.product-page__title {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-3xl);
+  letter-spacing: 1px;
+  color: var(--aki-white);
+  line-height: 1;
+}
+.product-page__series {
+  font-size: var(--text-sm);
+  color: var(--aki-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: var(--font-mono);
+}
+.product-page__price {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  color: var(--aki-white);
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPONENT — .akb-stock-status (OOS preventa override)
+   ══════════════════════════════════════════════════════ */
+.akb-stock-status--oos-preventa {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+  overflow: hidden;
+}
+.akb-stock-status--oos-preventa::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+  background: var(--aki-warning);
+}
+
+.akb-stock-status__badge--preventa {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--aki-warning);
+  color: var(--aki-black);  /* contrast 9.52:1 AAA */
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: max-content;
+}
+
+.akb-stock-status__date {
+  font-size: var(--text-base);
+  color: var(--aki-gray-200);
+  font-weight: var(--weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.akb-stock-status__date-icon {
+  font-size: 18px;
+  color: var(--aki-gray-400);
+}
+
+.akb-stock-status__copy {
+  font-size: var(--text-sm);
+  color: var(--aki-text-muted);
+  line-height: 1.6;
+}
+
+.akb-stock-status__cta {
+  margin-top: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--aki-red);
+  color: var(--aki-white);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-sm);
+  min-height: var(--touch-target-min);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-base);
+  width: 100%;
+  max-width: 320px;
+}
+.akb-stock-status__cta:hover { background: var(--aki-red-hover); }
+.akb-stock-status__cta:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+
+/* Default WC OOS badge (for comparison) */
+.wc-default-oos {
+  background: var(--aki-surface-2);
+  border: 1px solid var(--aki-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+}
+.wc-default-oos__badge {
+  display: inline-block;
+  background: var(--aki-error);
+  color: var(--aki-white);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--space-3);
+}
+.wc-default-oos__msg {
+  color: var(--aki-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Annotations */
+.prototype-annotations details {
+  border-top: 1px solid var(--aki-border);
+  padding: var(--space-4) 0;
+}
+.prototype-annotations details:first-of-type { border-top: none; padding-top: 0; }
+.prototype-annotations summary {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  font-size: var(--text-base);
+  color: var(--aki-yellow);
+  cursor: pointer;
+  padding: var(--space-2) 0;
+  letter-spacing: 0.5px;
+}
+.prototype-annotations summary:focus-visible {
+  outline: var(--aki-focus-outline);
+  outline-offset: var(--aki-focus-offset);
+}
+.prototype-annotations ul, .prototype-annotations ol { padding-left: var(--space-6); margin-top: var(--space-2); }
+.prototype-annotations li { font-size: var(--text-sm); color: var(--aki-gray-200); margin-bottom: var(--space-2); }
+.prototype-annotations code {
+  background: var(--aki-surface-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--aki-yellow);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.prototype-annotations pre {
+  background: var(--aki-surface-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin-top: var(--space-2);
+}
+.prototype-annotations pre code { background: none; padding: 0; color: var(--aki-gray-200); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+@media (max-width: 767px) { body { padding: var(--space-4); } }
+</style>
+</head>
+<body>
+
+<header class="prototype-header">
+  <h1>Item 5 — Auto-OOS Preventa: "Fecha por confirmar"</h1>
+  <p>
+    Spec: <code>UI-SPECS-preventas.md#item-5</code> · Consumer: Cell A
+    (<code>wp-content/plugins/akibara-preventas/</code>) · Fecha: 2026-04-27<br>
+    Trigger: <code>get_stock_quantity() &lt;= 0 &amp;&amp; _allow_preventa = 'yes'</code> →
+    reemplaza badge "Agotado" estándar de WC con tratamiento preventa.
+  </p>
+</header>
+
+<main class="prototype-grid">
+
+  <!-- ══════════════════════════════════════
+       STATE 1 — DEFAULT (no expected_date)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Estado 1: OOS Preventa sin fecha (default)</h2>
+    <span class="state-label">expected_date IS NULL → "Fecha por confirmar"</span>
+
+    <div class="product-page">
+      <div class="product-page__image" aria-hidden="true">[IMG 4:5]</div>
+      <div class="product-page__details">
+        <p class="product-page__series">One Piece</p>
+        <h3 class="product-page__title">Vol. 110 (próximo lanzamiento)</h3>
+        <p class="product-page__price">$9.990 CLP</p>
+
+        <div class="akb-stock-status akb-stock-status--oos-preventa" role="region" aria-label="Producto en preventa, sin stock">
+          <span class="akb-stock-status__badge--preventa">
+            <span aria-hidden="true">⏳</span> Preventa
+          </span>
+          <p class="akb-stock-status__date">
+            <span class="akb-stock-status__date-icon" aria-hidden="true">📅</span>
+            Fecha por confirmar
+          </p>
+          <p class="akb-stock-status__copy">
+            Actualmente sin stock. Puedes reservar ahora y te avisaremos
+            cuando llegue.
+          </p>
+          <button type="button" class="akb-stock-status__cta">
+            Reservar ahora
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 2 — WITH expected_date
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Estado 2: OOS Preventa con fecha estimada</h2>
+    <span class="state-label">expected_date = '2026-06-15' → "Llegada estimada DD/MM"</span>
+
+    <div class="product-page">
+      <div class="product-page__image" aria-hidden="true">[IMG 4:5]</div>
+      <div class="product-page__details">
+        <p class="product-page__series">Berserk</p>
+        <h3 class="product-page__title">Deluxe Vol. 14</h3>
+        <p class="product-page__price">$19.990 CLP</p>
+
+        <div class="akb-stock-status akb-stock-status--oos-preventa" role="region" aria-label="Producto en preventa con fecha estimada">
+          <span class="akb-stock-status__badge--preventa">
+            <span aria-hidden="true">⏳</span> Preventa
+          </span>
+          <p class="akb-stock-status__date">
+            <span class="akb-stock-status__date-icon" aria-hidden="true">📅</span>
+            Llegada estimada 15/06/2026
+          </p>
+          <p class="akb-stock-status__copy">
+            Reserva tu copia ahora. Te enviaremos un email cuando esté
+            disponible para envío.
+          </p>
+          <button type="button" class="akb-stock-status__cta">
+            Reservar ahora
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 3 — DEFAULT WC (FOR COMPARISON)
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Comparación: badge OOS estándar de WooCommerce (REEMPLAZADO)</h2>
+    <span class="state-label">_allow_preventa NOT set → render this default</span>
+
+    <div class="product-page">
+      <div class="product-page__image" aria-hidden="true">[IMG 4:5]</div>
+      <div class="product-page__details">
+        <p class="product-page__series">Sin preventa habilitada</p>
+        <h3 class="product-page__title">Producto descontinuado</h3>
+        <p class="product-page__price">—</p>
+
+        <div class="wc-default-oos" role="region" aria-label="Producto agotado">
+          <span class="wc-default-oos__badge">⚠ Agotado</span>
+          <p class="wc-default-oos__msg">Este producto no está disponible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       STATE 4 — INTERACTIONS
+       ══════════════════════════════════════ -->
+  <section class="section-wrapper">
+    <h2>Estado: CTA hover + focus</h2>
+    <span class="state-label">"Reservar ahora" hover (--aki-red-hover) + focus ring</span>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 320px)); gap: var(--space-4);">
+      <button type="button" class="akb-stock-status__cta">Default</button>
+      <button type="button" class="akb-stock-status__cta" style="background: var(--aki-red-hover);">Hover (sim)</button>
+      <button type="button" class="akb-stock-status__cta" style="outline: var(--aki-focus-outline); outline-offset: var(--aki-focus-offset);">Focus (sim)</button>
+    </div>
+  </section>
+
+</main>
+
+<aside class="prototype-annotations" aria-label="Notas técnicas para Cell A">
+  <details open>
+    <summary>Tokens consumidos</summary>
+    <ul>
+      <li><code>--aki-warning</code> + black text 9.52:1 AAA — preventa badge</li>
+      <li><code>--aki-red</code>, <code>--aki-red-hover</code> — "Reservar ahora" CTA</li>
+      <li><code>--aki-surface-2</code>, <code>--aki-border-light</code> — section bg</li>
+      <li><code>--aki-gray-200</code>, <code>--aki-text-muted</code> — copy hierarchy</li>
+      <li><code>--aki-focus-outline</code> (3px) — WCAG 2.4.13</li>
+      <li><code>--touch-target-min</code> (44px) en CTA</li>
+    </ul>
+  </details>
+  <details>
+    <summary>CSS classes para Cell A</summary>
+    <pre><code>.akb-stock-status                       /* base */
+.akb-stock-status--oos-preventa         /* OOS + preventa allowed variant */
+.akb-stock-status__badge--preventa      /* yellow "PREVENTA" badge */
+.akb-stock-status__date                 /* date label with icon */
+.akb-stock-status__date-icon
+.akb-stock-status__copy                 /* explanation paragraph */
+.akb-stock-status__cta                  /* "Reservar ahora" button */</code></pre>
+  </details>
+  <details>
+    <summary>Trigger logic / data binding (Cell A)</summary>
+    <pre><code>// Cell A hook en wp-content/plugins/akibara-preventas/includes/stock-override.php
+//
+// add_filter('woocommerce_get_stock_html', 'akb_replace_oos_with_preventa', 10, 2);
+//
+// function akb_replace_oos_with_preventa($html, $product) {
+//   $stock = $product->get_stock_quantity();
+//   $allow_preventa = get_post_meta($product->get_id(), '_allow_preventa', true) === 'yes';
+//
+//   if ($stock <= 0 && $allow_preventa) {
+//     $expected = get_post_meta($product->get_id(), '_akibara_expected_date', true);
+//     ob_start();
+//     include AKB_PLUGIN_DIR . 'templates/oos-preventa.php';
+//     return ob_get_clean();
+//   }
+//
+//   return $html;  // default WC OOS badge
+// }
+//
+// templates/oos-preventa.php expects:
+//   $product (WC_Product)
+//   $expected (string|null) — formatted date or null
+//
+// CTA action options:
+//   1. Anchor scroll: href="#akb-encargos-form" (item 1 form ya en page)
+//   2. Modal trigger: data-modal-trigger="encargos" (item 7 popup)
+//   3. Add-to-cart preventa: triggers wc add-to-cart with meta _is_preventa=true</code></pre>
+  </details>
+  <details>
+    <summary>Copy validation (mesa-06 Sprint 3.5)</summary>
+    <ul>
+      <li>"Fecha por confirmar" ✓ (NO "Por confirmar fecha")</li>
+      <li>"Puedes reservar ahora" ✓ (NO "Reservá" voseo · NO "Reserve" formal)</li>
+      <li>"Llegada estimada DD/MM" ✓ (NO "Llegará el", "Llegará en")</li>
+      <li>"Te enviaremos un email" ✓ (NO "Le enviaremos", "Te enviaré")</li>
+      <li>"Reservar ahora" CTA ✓ (NO "Reserva" infinitivo, NO "Reservá")</li>
+    </ul>
+  </details>
+  <details>
+    <summary>Edge cases / TODOs</summary>
+    <ul>
+      <li>TODO Cell A: si producto stock=0 sin _allow_preventa → render default WC OOS (sin override)</li>
+      <li>TODO: validar expected_date format Cell A — date_i18n('d/m/Y') WP function</li>
+      <li>TODO: si stock vuelve > 0 → trigger Brevo notificación a customers que reservaron (Cell B)</li>
+      <li>TODO mockup futuro: cuántas reservas existen contador opcional ("23 personas reservaron") — Phase 2</li>
+      <li>NOTE: O-13-111 (preventa+sale simultaneous) pendiente Sprint 4 — este mockup asume mutual exclusion</li>
+    </ul>
+  </details>
+</aside>
+
+</body>
+</html>
