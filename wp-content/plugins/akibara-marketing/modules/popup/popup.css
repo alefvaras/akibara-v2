@@ -1,0 +1,414 @@
+/**
+ * Akibara Popup + Footer Newsletter — Estilos Consolidados
+ * Plugin: akibara/modules/popup
+ * Handle: akibara-popup
+ */
+
+/* ═══════════════════════════════════════════
+	1. POPUP MODAL
+	═══════════════════════════════════════════ */
+
+.aki-popup {
+	position: fixed;
+	inset: 0;
+	z-index: 999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity .3s;
+	overscroll-behavior: contain;
+	padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+	box-sizing: border-box;
+}
+.aki-popup.show { opacity: 1; }
+
+.aki-popup__overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(0,0,0,.75);
+	backdrop-filter: blur(4px);
+}
+
+.aki-popup__card {
+	position: relative;
+	background: #1a1a1a;
+	border: 1px solid rgba(255,255,255,.08);
+	border-radius: 12px;
+	padding: 40px 36px;
+	max-width: 420px;
+	width: 90%;
+	max-height: 90vh;
+	max-height: 90dvh;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	text-align: center;
+	transform: translateY(20px) scale(.95);
+	transition: transform .3s;
+	z-index: 1;
+}
+.aki-popup.show .aki-popup__card {
+	transform: translateY(0) scale(1);
+}
+
+.aki-popup__close {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: none;
+	background: rgba(255,255,255,.1);
+	color: #888;
+	font-size: 20px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all .2s;
+	line-height: 1;
+	padding: 0;
+}
+.aki-popup__close:hover {
+	background: #D90010;
+	color: #fff;
+}
+
+.aki-popup__badge {
+	display: inline-block;
+	background: #D90010;
+	color: #fff;
+	font-family: var(--font-heading, 'Bebas Neue', Impact, sans-serif);
+	font-size: 28px;
+	letter-spacing: .04em;
+	padding: 4px 20px;
+	margin-bottom: 16px;
+	transform: skewX(-5deg);
+}
+
+.aki-popup__title {
+	font-family: var(--font-heading, 'Bebas Neue', Impact, sans-serif);
+	font-size: 24px;
+	text-transform: uppercase;
+	color: #fff;
+	margin: 0 0 8px;
+	letter-spacing: .02em;
+}
+
+.aki-popup__desc {
+	color: #aaa;
+	font-size: 14px;
+	line-height: 1.5;
+	margin: 0 0 20px;
+}
+.aki-popup__desc strong { color: #fff; }
+
+.aki-popup__form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.aki-popup__input {
+	background: #111;
+	border: 1px solid #333;
+	border-radius: 8px;
+	padding: 14px 16px;
+	color: #fff;
+	font-size: 15px;
+	outline: none;
+	transition: border-color .2s;
+}
+.aki-popup__input:focus { border-color: #D90010; }
+.aki-popup__input::placeholder { color: #555; }
+
+.aki-popup__btn {
+	background: #D90010;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 14px;
+	font-family: var(--font-heading, 'Bebas Neue', Impact, sans-serif);
+	font-size: 18px;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: background .2s;
+	text-decoration: none;
+	display: block;
+	text-align: center;
+}
+.aki-popup__btn:hover { background: #ff1a1a; }
+
+.aki-popup__legal {
+	color: #555;
+	font-size: 11px;
+	margin: 12px 0 0;
+}
+
+.aki-popup__error {
+	color: #D90010;
+	font-size: 12px;
+	margin: 8px 0 0;
+}
+
+/* Screen reader only — visually hidden, accessible */
+.aki-popup__sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0,0,0,0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.aki-popup__no-thanks {
+	background: none;
+	border: none;
+	color: #555;
+	font-size: 12px;
+	cursor: pointer;
+	padding: 8px 12px;
+	margin-top: 4px;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	transition: color .2s;
+	min-height: 44px;
+	display: inline-block;
+}
+.aki-popup__no-thanks:hover { color: #888; }
+
+.aki-popup__coupon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	background: rgba(217, 0, 16,.1);
+	border: 1px dashed rgba(217, 0, 16,.4);
+	border-radius: 8px;
+	padding: 12px 20px;
+	margin: 16px 0 0;
+}
+
+.aki-popup__coupon span {
+	font-family: var(--font-heading, 'Bebas Neue', Impact, sans-serif);
+	font-size: 24px;
+	letter-spacing: .08em;
+	color: #fff;
+}
+
+.aki-popup__copy {
+	background: rgba(255,255,255,.1);
+	border: none;
+	border-radius: 6px;
+	color: #ccc;
+	padding: 6px 12px;
+	font-size: 12px;
+	cursor: pointer;
+	transition: background .2s;
+}
+.aki-popup__copy:hover { background: rgba(255,255,255,.2); }
+
+@media (max-width: 640px) {
+	/* Bottom sheet: anclado al fondo, slide desde abajo */
+	.aki-popup {
+	align-items: flex-end;
+	padding: 0;
+	}
+	.aki-popup__card {
+	width: 100%;
+	max-width: 100%;
+	border-radius: 16px 16px 0 0;
+	padding: 8px 24px max(24px, env(safe-area-inset-bottom));
+	max-height: 90dvh;
+	transform: translateY(40px) scale(1);
+	}
+	.aki-popup.show .aki-popup__card {
+	transform: translateY(0) scale(1);
+	}
+	/* Drag handle visual */
+	.aki-popup__card::before {
+	content: '';
+	display: block;
+	width: 40px;
+	height: 4px;
+	background: rgba(255,255,255,.15);
+	border-radius: 2px;
+	margin: 0 auto 16px;
+	}
+	.aki-popup__title { font-size: 22px; }
+}
+
+@media (max-width: 480px) {
+	.aki-popup__card { padding: 8px 16px max(20px, env(safe-area-inset-bottom)); }
+	.aki-popup__badge { font-size: 24px; }
+}
+
+@media (max-height: 600px) {
+	.aki-popup__card { padding: 20px 22px; }
+	.aki-popup__badge { margin-bottom: 8px; }
+	.aki-popup__title { margin-bottom: 4px; }
+	.aki-popup__desc { margin-bottom: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.aki-popup,
+	.aki-popup__card,
+	.aki-popup__btn,
+	.aki-popup__input,
+	.aki-popup__close,
+	.aki-popup__copy {
+	transition: none !important;
+	transform: none !important;
+	animation: none !important;
+	}
+}
+
+/* ═══════════════════════════════════════════
+	2. FOOTER NEWSLETTER — Integrado en el footer
+	═══════════════════════════════════════════ */
+
+
+#aki-footer-signup.footer-newsletter {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3, 12px);
+	min-width: 0;
+}
+
+#aki-footer-signup .footer-newsletter__desc {
+	color: var(--aki-gray-400, #888);
+	font-size: var(--text-sm, 14px);
+	line-height: 1.6;
+	margin: 0;
+}
+
+#aki-footer-signup .footer-newsletter__desc strong {
+	color: #D90010;
+}
+
+/* Form: columna vertical — input arriba, botón abajo */
+#aki-footer-signup .footer-newsletter__form {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+/* Field: input + botón en pill inline */
+#aki-footer-signup .footer-newsletter__field {
+	display: flex;
+	flex-direction: row;
+	border-radius: 8px;
+	overflow: hidden;
+	border: 1px solid var(--aki-border, rgba(255,255,255,.08));
+	transition: border-color .3s, box-shadow .3s;
+}
+
+#aki-footer-signup .footer-newsletter__field:focus-within {
+	border-color: rgba(217, 0, 16, .5);
+	box-shadow: 0 0 12px rgba(217, 0, 16, .15);
+}
+
+#aki-footer-signup .footer-newsletter__input {
+	flex: 1;
+	min-width: 0;
+	padding: 10px 14px;
+	background: rgba(255,255,255,.04);
+	border: none;
+	color: #fff;
+	font-size: 13px;
+	outline: none;
+	box-sizing: border-box;
+	border-radius: 0;
+	-webkit-appearance: none;
+}
+
+#aki-footer-signup .footer-newsletter__input::placeholder {
+	color: rgba(255,255,255,.3);
+}
+
+#aki-footer-signup .footer-newsletter__btn {
+	flex-shrink: 0;
+	width: auto;
+	padding: 10px 16px;
+	background: #D90010;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	white-space: nowrap;
+	min-height: 40px;
+	border-radius: 0;
+	transition: background .2s, transform .15s;
+}
+
+#aki-footer-signup .footer-newsletter__btn:hover {
+	background: #ff1a1a;
+}
+
+#aki-footer-signup .footer-newsletter__btn:active {
+	transform: scale(.96);
+}
+
+/* Animación del icono send al hover */
+#aki-footer-signup .footer-newsletter__btn svg {
+	transition: transform .2s;
+}
+#aki-footer-signup .footer-newsletter__btn:hover svg {
+	transform: translate(2px, -2px);
+}
+
+/* Message area */
+#aki-footer-signup .footer-newsletter__msg {
+	font-size: 12px;
+	min-height: 1.4em;
+	margin-top: 6px;
+}
+
+/* Loading state */
+#aki-footer-signup .footer-newsletter__btn--loading {
+	position: relative;
+	color: transparent;
+}
+
+#aki-footer-signup .footer-newsletter__btn--ok {
+	background: var(--aki-success, #22c55e);
+}
+
+/* Estado suscrito */
+#aki-footer-signup .footer-newsletter__subscribed {
+	color: var(--aki-gray-400, #888);
+	font-size: var(--text-sm, 14px);
+	margin: 0;
+}
+
+#aki-footer-signup .footer-newsletter__subscribed a {
+	color: var(--aki-info, #3B82F6);
+	text-decoration: none;
+	transition: color .2s;
+}
+
+#aki-footer-signup .footer-newsletter__subscribed a:hover {
+	color: #fff;
+}
+
+/* Mobile: newsletter full width */
+@media (max-width: 768px) {
+	#aki-footer-signup.footer-newsletter {
+	grid-column: 1 / -1;
+	text-align: center;
+	}
+	#aki-footer-signup .footer-newsletter__field {
+	max-width: 400px;
+	margin: 0 auto;
+	}
+}
