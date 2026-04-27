@@ -171,13 +171,17 @@ if ( ! function_exists( 'akb_marketing_sentinel' ) ) {
 			'review-request/module.php',
 			'review-incentive/module.php',
 			'referrals/module.php',
-			'customer-milestones/module.php',
+			// 'customer-milestones/module.php', // DEFERRED Sprint 5+ (audit/sprint-3/cell-b/DECISION-CUSTOMER-MILESTONES.md)
 			'finance-dashboard/module.php',
 		);
 
 		// cart-abandoned: DEPRECATED — Brevo upstream covers this natively.
 		// Module file exists at modules/cart-abandoned/module.php (preserved for audit trail).
 		// See HANDOFF.md §Decisión cart-abandoned for full rationale.
+
+		// customer-milestones: DEFERRED Sprint 5+ — scaffold only, sin Brevo automations creadas.
+		// Pre-condiciones activación: customer base ≥50/mes + _billing_birthday capturado + 3 templates Brevo.
+		// See DECISION-CUSTOMER-MILESTONES.md for full rationale.
 
 		foreach ( $modules as $module ) {
 			$path = $module_dir . $module;
