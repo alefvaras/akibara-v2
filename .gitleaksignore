@@ -20,3 +20,7 @@ e8463dc094b9b9a1f21f48de054008a6e25234dd:audit/sprint-1/sec-04-bluex-disclosure-
 # slug + underscores), not a real secret value. grep-secrets.sh post-filters
 # via awk; gitleaks generic-api-key rule does not have equivalent filter.
 e8463dc094b9b9a1f21f48de054008a6e25234dd:wp-content/plugins/akibara/modules/shipping/class-12horas.php:generic-api-key:23
+
+# Sprint 4 Cell C: same file migrated to akibara-inventario addon.
+# Same false positive — option name string, not a secret value.
+wp-content/plugins/akibara-inventario/modules/shipping/class-12horas.php:generic-api-key:23
