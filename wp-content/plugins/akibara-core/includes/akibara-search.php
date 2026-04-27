@@ -21,16 +21,25 @@ if ( defined( 'AKB_SEARCH_LOADED' ) ) {
 }
 define( 'AKB_SEARCH_LOADED', '10.0.0' );
 
-// F-pivot defensive guard (mesa-01 vote 2026-04-27): if akb_sinonimos already
-// declared via another load path (legacy plugin akibara/, double-include, etc),
-// skip this module to prevent fatal redeclare. AKB_SEARCH_LOADED above covers
-// file-level dedup; this covers symbol-level dedup. Belt-and-suspenders for the
-// public functions akb_sinonimos + akb_create_index_table that originally caused
-// the Sprint 2 deploy fatal. Visible warning makes load-order issues debuggable.
-if ( function_exists( 'akb_sinonimos' ) || function_exists( 'akb_create_index_table' ) ) {
-	error_log( '[akibara-core] akb_sinonimos/akb_create_index_table already declared — F-pivot guard tripped, possible load order issue. Skipping akibara-core/includes/akibara-search.php.' );
-	return;
-}
+// NOTE 2026-04-27 staging deploy postmortem (REDESIGN.md):
+// Un sentinel `if (function_exists('akb_sinonimos')) return;` AQUÍ se intentó
+// como F-pivot belt-and-suspenders pero NO FUNCIONA: PHP hoists top-level
+// function declarations a parse time, así que function_exists() devuelve TRUE
+// EN CADA load de este archivo — el sentinel siempre firing y los `define()`
+// siguientes nunca corrían → fatal "Undefined AKB_TABLE" en activation hook.
+// Verificado con docker php:8.1-cli.
+//
+// FIX aplicado (group wrap más abajo): functions y hooks van dentro de
+// `if ( ! function_exists( 'akb_sinonimos' ) ) { ... }` después de los
+// constants. PHP NO hoistea functions dentro de if blocks → declarations
+// son conditional → no redeclare fatal aunque mu-plugin esté removed y
+// legacy akibara/includes/akibara-search.php se cargue first.
+//
+// Defensa-en-profundidad final:
+// 1. AKB_SEARCH_LOADED check arriba (file-level dedup vía require_once realpath)
+// 2. mu-plugin akibara-00-core-bootstrap.php define AKIBARA_CORE_PLUGIN_LOADED early
+// 3. legacy akibara/akibara.php skipea includes/akibara-search.php cuando AKIBARA_CORE_PLUGIN_LOADED set
+// 4. group wrap abajo (this file) — symbol-level dedup conditional declarations
 
 if ( ! defined( 'AKB_TABLE' ) ) {
 	define( 'AKB_TABLE', $GLOBALS['wpdb']->prefix . 'akibara_index' );
@@ -50,6 +59,18 @@ if ( ! defined( 'AKB_CDN_TTL' ) ) {
 if ( ! defined( 'AKB_CACHE_GROUP' ) ) {
 	define( 'AKB_CACHE_GROUP', 'akibara_search' );
 }
+
+// ══════════════════════════════════════════════════════════════════
+// F-pivot defensive layer (REDESIGN.md 2026-04-27 + staging postmortem):
+// Group wrap todas las 19 top-level function declarations + 11 add_action/
+// add_filter calls dentro de `if ( ! function_exists( 'akb_sinonimos' ) )`.
+// PHP NO hoistea functions dentro de un if block (verificado docker
+// php:8.1-cli) → previene fatal redeclare cross-file aunque mu-plugin
+// loader esté removed. AKB_SEARCH_LOADED arriba cubre file-level dedup
+// vía require_once realpath; este wrap cubre symbol-level dedup. Cierra
+// con `}` al final del archivo.
+// ══════════════════════════════════════════════════════════════════
+if ( ! function_exists( 'akb_sinonimos' ) ) {
 
 // ══════════════════════════════════════════════════════════════════
 // 0. SINÓNIMOS — fuente única en data/sinonimos.php
@@ -1390,3 +1411,5 @@ document.addEventListener('DOMContentLoaded',()=>{
 	},
 	999
 );
+
+} // end if ( ! function_exists( 'akb_sinonimos' ) ) — F-pivot group wrap REDESIGN.md
