@@ -150,6 +150,7 @@ require_once AKIBARA_CORE_DIR . 'modules/series-autofill/module.php';
 // 'woocommerce'. Manga Crimson identity vía border-left (mesa-13/05 contraste OK).
 if ( is_admin() ) {
 	require_once AKIBARA_CORE_DIR . 'admin/menu.php';
+	require_once AKIBARA_CORE_DIR . 'admin/modules-control.php';
 }
 
 // ─── Activation / deactivation hooks (mesa-15 P0-4 fix) ──────────────────────

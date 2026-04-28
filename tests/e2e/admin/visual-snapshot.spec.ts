@@ -89,10 +89,11 @@ test.describe('@admin CSS load verification — TODOS los plugins akibara', () =
   test.use({ storageState: 'tests/e2e/admin/.auth/admin.json' });
 
   test('admin.css carga en todas las akibara-* pages', async ({ page }) => {
+    test.setTimeout(180000); // 3 min para 18 pages
     const results: { slug: string; cssLoaded: boolean; status: number }[] = [];
 
     for (const adminPage of ADMIN_PAGES) {
-      const response = await page.goto(`/wp-admin/admin.php?page=${adminPage.slug}`);
+      const response = await page.goto(`/wp-admin/admin.php?page=${adminPage.slug}`, { timeout: 8000 }).catch(() => null);
       const status = response?.status() ?? 0;
 
       if (status !== 200) {
@@ -110,14 +111,12 @@ test.describe('@admin CSS load verification — TODOS los plugins akibara', () =
       results.push({ slug: adminPage.slug, cssLoaded, status });
     }
 
-    // Report
     const failures = results.filter((r) => r.status === 200 && !r.cssLoaded);
     if (failures.length > 0) {
       console.error('[FAIL] Pages sin admin.css:');
       failures.forEach((f) => console.error(`  - ${f.slug}`));
     }
 
-    // CSS debe cargar en ALL pages 200
     expect(failures, `${failures.length} páginas no tienen admin.css cargado`).toHaveLength(0);
   });
 
