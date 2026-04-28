@@ -159,6 +159,58 @@ function akb_ml_build_description( WC_Product $product ): string {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// MAPEO BOOK_COVER LOCAL → ML VALUE_ID
+//
+// ML categoría MLC1196 (Libros Físicos) define BOOK_COVER como
+// atributo de tipo `list` con exactamente 2 valores aceptados:
+//
+//   { "id": "2132701", "name": "Dura"  }
+//   { "id": "2132700", "name": "Blanda" }
+//
+// Enviar value_name libre (ej: "Rústica", "Blanda con sobrecubierta")
+// genera error: "Attribute [BOOK_COVER] is not valid, item values [(null:…)]"
+// El null indica que ML no pudo resolver el value_name a un value_id interno.
+//
+// Criterio de normalización:
+//   - Cualquier string que contenga "dura", "hard", "integral", "omnibus",
+//     "absolute", "compendium" → Dura (2132701)
+//   - Todo lo demás (Blanda, Rústica, Blanda con sobrecubierta, vacío) → Blanda (2132700)
+//
+// Retorna array con claves 'id' y 'name' para incluir en item.attributes.
+// ══════════════════════════════════════════════════════════════════
+
+/**
+ * Normaliza un string local de tapa a la entrada ML válida para BOOK_COVER.
+ *
+ * @param string $local_value Valor local: 'Dura', 'Blanda', 'Rústica', 'Blanda con sobrecubierta', etc.
+ * @return array{ id: string, name: string }
+ */
+function akb_ml_map_book_cover( string $local_value ): array {
+	// ML value_ids confirmados via GET /categories/MLC1196/attributes (2026-04-26)
+	static $ml_values = array(
+		'2132701' => 'Dura',
+		'2132700' => 'Blanda',
+	);
+
+	$normalized = mb_strtolower( trim( $local_value ), 'UTF-8' );
+
+	// Marcadores inequívocos de tapa dura.
+	// Nota: "hardcover" es una sola palabra en inglés — usar \bhard\b no matchea
+	// dentro de "hardcover", por eso se lista explícitamente como alternativa completa.
+	$is_hard = (bool) preg_match(
+		'/\b(hardcover|hard cover|tapa dura|dura|integral|omnibus|absolute|compendium)\b/i',
+		$normalized
+	);
+
+	$value_id = $is_hard ? '2132701' : '2132700';
+
+	return array(
+		'id'   => $value_id,
+		'name' => $ml_values[ $value_id ],
+	);
+}
+
+// ══════════════════════════════════════════════════════════════════
 // MAPEO WC PRODUCT → ML ITEM
 // ══════════════════════════════════════════════════════════════════
 
@@ -286,14 +338,20 @@ function _akb_ml_product_to_item_build( WC_Product $product ): array {
 	$desc = akb_ml_build_description( $product );
 
 	// Atributos ML para categoría Libros Físicos (MLC1196)
+	//
+	// Atributos tipo `list` requieren { "id": VALUE_ID } en lugar de { "value_name": STRING }.
+	// Enviar value_name libre en atributos list genera "(null:value)" y error de validación.
+	//
+	// BOOK_GENRE value_id "13061816" = "Cómic, manga y novela gráfica"
+	// Confirmado via GET /categories/MLC1196/attributes (2026-04-26).
 	$attributes = array(
 		array(
 			'id'         => 'BOOK_TITLE',
 			'value_name' => $product->get_name(),
 		),
 		array(
-			'id'         => 'BOOK_GENRE',
-			'value_name' => 'Cómic, manga y novela gráfica',
+			'id'       => 'BOOK_GENRE',
+			'value_id' => '13061816',
 		),
 		array(
 			'id'         => 'LANGUAGE',
@@ -330,22 +388,29 @@ function _akb_ml_product_to_item_build( WC_Product $product ): array {
 		);
 	}
 
-	// BOOK_COVER — preferir meta explícita; regex solo con marcadores unívocos.
+	// BOOK_COVER — preferir meta explícita; fallback por regex sobre nombre del producto.
+	//
 	// "deluxe" se excluye del regex porque en manga a menudo indica "edición mejorada
 	// con better paper" pero SIN ser tapa dura (p. ej. Attack on Titan Deluxe).
-	// Marcadores conservadores que SIEMPRE implican hardcover:
-	// hardcover, tapa dura, integral, omnibus, absolute, compendium
-	$cover = get_post_meta( $pid, '_akb_book_cover', true );
-	if ( empty( $cover ) ) {
+	//
+	// CRÍTICO: ML define BOOK_COVER como tipo `list` con solo 2 opciones válidas:
+	//   2132700 → Blanda | 2132701 → Dura
+	// Enviar value_name libre (ej: "Rústica", "Blanda con sobrecubierta") genera
+	// el error: "Attribute [BOOK_COVER] is not valid, item values [(null:VALUE)]"
+	// La función akb_ml_map_book_cover() normaliza cualquier string local al value_id correcto.
+	$cover_meta = get_post_meta( $pid, '_akb_book_cover', true );
+	if ( empty( $cover_meta ) ) {
+		// Marcadores conservadores que SIEMPRE implican hardcover en manga/cómic
 		$is_hardcover = preg_match(
 			'/\b(hardcover|tapa dura|integral|omnibus|absolute|compendium)\b/i',
 			$product->get_name()
 		);
-		$cover        = $is_hardcover ? 'Dura' : 'Blanda';
+		$cover_meta   = $is_hardcover ? 'Dura' : 'Blanda';
 	}
+	$cover_ml     = akb_ml_map_book_cover( $cover_meta );
 	$attributes[] = array(
-		'id'         => 'BOOK_COVER',
-		'value_name' => $cover,
+		'id'       => 'BOOK_COVER',
+		'value_id' => $cover_ml['id'],
 	);
 	$attributes[] = array(
 		'id'         => 'NARRATION_TYPE',
