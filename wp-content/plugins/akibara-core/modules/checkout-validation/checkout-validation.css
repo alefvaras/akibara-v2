@@ -1,0 +1,197 @@
+/**
+ * Akibara — Checkout Validation v1.0
+ * Estilos para feedback en tiempo real de email/nombres/dirección.
+ */
+
+/* Sugerencia de email — dos variantes semánticas:
+	--chips: autocomplete neutro (cero ansiedad, color info)
+	--typo:  corrección activa de error (amber justificado) */
+.akb-email-suggestion {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin-top: 8px;
+	padding: 12px 14px;
+	border-radius: 8px;
+	color: var(--aki-text, #F5F5F5);
+	font-size: 13px;
+	line-height: 1.45;
+	animation: akb-slide-down .2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.akb-email-suggestion { animation: none; }
+}
+
+/* Variante neutra: autocomplete tras "@" */
+.akb-email-suggestion--chips {
+	flex-wrap: wrap;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.akb-email-suggestion--chips .akb-email-suggestion__icon {
+	color: var(--aki-text-muted, #A0A0A0);
+	margin-top: 2px;
+}
+
+/* Variante amber: typo-fix (corrección activa — warning legítimo) */
+.akb-email-suggestion--typo {
+	background: rgba(245, 158, 11, 0.08);
+	border: 1px solid rgba(245, 158, 11, 0.6);
+}
+
+.akb-email-suggestion--typo .akb-email-suggestion__icon {
+	color: #F59E0B;
+	margin-top: 1px;
+}
+
+.akb-email-suggestion__icon {
+	font-size: 14px;
+	flex-shrink: 0;
+}
+
+.akb-email-suggestion__text,
+.akb-email-suggestion__label {
+	flex: 1;
+	min-width: 0;
+}
+
+.akb-email-suggestion__label {
+	font-weight: 500;
+	color: var(--aki-text-muted, #A0A0A0);
+	flex: 0 0 100%;
+	margin-bottom: 8px;
+	font-size: 12px;
+	letter-spacing: 0.01em;
+}
+
+/* Sr-only helper para live-region de anuncio */
+.akb-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.akb-email-suggestion__btn {
+	appearance: none;
+	background: transparent;
+	border: none;
+	color: #F59E0B;
+	font-weight: 600;
+	cursor: pointer;
+	padding: 0 2px;
+	font: inherit;
+	border-bottom: 1px dashed #F59E0B;
+	transition: color .15s, border-color .15s;
+}
+
+.akb-email-suggestion__btn:hover {
+	color: #FBBF24;
+	border-bottom-color: #FBBF24;
+}
+
+.akb-email-suggestion__btn:focus-visible {
+	outline: 2px solid #FBBF24;
+	outline-offset: 2px;
+	border-radius: 2px;
+	color: #FBBF24;
+	border-bottom-color: transparent;
+}
+
+/* Chips neutros outlined (autocomplete — cero semántica warning) */
+.akb-email-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	flex: 0 0 100%;
+}
+
+.akb-email-chip {
+	appearance: none;
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	color: var(--aki-text, #F5F5F5);
+	font: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	padding: 6px 12px;
+	min-height: 32px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: border-color .15s, background .15s, color .15s, transform .15s;
+	line-height: 1.2;
+	white-space: nowrap;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.akb-email-chip:hover {
+	background: rgba(217, 0, 16, 0.08);
+	border-color: #D90010;
+	color: #D90010;
+	transform: translateY(-1px);
+}
+
+.akb-email-chip:focus-visible {
+	outline: 2px solid #D90010;
+	outline-offset: 2px;
+	background: rgba(217, 0, 16, 0.08);
+	border-color: #D90010;
+	color: #D90010;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.akb-email-chip:hover { transform: none; }
+}
+
+.akb-email-chip:active {
+	transform: translateY(0);
+}
+
+/* Feedback de nombres/dirección */
+.akb-name-feedback,
+.akb-addr-feedback {
+	display: block;
+	font-size: 12px;
+	margin-top: 4px;
+	min-height: 16px;
+	transition: color .15s;
+}
+
+.akb-fb--ok {
+	color: #10B981;
+}
+
+.akb-fb--err {
+	color: #EF4444;
+}
+
+/* Estados del input */
+.akb-input-ok {
+	border-color: #10B981 !important;
+}
+
+.akb-input-err {
+	border-color: #EF4444 !important;
+}
+
+/* Animación */
+@keyframes akb-slide-down {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
