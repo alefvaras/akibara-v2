@@ -271,6 +271,15 @@ register_activation_hook(
     static function (): void {
         akb_preventas_install_db();
 
+        // Force rewrite endpoints registration + flush (post-INCIDENT-05 2026-04-27).
+        // Without this, /mi-cuenta/mis-reservas/ retorna 404 hasta proxima activación
+        // del plugin (rules cached en option NO contienen el endpoint).
+        akb_preventas_load_classes();
+        if ( class_exists( '\\Akibara_Reserva_MyAccount' ) ) {
+            \Akibara_Reserva_MyAccount::register_endpoint();
+        }
+        flush_rewrite_rules( true );
+
         if ( ! wp_next_scheduled( 'akb_reservas_check_dates' ) ) {
             wp_schedule_event( time(), 'akb_fifteen_minutes', 'akb_reservas_check_dates' );
         }
