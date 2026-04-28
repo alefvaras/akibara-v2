@@ -3,7 +3,7 @@
  * Plugin Name:       Akibara WhatsApp
  * Plugin URI:        https://github.com/alefvaras/akibara-v2
  * Description:       Botón flotante de WhatsApp integrado con el diseño de Akibara.
- * Version:           1.4.0
+ * Version:           1.4.1
  * Author:            Akibara
  * Text Domain:       akibara-whatsapp
  * Requires at least: 6.5
@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
 if ( defined( 'AKB_WHATSAPP_LOADED' ) ) {
     return;
 }
-define( 'AKB_WHATSAPP_LOADED', '1.4.0' );
+define( 'AKB_WHATSAPP_LOADED', '1.4.1' );
 
 // ─── Constants (always defined, idempotent) ──────────────────────────────────
 if ( ! defined( 'AKB_WHATSAPP_VERSION' ) ) {
-    define( 'AKB_WHATSAPP_VERSION', '1.4.0' );
+    define( 'AKB_WHATSAPP_VERSION', '1.4.1' );
 }
 if ( ! defined( 'AKB_WHATSAPP_DIR' ) ) {
     define( 'AKB_WHATSAPP_DIR', plugin_dir_path( __FILE__ ) );
