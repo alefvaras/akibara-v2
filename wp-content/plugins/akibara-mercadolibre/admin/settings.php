@@ -4,8 +4,234 @@ defined( 'ABSPATH' ) || exit;
 add_action(
 	'admin_menu',
 	static function (): void {
-		add_submenu_page( null, 'ML Auth', 'ML Auth', 'manage_woocommerce', 'akibara-ml-auth', '__return_null' );
+		// Visible bajo Akibara menu — Sprint 5.5+ admin reorg.
+		// Slug `akibara-ml-auth` mantenido para backward-compat con OAuth redirect_uri.
+		add_submenu_page(
+			'akibara',
+			'MercadoLibre — Configuración',
+			'🛒 MercadoLibre',
+			'manage_woocommerce',
+			'akibara-ml-auth',
+			'akb_ml_render_admin_page'
+		);
 	}
+);
+
+/**
+ * Render página configuración MercadoLibre.
+ *
+ * Muestra estado de conexión OAuth + acciones (connect/disconnect/refresh) +
+ * info seller si conectado + counts de listings activos.
+ */
+function akb_ml_render_admin_page(): void {
+	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+		wp_die( 'Sin permisos.' );
+	}
+
+	$client_id     = akb_ml_opt( 'client_id' );
+	$client_secret = akb_ml_opt( 'client_secret' );
+	$access_token  = akb_ml_opt( 'access_token' );
+	$refresh_token = akb_ml_opt( 'refresh_token' );
+	$is_configured = ! empty( $client_id ) && ! empty( $client_secret );
+	$is_connected  = ! empty( $access_token );
+	$redirect_uri  = admin_url( 'admin.php?page=akibara-ml-auth' );
+	$connect_url   = add_query_arg( array( 'page' => 'akibara-ml-auth', 'action' => 'start' ), admin_url( 'admin.php' ) );
+
+	// Counts de listings desde tabla wp_akb_ml_listings si existe.
+	global $wpdb;
+	$table = $wpdb->prefix . 'akb_ml_listings';
+	$listings_total  = 0;
+	$listings_active = 0;
+	if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table es nombre constante.
+		$listings_total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table es nombre constante.
+		$listings_active = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'active'" );
+	}
+
+	// Mensaje OAuth (si lo hay).
+	$oauth_msg = get_transient( 'akb_ml_oauth_msg' );
+	delete_transient( 'akb_ml_oauth_msg' );
+	?>
+	<div class="wrap akb-admin-page akb-ml-settings">
+		<div class="akb-page-header">
+			<h1 class="akb-page-header__title">🛒 MercadoLibre Chile</h1>
+			<p class="akb-page-header__desc">Publica productos a MercadoLibre + sincroniza órdenes + responde preguntas.</p>
+		</div>
+
+		<?php if ( $oauth_msg ) :
+			[ $type, $text ] = explode( ':', $oauth_msg, 2 );
+			?>
+			<div class="akb-notice akb-notice--<?php echo esc_attr( $type === 'success' ? 'success' : 'error' ); ?>">
+				<p><?php echo esc_html( $text ); ?></p>
+			</div>
+		<?php endif; ?>
+
+		<!-- KPIs -->
+		<div class="akb-stats">
+			<div class="akb-stat">
+				<div class="akb-stat__value <?php echo $is_connected ? 'akb-stat__value--success' : 'akb-stat__value--error'; ?>">
+					<?php echo $is_connected ? '✅' : '⚠️'; ?>
+				</div>
+				<div class="akb-stat__label">Estado OAuth</div>
+			</div>
+			<div class="akb-stat">
+				<div class="akb-stat__value akb-stat__value--info"><?php echo number_format( $listings_total ); ?></div>
+				<div class="akb-stat__label">Listings Total</div>
+			</div>
+			<div class="akb-stat">
+				<div class="akb-stat__value akb-stat__value--success"><?php echo number_format( $listings_active ); ?></div>
+				<div class="akb-stat__label">Listings Activos</div>
+			</div>
+			<div class="akb-stat">
+				<div class="akb-stat__value <?php echo $is_configured ? 'akb-stat__value--success' : 'akb-stat__value--warning'; ?>">
+					<?php echo $is_configured ? 'OK' : 'Falta'; ?>
+				</div>
+				<div class="akb-stat__label">App ID Config</div>
+			</div>
+		</div>
+
+		<!-- Connection Card -->
+		<div class="akb-card akb-card--section">
+			<h2 class="akb-section-title">🔐 Conexión OAuth</h2>
+
+			<?php if ( ! $is_configured ) : ?>
+				<div class="akb-notice akb-notice--warning">
+					<p>
+						<strong>Configurá App ID + Secret antes de conectar.</strong>
+						Crea una app en
+						<a href="https://developers.mercadolibre.cl/devcenter" target="_blank" rel="noopener">developers.mercadolibre.cl</a>
+						y completa los campos de abajo. Redirect URI:
+						<code class="akb-ml-code-inline"><?php echo esc_url( $redirect_uri ); ?></code>
+					</p>
+				</div>
+			<?php elseif ( $is_connected ) : ?>
+				<div class="akb-notice akb-notice--success">
+					<p>
+						<strong>✅ Conectado a MercadoLibre.</strong>
+						Token activo. Refresh token: <code><?php echo $refresh_token ? '✓ presente' : '✗ falta'; ?></code>
+					</p>
+				</div>
+				<p>
+					<a class="akb-btn akb-btn--primary" href="<?php echo esc_url( $connect_url ); ?>">
+						🔄 Reconectar (renovar tokens)
+					</a>
+					<a class="akb-btn akb-btn--danger" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'akb_ml_disconnect', '1' ), 'akb_ml_disconnect' ) ); ?>"
+						onclick="return confirm('¿Desconectar de MercadoLibre? Los listings dejarán de sincronizarse.');">
+						❌ Desconectar
+					</a>
+				</p>
+			<?php else : ?>
+				<div class="akb-notice akb-notice--info">
+					<p>App configurada pero sin token. Conectá tu cuenta MercadoLibre:</p>
+				</div>
+				<p>
+					<a class="akb-btn akb-btn--primary akb-btn--lg" href="<?php echo esc_url( $connect_url ); ?>">
+						🔗 Conectar con MercadoLibre
+					</a>
+				</p>
+			<?php endif; ?>
+		</div>
+
+		<!-- App Credentials Card -->
+		<div class="akb-card akb-card--section">
+			<h2 class="akb-section-title">⚙️ App Credentials</h2>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=akibara-ml-auth' ) ); ?>">
+				<?php wp_nonce_field( 'akb_ml_save_creds' ); ?>
+				<table class="form-table">
+					<tr>
+						<th><label for="akb-ml-client-id">App ID</label></th>
+						<td>
+							<input type="text" id="akb-ml-client-id" name="akb_ml_client_id" class="regular-text"
+								value="<?php echo esc_attr( $client_id ); ?>" placeholder="123456789">
+						</td>
+					</tr>
+					<tr>
+						<th><label for="akb-ml-client-secret">App Secret</label></th>
+						<td>
+							<input type="password" id="akb-ml-client-secret" name="akb_ml_client_secret" class="regular-text"
+								value="<?php echo esc_attr( $client_secret ); ?>" placeholder="••••••••••••••••">
+							<p class="description">No mostrar — guardado encriptado en options.</p>
+						</td>
+					</tr>
+					<tr>
+						<th>Redirect URI</th>
+						<td>
+							<code class="akb-ml-code-inline"><?php echo esc_url( $redirect_uri ); ?></code>
+							<p class="description">Copiar este URL exacto en la config de tu App ML.</p>
+						</td>
+					</tr>
+				</table>
+				<button type="submit" class="akb-btn akb-btn--primary">Guardar Credentials</button>
+			</form>
+		</div>
+
+		<!-- Quick Links -->
+		<div class="akb-card akb-card--section">
+			<h2 class="akb-section-title">🔗 Quick Links</h2>
+			<ul style="margin:0;padding-left:20px;line-height:1.8">
+				<li><a href="https://www.mercadolibre.cl/perfil" target="_blank" rel="noopener">Mi perfil MercadoLibre</a></li>
+				<li><a href="https://www.mercadolibre.cl/ventas" target="_blank" rel="noopener">Mis ventas</a></li>
+				<li><a href="https://developers.mercadolibre.cl/devcenter" target="_blank" rel="noopener">Developer Center (App management)</a></li>
+				<li><a href="https://api.mercadolibre.com/sites/MLC/categories" target="_blank" rel="noopener">Categorías MLC (API)</a></li>
+			</ul>
+		</div>
+	</div>
+	<style>
+		.akb-ml-code-inline {
+			display: inline-block;
+			background: #f0f0f1;
+			padding: 4px 8px;
+			border-radius: 3px;
+			font-family: monospace;
+			font-size: 12px;
+			color: #1d2327;
+		}
+	</style>
+	<?php
+}
+
+/**
+ * Handler save credentials + disconnect actions.
+ */
+add_action(
+	'admin_init',
+	static function (): void {
+		// Save credentials.
+		if ( isset( $_POST['akb_ml_client_id'], $_POST['_wpnonce'] )
+			&& wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'akb_ml_save_creds' )
+			&& current_user_can( 'manage_woocommerce' )
+		) {
+			akb_ml_save_opts(
+				array(
+					'client_id'     => sanitize_text_field( wp_unslash( $_POST['akb_ml_client_id'] ) ),
+					'client_secret' => sanitize_text_field( wp_unslash( $_POST['akb_ml_client_secret'] ?? '' ) ),
+				)
+			);
+			set_transient( 'akb_ml_oauth_msg', 'success:Credentials guardadas. Ahora conecta tu cuenta ML.', 60 );
+			wp_safe_redirect( admin_url( 'admin.php?page=akibara-ml-auth' ) );
+			exit;
+		}
+
+		// Disconnect.
+		if ( isset( $_GET['akb_ml_disconnect'], $_GET['_wpnonce'] )
+			&& $_GET['akb_ml_disconnect'] === '1'
+			&& wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'akb_ml_disconnect' )
+			&& current_user_can( 'manage_woocommerce' )
+		) {
+			akb_ml_save_opts(
+				array(
+					'access_token'  => '',
+					'refresh_token' => '',
+				)
+			);
+			delete_transient( 'akb_ml_seller_id' );
+			set_transient( 'akb_ml_oauth_msg', 'success:Desconectado de MercadoLibre.', 60 );
+			wp_safe_redirect( admin_url( 'admin.php?page=akibara-ml-auth' ) );
+			exit;
+		}
+	},
+	5 // antes que OAuth handler (priority 10 default)
 );
 
 // Migración DB en hook 'init' (no 'admin_init') — admin_init NO dispara en
