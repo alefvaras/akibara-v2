@@ -85,7 +85,7 @@ function akb_ml_build_description( WC_Product $product ): string {
 	// Metadatos del producto
 	$editorial_terms = wp_get_post_terms( $pid, 'product_brand', array( 'fields' => 'names' ) );
 	$editorial       = ( ! is_wp_error( $editorial_terms ) && ! empty( $editorial_terms ) ) ? (string) $editorial_terms[0] : '';
-	$tomo            = akb_extract_tomo( $product->get_name() );
+	$tomo            = function_exists( 'akb_extract_tomo' ) ? akb_extract_tomo( $product->get_name() ) : '';
 	$serie_terms     = get_the_terms( $pid, 'pa_serie' );
 	$serie_name      = ( ! is_wp_error( $serie_terms ) && ! empty( $serie_terms ) )
 		? $serie_terms[0]->name
