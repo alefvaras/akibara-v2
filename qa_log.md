@@ -131,3 +131,5 @@
 ---
 
 *qa_log.md generado 2026-04-28T03:55Z autonomous mode*
+
+## Smoke #5 — semantic memory ON — 2026-04-28T15:55Z
