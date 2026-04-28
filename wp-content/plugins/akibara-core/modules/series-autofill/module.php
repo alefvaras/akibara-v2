@@ -22,29 +22,24 @@
  * @since   10.1.0
  */
 
-defined( 'ABSPATH' ) || exit;
+// ─── File-level guards en global namespace (bracketed syntax para coexistir con namespaced code abajo) ─
+namespace {
+	defined( 'ABSPATH' ) || exit;
 
-// ─── File-level guard ───────────────────────────────────────────────────────
-if ( defined( 'AKB_CORE_SERIES_AUTOFILL_LOADED' ) ) {
-	return;
+	if ( defined( 'AKB_CORE_SERIES_AUTOFILL_LOADED' ) ) {
+		return;
+	}
+	define( 'AKB_CORE_SERIES_AUTOFILL_LOADED', '1.0.0' );
+
+	if ( ! defined( 'AKB_CORE_MODULE_SERIES_AUTOFILL_LOADED' ) ) {
+		define( 'AKB_CORE_MODULE_SERIES_AUTOFILL_LOADED', '1.0.0' );
+	}
+
+	require_once __DIR__ . '/class-extractor.php';
+	require_once __DIR__ . '/class-migration.php';
 }
-define( 'AKB_CORE_SERIES_AUTOFILL_LOADED', '1.0.0' );
 
-// Constant signal per ModuleRegistry pattern.
-if ( ! defined( 'AKB_CORE_MODULE_SERIES_AUTOFILL_LOADED' ) ) {
-	define( 'AKB_CORE_MODULE_SERIES_AUTOFILL_LOADED', '1.0.0' );
-}
-
-// ─── Series-autofill uses namespaced classes — require support files ─────────
-require_once __DIR__ . '/class-extractor.php';
-require_once __DIR__ . '/class-migration.php';
-
-// NOTE: This module uses the namespace Akibara\SeriesAutofill (defined in original).
-// The namespace block is self-contained in the original module.php.
-// We replicate the entire body from the legacy module as-is, wrapped in a
-// function_exists guard on the sentinel function to prevent double-load.
-
-namespace Akibara\SeriesAutofill;
+namespace Akibara\SeriesAutofill {
 
 // ─── Capa 2: Registrar hook del Action Scheduler ──────────────────
 Migration::register_hooks();
@@ -665,3 +660,5 @@ function handle_admin_migrate_cancel(): void {
 	wp_safe_redirect( get_return_url( array( 'cancelled' => 1 ) ) );
 	exit;
 }
+}
+
