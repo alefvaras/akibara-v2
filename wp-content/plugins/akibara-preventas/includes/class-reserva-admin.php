@@ -32,7 +32,7 @@ final class Akibara_Reserva_Admin {
 		add_submenu_page(
 			'akibara',
 			'Reservas',
-			'Reservas',
+			'🎌 Reservas',
 			'manage_woocommerce',
 			'akb-reservas',
 			[ __CLASS__, 'render_dashboard' ]

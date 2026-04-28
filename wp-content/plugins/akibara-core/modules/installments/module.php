@@ -186,7 +186,7 @@ if ( ! function_exists( 'akb_installments_mp_active' ) ) {
 		add_submenu_page(
 			'akibara',
 			'Cuotas sin Interés',
-			'Cuotas',
+			'💰 Cuotas',
 			'manage_woocommerce',
 			'akibara-installments',
 			'akibara_installments_admin_page'

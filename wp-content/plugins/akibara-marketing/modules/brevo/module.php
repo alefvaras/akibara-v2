@@ -283,7 +283,7 @@ if ( ! function_exists( 'akb_marketing_brevo_sentinel' ) ) {
 		add_submenu_page(
 			'akibara',
 			'Brevo Segmentación',
-			'Brevo',
+			'📧 Brevo',
 			'manage_woocommerce',
 			'akibara-brevo',
 			'akibara_brevo_render_admin'

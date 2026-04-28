@@ -349,7 +349,7 @@ function register_legacy_menu(): void {
 	add_submenu_page(
 		'akibara',
 		'Auto-Series',
-		'Auto-Series',
+		'🔁 Auto-Series',
 		'manage_woocommerce',
 		'akibara-series-autofill',
 		__NAMESPACE__ . '\render_admin_page'

@@ -281,7 +281,7 @@ final class Akibara_WhatsApp_Controller {
         add_submenu_page(
             'akibara',
             'WhatsApp',
-            'WhatsApp',
+            '💬 WhatsApp',
             'manage_options',
             'akibara-whatsapp',
             [ $this, 'admin_page' ]

@@ -34,6 +34,21 @@ if ( ! function_exists( 'akb_marketing_finance_sentinel' ) ) {
 			// DashboardController adds the tab via akibara_admin_tabs filter.
 			$controller = new \Akibara\Marketing\Finance\DashboardController();
 			$controller->register();
+
+			// Sprint 5.5 admin reorg: surface como submenu page bajo Akibara.
+			// El sistema akibara_admin_tabs nunca se conectó a render real, por
+			// eso el dashboard quedaba "huérfano" en el código sin acceso UI.
+			// Registramos como page directa para que aparezca en el sidebar.
+			add_submenu_page(
+				'akibara',
+				'Finanzas Manga',
+				'💹 Finanzas Manga',
+				'manage_woocommerce',
+				'akibara-finance-manga',
+				static function () use ( $controller ): void {
+					$controller->render();
+				}
+			);
 		},
 		20
 	);

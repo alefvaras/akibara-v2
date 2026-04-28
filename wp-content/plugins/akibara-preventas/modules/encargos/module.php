@@ -301,7 +301,7 @@ if ( ! function_exists( 'akb_encargos_admin_page' ) ) {
                 add_submenu_page(
                     'akibara',
                     'Encargos Especiales',
-                    'Encargos',
+                    '📥 Encargos',
                     'manage_woocommerce',
                     'akibara-encargos',
                     'akb_encargos_admin_page'

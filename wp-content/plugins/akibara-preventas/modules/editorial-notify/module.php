@@ -578,7 +578,7 @@ if ( ! function_exists( 'akb_editorial_notify_admin_page' ) ) {
                 add_submenu_page(
                     'akibara',
                     'Notif. Editoriales',
-                    'Notif. Editoriales',
+                    '📨 Notif. Editoriales',
                     'manage_woocommerce',
                     'akibara-editorial-notify',
                     'akb_editorial_notify_admin_page'

@@ -357,7 +357,7 @@ if ( ! function_exists( 'akb_inventario_bis_subscribe_handler' ) ) {
 		if ( defined( 'AKIBARA_ADMIN_DASHBOARD_LOADED' ) ) {
 			return;
 		}
-		add_submenu_page( 'akibara', 'Avisos Back in Stock', 'Back in Stock', 'manage_woocommerce', 'akibara-back-in-stock', 'akb_inventario_bis_render_admin' );
+		add_submenu_page( 'akibara', 'Avisos Back in Stock', '📦 Back in Stock', 'manage_woocommerce', 'akibara-back-in-stock', 'akb_inventario_bis_render_admin' );
 	} );
 
 	function akb_inventario_bis_render_admin(): void {

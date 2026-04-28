@@ -577,7 +577,7 @@ if ( ! function_exists( 'akibara_next_volume_widget_enqueue' ) ) {
                 add_submenu_page(
                     'akibara',
                     'Siguiente Tomo',
-                    'Siguiente Tomo',
+                    '🆕 Siguiente Tomo',
                     'manage_woocommerce',
                     'akibara-next-volume',
                     'akibara_next_volume_admin'

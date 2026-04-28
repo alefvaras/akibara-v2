@@ -30,7 +30,7 @@ class Akibara_WD_Admin {
 		add_submenu_page(
 			'akibara',
 			'Descuento de Bienvenida',
-			'Bienvenida',
+			'🎁 Bienvenida',
 			'manage_woocommerce',
 			'akibara-welcome-discount',
 			array( $this, 'render_page' )

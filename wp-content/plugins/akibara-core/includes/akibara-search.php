@@ -944,9 +944,10 @@ function akb_admin_page(): void {
 	$ft_ok   = (bool) $wpdb->get_var( "SHOW INDEX FROM {$table} WHERE Key_name='ft_searchable'" );
 	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	?>
+	<div class="wrap akb-admin-page">
 	<div class="akb-page-header">
-		<h2 class="akb-page-header__title">Busqueda v10</h2>
-		<p class="akb-page-header__desc">Multi-campo, fuzzy, popularidad. Motor de busqueda personalizado.</p>
+		<h1 class="akb-page-header__title">Búsqueda v10</h1>
+		<p class="akb-page-header__desc">Multi-campo, fuzzy, popularidad. Motor de búsqueda personalizado.</p>
 	</div>
 
 	<?php
@@ -997,6 +998,7 @@ function akb_admin_page(): void {
 				onclick="return confirm('¿Recrear tabla? Se pierde el indice actual.')">Recrear tabla</button>
 		</form>
 	</div>
+	</div><!-- /.wrap -->
 	<?php
 }
 

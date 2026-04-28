@@ -176,7 +176,7 @@ if ( ! function_exists( 'akb_marketing_banner_sentinel' ) ) {
 		add_submenu_page(
 			'akibara',
 			'Topbar — Mensajes',
-			'Topbar',
+			'📢 Topbar',
 			'manage_woocommerce',
 			'akibara-topbar',
 			'akibara_banner_render_admin'
