@@ -114,6 +114,12 @@ add_action(
 	5 // priority 5 — addons can hook akibara_core_init via plugins_loaded:>=10 OR file-include
 );
 
+// ─── Helpers compartidos (deben cargar antes de cualquier module) ────────────
+// akb_ajax_endpoint() es helper crítico usado por marketing/inventario/mercadolibre/
+// preventas/whatsapp. Polish #1 retry 2026-04-27: migrado desde legacy akibara/
+// para permitir eliminación del legacy plugin sin romper addons.
+require_once AKIBARA_CORE_DIR . 'includes/helpers/ajax.php';
+
 // ─── Phase 1 modules (Sprint 2 atomic deploy) ────────────────────────────────
 // Cargan en file-include time (top-level), antes de hooks plugins_loaded.
 // Sus add_action/add_filter calls registran hooks aquí mismo.
