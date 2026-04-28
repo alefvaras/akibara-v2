@@ -299,7 +299,7 @@ if ( ! function_exists( 'akb_encargos_admin_page' ) ) {
         static function (): void {
             if ( ! defined( 'AKIBARA_ADMIN_DASHBOARD_LOADED' ) ) {
                 add_submenu_page(
-                    'woocommerce',
+                    'akibara',
                     'Encargos Especiales',
                     'Encargos',
                     'manage_woocommerce',

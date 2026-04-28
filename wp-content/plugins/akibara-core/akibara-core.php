@@ -144,6 +144,14 @@ require_once AKIBARA_CORE_DIR . 'modules/checkout-validation/module.php';
 require_once AKIBARA_CORE_DIR . 'modules/health-check/module.php';
 require_once AKIBARA_CORE_DIR . 'modules/series-autofill/module.php';
 
+// ─── Sprint 5.5 admin reorg (2026-04-27) ─────────────────────────────────────
+// Top-level "Akibara" menu en admin (parent_slug='akibara') con dashboard +
+// 8 sub-pages agrupadas por feature. Reemplaza 15+ submenus dispersos bajo
+// 'woocommerce'. Manga Crimson identity vía border-left (mesa-13/05 contraste OK).
+if ( is_admin() ) {
+	require_once AKIBARA_CORE_DIR . 'admin/menu.php';
+}
+
 // ─── Activation / deactivation hooks (mesa-15 P0-4 fix) ──────────────────────
 // Cuando admin activa el plugin (o WP cron primer firing), crear tabla index +
 // schedule reorder cron. Cuando desactiva, limpia crons. NO drop table en

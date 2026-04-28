@@ -68,7 +68,7 @@ class Akibara_Descuento_Admin {
 			return;
 		}
 		add_submenu_page(
-			'woocommerce',
+			'akibara',
 			'Descuentos Akibara',
 			'🏷️ Descuentos',
 			'manage_woocommerce',

@@ -174,7 +174,7 @@ if ( ! function_exists( 'akb_marketing_banner_sentinel' ) ) {
 		}
 
 		add_submenu_page(
-			'woocommerce',
+			'akibara',
 			'Topbar — Mensajes',
 			'Topbar',
 			'manage_woocommerce',

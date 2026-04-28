@@ -1,0 +1,128 @@
+/**
+ * Akibara Core — Admin styles (Sprint 5.5).
+ *
+ * Manga Crimson identity en admin SOLO via border-left (UI element 3:1 OK).
+ * Texto + ícono usan WP defaults (white sobre #23282d, passes AA fácil).
+ *
+ * mesa-13 + mesa-05: contraste #DC2626 sobre #23282d falla 4.5:1 si se usa
+ * como texto, pero pasa 3:1 como UI element (border) — solución elegida.
+ */
+
+/* ─── Sidebar: Manga Crimson border-left en active state ──────────────────── */
+#adminmenu li.toplevel_page_akibara.current,
+#adminmenu li.toplevel_page_akibara.wp-has-current-submenu,
+#adminmenu li.toplevel_page_akibara:hover {
+	box-shadow: inset 3px 0 0 0 #DC2626;
+}
+
+/* ─── Dashboard layout ─────────────────────────────────────────────────────── */
+.akibara-admin-dashboard {
+	max-width: 1200px;
+}
+
+.akibara-admin-dashboard .wp-heading-inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.akibara-brand-mark {
+	font-size: 1.5em;
+	line-height: 1;
+}
+
+.akibara-admin-subtitle {
+	color: #50575e;
+	font-size: 14px;
+	margin: 8px 0 24px;
+	max-width: 760px;
+}
+
+/* ─── Cards grid ──────────────────────────────────────────────────────────── */
+.akibara-cards-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.akibara-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-left: 3px solid #DC2626; /* Manga Crimson identity */
+	border-radius: 4px;
+	padding: 16px 20px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	transition: box-shadow 150ms ease;
+}
+
+.akibara-card:hover,
+.akibara-card:focus-within {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.akibara-card__title {
+	margin: 0 0 4px;
+	font-size: 16px;
+	font-weight: 600;
+	color: #1d2327;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.akibara-card__icon {
+	font-size: 1.2em;
+	line-height: 1;
+}
+
+.akibara-card__desc {
+	color: #50575e;
+	font-size: 13px;
+	margin: 0 0 12px;
+	line-height: 1.4;
+}
+
+.akibara-card__links {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.akibara-card__links li {
+	margin: 0;
+}
+
+.akibara-card__links a {
+	display: inline-block;
+	padding: 4px 10px;
+	background: #f0f0f1;
+	border: 1px solid #dcdcde;
+	border-radius: 3px;
+	color: #2271b1;
+	font-size: 13px;
+	text-decoration: none;
+	transition: background 150ms ease, color 150ms ease;
+}
+
+.akibara-card__links a:hover,
+.akibara-card__links a:focus {
+	background: #DC2626;
+	border-color: #DC2626;
+	color: #fff; /* AA pass: white sobre crimson 5.6:1 */
+}
+
+/* ─── Responsive: stack cards en mobile admin ─────────────────────────────── */
+@media (max-width: 782px) {
+	.akibara-cards-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ─── Migration notice ────────────────────────────────────────────────────── */
+.akibara-reorg-notice {
+	border-left-color: #DC2626 !important;
+}

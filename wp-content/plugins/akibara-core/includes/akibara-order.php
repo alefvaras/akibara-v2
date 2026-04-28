@@ -345,7 +345,7 @@ final class Akibara_Order {
 		if ( defined( 'AKIBARA_ADMIN_DASHBOARD_LOADED' ) ) {
 			return;
 		} add_submenu_page(
-			'woocommerce',
+			'akibara',
 			'Ordenar por Tomo v' . self::VERSION,
 			'📚 Ordenar por Tomo',
 			'manage_woocommerce',

@@ -55,7 +55,7 @@ function akb_marketing_admin_menu(): void {
 	}
 
 	add_submenu_page(
-		'woocommerce',
+		'akibara',
 		'Campañas Marketing',
 		'📣 Campañas',
 		'manage_woocommerce',

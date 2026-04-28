@@ -17,6 +17,8 @@ wp-config.php
 # Snapshots and audit raw output (heavy)
 snapshots/
 audit/raw/
+mesa-output/**/screenshots/
+mesa-output/**/raw-response.json
 
 # Mirror is fetched, not committed
 server-snapshot/
@@ -38,3 +40,4 @@ coverage/
 playwright-report/
 test-results/
 .staging-agents/
+tests/e2e/admin/.auth/

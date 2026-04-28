@@ -347,7 +347,7 @@ function register_legacy_menu(): void {
 		return;
 	}
 	add_submenu_page(
-		'woocommerce',
+		'akibara',
 		'Auto-Series',
 		'Auto-Series',
 		'manage_woocommerce',

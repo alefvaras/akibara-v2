@@ -576,7 +576,7 @@ if ( ! function_exists( 'akb_editorial_notify_admin_page' ) ) {
         static function (): void {
             if ( ! defined( 'AKIBARA_ADMIN_DASHBOARD_LOADED' ) ) {
                 add_submenu_page(
-                    'woocommerce',
+                    'akibara',
                     'Notif. Editoriales',
                     'Notif. Editoriales',
                     'manage_woocommerce',

@@ -575,7 +575,7 @@ if ( ! function_exists( 'akibara_next_volume_widget_enqueue' ) ) {
         static function (): void {
             if ( ! defined( 'AKIBARA_ADMIN_DASHBOARD_LOADED' ) ) {
                 add_submenu_page(
-                    'woocommerce',
+                    'akibara',
                     'Siguiente Tomo',
                     'Siguiente Tomo',
                     'manage_woocommerce',

@@ -60,6 +60,23 @@ export default defineConfig({
     {
       name: 'mobile',
       use: { ...devices['iPhone 12'] },
+      testIgnore: ['**/admin/**'],
+    },
+
+    // ── Admin QA project (Sprint 5.5) ────────────────────────────────────────
+    // Read-only admin testing. Login una vez vía auth.setup, reusa storageState.
+    // User explicit "no clicklea" — solo navega + assert layout/200.
+    // Activa solo si WP_ADMIN_USER + WP_ADMIN_PASSWORD env vars.
+    {
+      name: 'admin-setup',
+      testMatch: /admin\/auth\.setup\.ts/,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'admin',
+      testMatch: /admin\/.*\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['admin-setup'],
     },
   ],
 

@@ -894,7 +894,7 @@ add_action(
 	function () {
 		if ( ! defined( 'AKIBARA_ADMIN_DASHBOARD_LOADED' ) ) {
 			add_submenu_page(
-				'woocommerce',
+				'akibara',
 				'Akibara Búsqueda v10',
 				'🔍 Akibara Búsqueda',
 				'manage_woocommerce',

@@ -13,7 +13,9 @@
     "format": "prettier --write '**/*.{js,jsx,ts,tsx,css,json,md}' --ignore-path .gitignore",
     "test:e2e": "playwright test",
     "test:e2e:critical": "playwright test --grep @critical",
-    "test:e2e:headed": "playwright test --headed --grep @critical"
+    "test:e2e:headed": "playwright test --headed --grep @critical",
+    "test:e2e:admin": "playwright test --project=admin --project=admin-setup",
+    "test:e2e:admin:headed": "playwright test --project=admin --project=admin-setup --headed"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",

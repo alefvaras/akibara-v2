@@ -279,7 +279,7 @@ final class Akibara_WhatsApp_Controller {
 
     public function admin_menu(): void {
         add_submenu_page(
-            'woocommerce',
+            'akibara',
             'WhatsApp',
             'WhatsApp',
             'manage_options',

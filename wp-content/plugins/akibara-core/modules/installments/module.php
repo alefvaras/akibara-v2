@@ -184,7 +184,7 @@ if ( ! function_exists( 'akb_installments_mp_active' ) ) {
 		}
 
 		add_submenu_page(
-			'woocommerce',
+			'akibara',
 			'Cuotas sin Interés',
 			'Cuotas',
 			'manage_woocommerce',

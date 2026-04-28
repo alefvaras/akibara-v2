@@ -28,7 +28,7 @@ class Akibara_WD_Admin {
 
 	public function register_menu(): void {
 		add_submenu_page(
-			'woocommerce',
+			'akibara',
 			'Descuento de Bienvenida',
 			'Bienvenida',
 			'manage_woocommerce',

@@ -30,7 +30,7 @@ final class Akibara_Reserva_Admin {
 
 	public static function register_menus(): void {
 		add_submenu_page(
-			'woocommerce',
+			'akibara',
 			'Reservas',
 			'Reservas',
 			'manage_woocommerce',

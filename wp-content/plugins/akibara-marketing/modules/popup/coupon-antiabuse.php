@@ -543,7 +543,7 @@ add_action(
 	function (): void {
 		if ( ! defined( 'AKIBARA_ADMIN_DASHBOARD_LOADED' ) ) {
 			add_submenu_page(
-				'woocommerce',
+				'akibara',
 				'Métricas Cupones Bienvenida',
 				'📊 Cupones Bienvenida',
 				'manage_woocommerce',
