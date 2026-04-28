@@ -119,105 +119,69 @@ final class DashboardController {
 	/**
 	 * Render the finance dashboard admin page.
 	 *
-	 * STUB: UI pending Cell H mockup approval.
-	 * Backend data fetch is fully functional.
-	 * See: audit/sprint-3/cell-b/STUBS.md
+	 * Sprint 5.5 admin reorg: UI proper usando admin.css classes (.akb-stats,
+	 * .akb-card, .akb-table). Removed STUB notice — ahora es UI real.
 	 */
 	public function render(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( 'Sin permisos.' );
 		}
-		?>
-		<div class="wrap akb-finance-manga">
-			<h2>Finanzas Manga</h2>
 
-			<?php /* STUB NOTICE — remove when Cell H mockup is approved */ ?>
-			<div class="notice notice-info inline" style="margin:0 0 20px">
-				<p>
-					<strong>UI en espera de mockup:</strong>
-					El diseño de este panel requiere aprobacion de Cell H (sprint-3/cell-h/REQUESTS-FROM-B.md).
-					Los datos estan disponibles via AJAX (<code>akb_finance_manga_data</code>).
-					Esta vista es un placeholder temporal — ver <code>audit/sprint-3/cell-b/STUBS.md</code>.
-				</p>
+		$data = $this->data();
+
+		// KPIs totales para top row.
+		$total_series_units = array_sum( array_column( $data['top_series'], 'units' ) );
+		$total_editoriales  = count( $data['top_editoriales'] );
+		$total_encargos     = count( $data['encargos_pendientes'] );
+		$total_trending     = array_sum( array_column( $data['trending_searches'], 'count' ) );
+		$total_stock_low    = count( $data['stock_critico'] );
+		?>
+		<div class="wrap akb-admin-page akb-finance-manga">
+			<div class="akb-page-header">
+				<h1 class="akb-page-header__title">💹 Finanzas Manga</h1>
+				<p class="akb-page-header__desc">Dashboard de métricas manga-specific: series top, editoriales, encargos pendientes, búsquedas trending, stock crítico.</p>
 			</div>
 
-			<div id="akb-finance-manga-stub" style="display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
-				<?php $data = $this->data(); ?>
+			<!-- KPIs row -->
+			<div class="akb-stats">
+				<div class="akb-stat">
+					<div class="akb-stat__value akb-stat__value--info"><?php echo number_format( $total_series_units ); ?></div>
+					<div class="akb-stat__label">Unidades Top 10 Series</div>
+				</div>
+				<div class="akb-stat">
+					<div class="akb-stat__value akb-stat__value--success"><?php echo number_format( $total_editoriales ); ?></div>
+					<div class="akb-stat__label">Editoriales Activas</div>
+				</div>
+				<div class="akb-stat">
+					<div class="akb-stat__value <?php echo $total_encargos > 0 ? 'akb-stat__value--warning' : ''; ?>"><?php echo number_format( $total_encargos ); ?></div>
+					<div class="akb-stat__label">Encargos Pendientes</div>
+				</div>
+				<div class="akb-stat">
+					<div class="akb-stat__value akb-stat__value--info"><?php echo number_format( $total_trending ); ?></div>
+					<div class="akb-stat__label">Búsquedas (30d)</div>
+				</div>
+				<div class="akb-stat">
+					<div class="akb-stat__value <?php echo $total_stock_low > 0 ? 'akb-stat__value--error' : 'akb-stat__value--success'; ?>"><?php echo number_format( $total_stock_low ); ?></div>
+					<div class="akb-stat__label">Stock Crítico</div>
+				</div>
+			</div>
 
-				<!-- Top Series -->
-				<div class="akb-card" style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:16px">
-					<h3 style="margin-top:0">Top series por volumen</h3>
+			<!-- Widgets grid -->
+			<div class="akibara-cards-grid">
+
+				<!-- Top Series por volumen -->
+				<div class="akb-card">
+					<h3 class="akb-section-title">📚 Top Series por Volumen</h3>
 					<?php if ( empty( $data['top_series'] ) ) : ?>
-						<p><em>Sin datos</em></p>
+						<p><em>Sin datos disponibles.</em></p>
 					<?php else : ?>
-						<ol style="margin:0;padding-left:20px">
-						<?php foreach ( array_slice( $data['top_series'], 0, 5 ) as $row ) : ?>
-							<li><?php echo esc_html( $row['serie'] ); ?> <strong>(<?php echo esc_html( (string) $row['units'] ); ?>)</strong></li>
-						<?php endforeach; ?>
-						</ol>
-					<?php endif; ?>
-				</div>
-
-				<!-- Top Editoriales -->
-				<div class="akb-card" style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:16px">
-					<h3 style="margin-top:0">Top editoriales (suscriptores Brevo)</h3>
-					<?php if ( empty( $data['top_editoriales'] ) ) : ?>
-						<p><em>Sin datos (verificar API key Brevo)</em></p>
-					<?php else : ?>
-						<ol style="margin:0;padding-left:20px">
-						<?php foreach ( array_slice( $data['top_editoriales'], 0, 5, true ) as $ed ) : ?>
-							<li><?php echo esc_html( $ed['label'] ); ?> <strong>(<?php echo esc_html( (string) $ed['count'] ); ?>)</strong></li>
-						<?php endforeach; ?>
-						</ol>
-					<?php endif; ?>
-				</div>
-
-				<!-- Encargos Pendientes -->
-				<div class="akb-card" style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:16px">
-					<h3 style="margin-top:0">Encargos pendientes</h3>
-					<?php if ( empty( $data['encargos_pendientes'] ) ) : ?>
-						<p><em>Sin encargos activos</em></p>
-					<?php else : ?>
-						<ul style="margin:0;padding-left:20px">
-						<?php foreach ( $data['encargos_pendientes'] as $enc ) : ?>
-							<li><?php echo esc_html( $enc['title'] ); ?> &times;<?php echo esc_html( (string) $enc['qty'] ); ?></li>
-						<?php endforeach; ?>
-						</ul>
-					<?php endif; ?>
-				</div>
-
-				<!-- Trending Searches -->
-				<div class="akb-card" style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:16px">
-					<h3 style="margin-top:0">Busquedas mas buscadas</h3>
-					<?php if ( empty( $data['trending_searches'] ) ) : ?>
-						<p><em>Sin datos</em></p>
-					<?php else : ?>
-						<ol style="margin:0;padding-left:20px">
-						<?php foreach ( array_slice( $data['trending_searches'], 0, 5 ) as $t ) : ?>
-							<li><?php echo esc_html( $t['term'] ); ?> <strong>(<?php echo number_format( (int) $t['count'] ); ?>)</strong></li>
-						<?php endforeach; ?>
-						</ol>
-					<?php endif; ?>
-				</div>
-
-				<!-- Stock Critico -->
-				<div class="akb-card" style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:16px">
-					<h3 style="margin-top:0">Stock critico (&lt; 3 unidades)</h3>
-					<?php if ( empty( $data['stock_critico'] ) ) : ?>
-						<p><em>Sin productos en stock critico</em></p>
-					<?php else : ?>
-						<table style="width:100%;border-collapse:collapse;font-size:13px">
-							<thead><tr style="border-bottom:1px solid #ddd">
-								<th style="text-align:left;padding:4px">Producto</th>
-								<th style="text-align:right;padding:4px">Stock</th>
-								<th style="text-align:right;padding:4px">Vendidos 30d</th>
-							</tr></thead>
+						<table class="akb-table">
 							<tbody>
-							<?php foreach ( array_slice( $data['stock_critico'], 0, 10 ) as $p ) : ?>
-								<tr style="border-bottom:1px solid #eee">
-									<td style="padding:4px"><?php echo esc_html( $p['title'] ); ?></td>
-									<td style="padding:4px;text-align:right;color:<?php echo $p['stock'] === 0 ? 'red' : 'orange'; ?>"><?php echo esc_html( (string) $p['stock'] ); ?></td>
-									<td style="padding:4px;text-align:right"><?php echo esc_html( (string) $p['sold_30d'] ); ?></td>
+							<?php foreach ( array_slice( $data['top_series'], 0, 10 ) as $i => $row ) : ?>
+								<tr>
+									<td style="width:30px;color:#50575e"><?php echo esc_html( (string) ( $i + 1 ) ); ?>.</td>
+									<td><?php echo esc_html( $row['serie'] ); ?></td>
+									<td style="text-align:right"><span class="akb-badge akb-badge--info"><?php echo number_format( (int) $row['units'] ); ?></span></td>
 								</tr>
 							<?php endforeach; ?>
 							</tbody>
@@ -225,11 +189,108 @@ final class DashboardController {
 					<?php endif; ?>
 				</div>
 
-			</div><!-- /#akb-finance-manga-stub -->
+				<!-- Top Editoriales -->
+				<div class="akb-card">
+					<h3 class="akb-section-title">🏢 Top Editoriales (Brevo)</h3>
+					<?php if ( empty( $data['top_editoriales'] ) ) : ?>
+						<p><em>Sin datos. Verificá API key Brevo en <a href="<?php echo esc_url( admin_url( 'admin.php?page=akibara-brevo' ) ); ?>">Akibara → 📧 Brevo</a>.</em></p>
+					<?php else : ?>
+						<table class="akb-table">
+							<tbody>
+							<?php foreach ( array_slice( $data['top_editoriales'], 0, 10, true ) as $ed ) : ?>
+								<tr>
+									<td><?php echo esc_html( $ed['label'] ); ?></td>
+									<td style="text-align:right"><span class="akb-badge akb-badge--active"><?php echo number_format( (int) $ed['count'] ); ?></span></td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
 
-			<p style="margin-top:16px;color:#888;font-size:12px">
-				Datos generados: <?php echo esc_html( $data['generated_at'] ); ?> UTC |
-				<a href="<?php echo esc_url( add_query_arg( 'akb_nocache', '1' ) ); ?>">Forzar actualizacion</a>
+				<!-- Encargos Pendientes -->
+				<div class="akb-card">
+					<h3 class="akb-section-title">📥 Encargos Pendientes</h3>
+					<?php if ( empty( $data['encargos_pendientes'] ) ) : ?>
+						<p><em>✅ Sin encargos activos.</em></p>
+					<?php else : ?>
+						<table class="akb-table">
+							<tbody>
+							<?php foreach ( array_slice( $data['encargos_pendientes'], 0, 10 ) as $enc ) : ?>
+								<tr>
+									<td><?php echo esc_html( $enc['title'] ); ?></td>
+									<td style="text-align:right"><span class="akb-badge akb-badge--warning">×<?php echo esc_html( (string) $enc['qty'] ); ?></span></td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+						<p style="margin-top:12px"><a class="akb-btn akb-btn--sm" href="<?php echo esc_url( admin_url( 'admin.php?page=akibara-encargos' ) ); ?>">Ver todos →</a></p>
+					<?php endif; ?>
+				</div>
+
+				<!-- Trending Searches -->
+				<div class="akb-card">
+					<h3 class="akb-section-title">🔥 Búsquedas Trending</h3>
+					<?php if ( empty( $data['trending_searches'] ) ) : ?>
+						<p><em>Sin datos.</em></p>
+					<?php else : ?>
+						<table class="akb-table">
+							<tbody>
+							<?php foreach ( array_slice( $data['trending_searches'], 0, 10 ) as $i => $t ) : ?>
+								<tr>
+									<td style="width:30px;color:#50575e"><?php echo esc_html( (string) ( $i + 1 ) ); ?>.</td>
+									<td><?php echo esc_html( $t['term'] ); ?></td>
+									<td style="text-align:right"><span class="akb-badge akb-badge--info"><?php echo number_format( (int) $t['count'] ); ?></span></td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
+
+				<!-- Stock Critico -->
+				<div class="akb-card" style="grid-column: span 2">
+					<h3 class="akb-section-title">⚠️ Stock Crítico (menos de 3 unidades)</h3>
+					<?php if ( empty( $data['stock_critico'] ) ) : ?>
+						<p><em>✅ Todo el catálogo con stock saludable.</em></p>
+					<?php else : ?>
+						<table class="akb-table">
+							<thead>
+								<tr>
+									<th>Producto</th>
+									<th style="text-align:right">Stock</th>
+									<th style="text-align:right">Vendidos 30d</th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php foreach ( array_slice( $data['stock_critico'], 0, 10 ) as $p ) : ?>
+								<tr>
+									<td>
+										<?php
+										$edit_link = admin_url( 'post.php?post=' . (int) $p['product_id'] . '&action=edit' );
+										?>
+										<a href="<?php echo esc_url( $edit_link ); ?>"><?php echo esc_html( $p['title'] ); ?></a>
+										<?php if ( ! empty( $p['sku'] ) ) : ?>
+											<small style="color:#50575e"><br><code><?php echo esc_html( $p['sku'] ); ?></code></small>
+										<?php endif; ?>
+									</td>
+									<td style="text-align:right">
+										<?php $stock_class = (int) $p['stock'] === 0 ? 'akb-badge--error' : 'akb-badge--warning'; ?>
+										<span class="akb-badge <?php echo esc_attr( $stock_class ); ?>"><?php echo esc_html( (string) $p['stock'] ); ?></span>
+									</td>
+									<td style="text-align:right"><?php echo esc_html( (string) $p['sold_30d'] ); ?></td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
+
+			</div><!-- /.akibara-cards-grid -->
+
+			<p style="margin-top:16px;color:#50575e;font-size:12px">
+				Datos generados: <code><?php echo esc_html( $data['generated_at'] ); ?> UTC</code> ·
+				<a href="<?php echo esc_url( add_query_arg( 'akb_nocache', '1' ) ); ?>">Forzar actualización</a>
 			</p>
 		</div>
 		<?php

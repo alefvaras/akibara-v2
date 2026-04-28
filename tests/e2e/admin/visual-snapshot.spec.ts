@@ -31,6 +31,7 @@ const ADMIN_PAGES = [
   { slug: 'akibara-coupon-metrics', name: 'coupon-metrics' },
   { slug: 'akibara-back-in-stock', name: 'back-in-stock' },
   { slug: 'akibara-whatsapp', name: 'whatsapp' },
+  { slug: 'akibara-finance-manga', name: 'finance-manga' },
 ];
 
 test.describe('@admin Visual snapshots — full admin pages', () => {
