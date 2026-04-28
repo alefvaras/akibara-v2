@@ -82,10 +82,15 @@ function akb_ajax_endpoint( string $action, array $config ): void {
 		_doing_it_wrong( __FUNCTION__, 'akb_ajax_endpoint requiere config[nonce] string', '10.5.0' );
 		return;
 	}
-	if ( empty( $config['handler'] ) || ! is_callable( $config['handler'] ) ) {
-		_doing_it_wrong( __FUNCTION__, 'akb_ajax_endpoint requiere config[handler] callable', '10.5.0' );
+	if ( empty( $config['handler'] ) ) {
+		_doing_it_wrong( __FUNCTION__, 'akb_ajax_endpoint requiere config[handler]', '10.5.0' );
 		return;
 	}
+	// NOTA: is_callable() check movido al wrapper runtime — el group-wrap pattern
+	// (REDESIGN.md §9) usado en addons declara la función handler DESPUÉS de
+	// llamar a akb_ajax_endpoint(), porque las funciones dentro de `if(...)` no
+	// son hoisted. Validar al request-time (no al register-time) evita el ruido
+	// de "handler not callable" en file-include time. Sentry PHP-C4 fix 2026-04-27.
 
 	$nonce      = $config['nonce'];
 	$capability = array_key_exists( 'capability', $config ) ? $config['capability'] : null;
@@ -96,6 +101,22 @@ function akb_ajax_endpoint( string $action, array $config ): void {
 
 	$wrapped = static function () use ( $action, $nonce, $capability, $handler, $rate_limit, $sanitize ): void {
 		try {
+			// 0) Validate handler callable at request-time (group-wrap deferred).
+			if ( ! is_callable( $handler ) ) {
+				if ( function_exists( 'akb_log' ) ) {
+					akb_log( 'akb_ajax_endpoint', 'error', "Handler no callable at request: $action" );
+				} else {
+					error_log( "[akb_ajax_endpoint:$action] handler not callable at request time" );
+				}
+				wp_send_json_error(
+					array(
+						'error'   => 'handler_unavailable',
+						'message' => 'Handler no disponible.',
+					),
+					500
+				);
+			}
+
 			// 1) Capability check SIEMPRE antes del nonce (orden correcto de auditoría).
 			// Un usuario sin permisos no debe siquiera ver la validación del nonce.
 			if ( $capability !== null ) {
