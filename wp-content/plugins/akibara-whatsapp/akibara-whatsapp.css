@@ -143,3 +143,15 @@ body.woocommerce-checkout .akibara-wa {
   }
   .akibara-wa__pulse { display: none; }
 }
+
+/* ── Auto-fade on heading collision (audit 2026-04-27 P2-02) ─ */
+/* !important needed to override JS safety-net inline opacity 800ms post-show. */
+.akibara-wa__btn.is-dimmed {
+  opacity: 0.25 !important;
+  animation: none;
+}
+
+.akibara-wa__btn.is-dimmed .akibara-wa__pulse {
+  animation: none;
+  opacity: 0;
+}

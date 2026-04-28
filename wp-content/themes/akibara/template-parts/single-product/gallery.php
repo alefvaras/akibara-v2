@@ -54,9 +54,16 @@ if ( $main_img_id ) {
                     <?php echo wp_get_attachment_image( $main_img_id, 'thumbnail' ); ?>
                 </button>
             <?php endif; ?>
-            <?php foreach ( $gallery_ids as $gid ) : ?>
+            <?php foreach ( $gallery_ids as $gid ) :
+                // P0-01 fix A: skip orphan attachment IDs whose image cannot be resolved.
+                // Prevents rendering empty <button> wrappers (visible as black boxes).
+                $thumb_full_url = wp_get_attachment_image_url( $gid, 'large' );
+                if ( ! $thumb_full_url ) {
+                    continue;
+                }
+                ?>
                 <button class="product-gallery__thumb"
-                        data-full="<?php echo esc_url( wp_get_attachment_image_url( $gid, 'large' ) ); ?>">
+                        data-full="<?php echo esc_url( $thumb_full_url ); ?>">
                     <?php echo wp_get_attachment_image( $gid, 'thumbnail' ); ?>
                 </button>
             <?php endforeach; ?>
