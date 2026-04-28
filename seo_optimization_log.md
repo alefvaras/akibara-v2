@@ -109,3 +109,4 @@
 - product schema author/ISBN bulk fill from _akb_isbn / pa_autor (snippet_book_*)
 - `/serie/` index hub: still served by WP page 24266 fallback. Custom landing template-serie-index.php has rule defined but never flushed in DB. Fix: trigger flush_rewrite_rules + retire WP page 24266. Out of scope this iteration.
 
+## Smoke #6 — semantic memory + A/B ON — 2026-04-28T15:55Z
