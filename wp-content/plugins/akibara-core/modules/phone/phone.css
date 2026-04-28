@@ -1,0 +1,143 @@
+/**
+ * Akibara — Teléfono Chile (chip bandera + prefijo, estilo MELI)
+ *
+ * El JS (phone.js → wrapInput) envuelve el <input> en:
+ *   <div class="akb-phone-input-wrap">
+ *     <span class="akb-phone-chip" aria-hidden="true">
+ *       <span class="akb-phone-chip__flag">🇨🇱</span>
+ *       <span class="akb-phone-chip__code">+56 9</span>
+ *     </span>
+ *     <input id="billing_phone" type="tel">
+ *   </div>
+ *
+ * Layout: flex horizontal. El chip es un elemento real (no pseudo) →
+ * 100% robusto a cualquier variación de markup de WooCommerce.
+ */
+
+/* ═════ Contenedor flex — "pill" unificado chip + input ═════ */
+.akb-phone-field .akb-phone-input-wrap {
+	display: flex;
+	align-items: stretch;
+	width: 100%;
+	background: var(--aki-surface-2, #1b1b1e);
+	border: 1px solid var(--aki-border, #2A2A2E);
+	border-radius: var(--radius-sm, 6px);
+	overflow: hidden;
+	transition: border-color .15s, box-shadow .15s;
+	min-height: 44px;
+}
+
+.akb-phone-field .akb-phone-input-wrap:focus-within {
+	border-color: var(--aki-red, #D90010);
+	box-shadow: 0 0 0 3px rgba(217, 0, 16, 0.12);
+}
+
+/* ═════ Chip bandera + código — sólido a la izquierda ═════ */
+.akb-phone-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 0 14px;
+	background: rgba(255, 255, 255, 0.04);
+	border-right: 1px solid var(--aki-border, #2A2A2E);
+	color: var(--aki-text, #F5F5F5);
+	font-size: 14px;
+	font-weight: 600;
+	white-space: nowrap;
+	letter-spacing: 0.01em;
+	user-select: none;
+	pointer-events: none;
+	flex-shrink: 0;
+}
+
+.akb-phone-chip__flag {
+	font-size: 18px;
+	line-height: 1;
+	font-variant-emoji: emoji;
+}
+
+.akb-phone-chip__code {
+	font-variant-numeric: tabular-nums;
+}
+
+/* ═════ Input dentro del wrap — sin borde propio (lo lleva el wrap) ═════ */
+.akb-phone-field .akb-phone-input-wrap input[type="tel"],
+.akb-phone-field .akb-phone-input-wrap input#billing_phone {
+	flex: 1 1 auto;
+	width: auto !important;
+	border: 0 !important;
+	background: transparent !important;
+	color: var(--aki-white, #F5F5F5);
+	padding: 10px 14px !important;
+	margin: 0 !important;
+	font-size: 14px;
+	letter-spacing: 0.05em;
+	font-variant-numeric: tabular-nums;
+	outline: none !important;
+	box-shadow: none !important;
+	min-width: 0; /* permite shrink en flex */
+}
+
+.akb-phone-field .akb-phone-input-wrap input[type="tel"]:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+/* Estados de validación — aplicados al wrap (no al input) */
+.akb-phone-field .akb-phone-input-wrap:has(input.akb-input-ok) {
+	border-color: #10B981;
+}
+
+.akb-phone-field .akb-phone-input-wrap:has(input.akb-input-err) {
+	border-color: #EF4444;
+}
+
+/* Fallback para browsers sin :has() — usar el estado del input directamente */
+.akb-phone-field input.akb-input-ok {
+	box-shadow: inset 0 0 0 9999px transparent;
+}
+
+/* ═════ Feedback debajo del wrap ═════ */
+.akb-phone-feedback {
+	display: block;
+	font-size: 12px;
+	margin-top: 6px;
+	min-height: 16px;
+	transition: color .15s;
+	color: var(--aki-text-muted, #888);
+	font-variant-numeric: tabular-nums;
+}
+
+.akb-phone-feedback.akb-fb--ok {
+	color: #10B981;
+}
+
+.akb-phone-feedback.akb-fb--err {
+	color: #EF4444;
+}
+
+/* ═════ Helper text (description) ═════ */
+.akb-phone-field .description {
+	font-size: 12px;
+	color: var(--aki-text-muted, #888);
+	margin-top: 4px;
+	font-style: normal;
+	opacity: 0.85;
+	line-height: 1.4;
+}
+
+/* ═════ Mobile: chip más compacto ═════ */
+@media (max-width: 480px) {
+	.akb-phone-chip {
+		padding: 0 12px;
+		gap: 6px;
+		font-size: 14px;
+	}
+	.akb-phone-chip__flag {
+		font-size: 16px;
+	}
+	.akb-phone-field .akb-phone-input-wrap input[type="tel"] {
+		padding: 10px 12px !important;
+		font-size: 16px; /* evita zoom iOS */
+	}
+}

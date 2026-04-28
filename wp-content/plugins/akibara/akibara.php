@@ -61,8 +61,12 @@ if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 	require_once AKIBARA_DIR . 'includes/akibara-search.php';
 	require_once AKIBARA_DIR . 'includes/akibara-order.php';
 }
-require_once AKIBARA_DIR . 'includes/class-akibara-email-template.php';
 if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
+	// Polish #1 2026-04-26: class-akibara-email-template.php migrated to akibara-core.
+	// When akibara-core is active, AkibaraEmailTemplate alias is set there (via its
+	// includes/class-akibara-email-template.php + src/Infra/EmailTemplate.php).
+	// Legacy also keeps the file on disk as backward-compat fallback.
+	require_once AKIBARA_DIR . 'includes/class-akibara-email-template.php';
 	// Migrated to plugin akibara-core/ Phase 1.
 	// Testing mode: redirige wp_mail a alejandro.fvaras@gmail.com si AKIBARA_EMAIL_TESTING_MODE=true.
 	// Noop en prod (constante no definida). Ver includes/akibara-email-safety.php.
@@ -109,10 +113,23 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 	// Modules migrated to akibara-mercadolibre addon (skip if mercadolibre active) — Sprint 5.
 	$akb_mercadolibre_modules = array( 'mercadolibre' );
 
+	// Modules migrated to akibara-core plugin (Polish #1 2026-04-26).
+	// Skip if akibara-core is active — these modules now load from plugins/akibara-core/.
+	$akb_core_owned   = defined( 'AKIBARA_CORE_PLUGIN_LOADED' );
+	$akb_core_modules = array(
+		'rut', 'phone', 'installments', 'product-badges',
+		'checkout-validation', 'health-check', 'series-autofill',
+	);
+
 	$akb_enabled = static function ( string $key ) use (
 		$akb_marketing_owned, $akb_preventas_owned, $akb_inventario_owned, $akb_mercadolibre_owned,
-		$akb_marketing_modules, $akb_preventas_modules, $akb_inventario_modules, $akb_mercadolibre_modules
+		$akb_marketing_modules, $akb_preventas_modules, $akb_inventario_modules, $akb_mercadolibre_modules,
+		$akb_core_owned, $akb_core_modules
 	): bool {
+		// Skip modules owned by akibara-core plugin — Polish #1 2026-04-26.
+		if ( $akb_core_owned && in_array( $key, $akb_core_modules, true ) ) {
+			return false;
+		}
 		// Skip migrated modules — addon plugin owns the module post-Sprint-3/4/5.
 		if ( $akb_marketing_owned && in_array( $key, $akb_marketing_modules, true ) ) {
 			return false;
@@ -507,11 +524,15 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 	require_once AKIBARA_DIR . 'modules/review-request/module.php';
 	require_once AKIBARA_DIR . 'modules/next-volume/module.php';
 	require_once AKIBARA_DIR . 'modules/cart-abandoned/module.php';
-	require_once AKIBARA_DIR . 'modules/installments/module.php';
-	require_once AKIBARA_DIR . 'modules/rut/module.php';
-	require_once AKIBARA_DIR . 'modules/phone/module.php';
-	if ( file_exists( AKIBARA_DIR . 'modules/checkout-validation/module.php' ) ) {
-		require_once AKIBARA_DIR . 'modules/checkout-validation/module.php';
+	// Polish #1 2026-04-26: rut/phone/installments/checkout-validation/product-badges/
+	// health-check/series-autofill migrated to akibara-core. Skip if core active.
+	if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
+		require_once AKIBARA_DIR . 'modules/installments/module.php';
+		require_once AKIBARA_DIR . 'modules/rut/module.php';
+		require_once AKIBARA_DIR . 'modules/phone/module.php';
+		if ( file_exists( AKIBARA_DIR . 'modules/checkout-validation/module.php' ) ) {
+			require_once AKIBARA_DIR . 'modules/checkout-validation/module.php';
+		}
 	}
 	require_once AKIBARA_DIR . 'modules/series-notify/module.php';
 	if ( file_exists( AKIBARA_DIR . 'modules/back-in-stock/module.php' ) ) {
@@ -521,18 +542,27 @@ if ( class_exists( 'Akibara_Module_Registry' ) ) {
 	require_once AKIBARA_DIR . 'modules/referrals/module.php';
 	require_once AKIBARA_DIR . 'modules/ga4/module.php';
 	require_once AKIBARA_DIR . 'modules/marketing-campaigns/module.php';
-	require_once AKIBARA_DIR . 'modules/health-check/module.php';
+	// Polish #1: health-check migrated to akibara-core.
+	if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
+		require_once AKIBARA_DIR . 'modules/health-check/module.php';
+	}
 	require_once AKIBARA_DIR . 'modules/inventory/module.php';
 	require_once AKIBARA_DIR . 'modules/mercadolibre/module.php';
 	require_once AKIBARA_DIR . 'modules/finance-dashboard/module.php';
 	// image-normalize removido 2026-04-20
-	require_once AKIBARA_DIR . 'modules/product-badges/module.php';
+	// Polish #1: product-badges migrated to akibara-core.
+	if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
+		require_once AKIBARA_DIR . 'modules/product-badges/module.php';
+	}
 	// Sprint 2 Cell Core Phase 1 — customer-edit-address + address-autocomplete migrados a plugin akibara-core/.
 	if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
 		require_once AKIBARA_DIR . 'modules/customer-edit-address/module.php';
 		require_once AKIBARA_DIR . 'modules/address-autocomplete/module.php';
 	}
-	require_once AKIBARA_DIR . 'modules/series-autofill/module.php';
+	// Polish #1: series-autofill migrated to akibara-core.
+	if ( ! defined( 'AKIBARA_CORE_PLUGIN_LOADED' ) ) {
+		require_once AKIBARA_DIR . 'modules/series-autofill/module.php';
+	}
 	if ( file_exists( AKIBARA_DIR . 'modules/welcome-discount/module.php' ) ) {
 		require_once AKIBARA_DIR . 'modules/welcome-discount/module.php';
 	}

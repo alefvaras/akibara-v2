@@ -85,12 +85,22 @@ add_action(
 	'plugins_loaded',
 	function (): void {
 		$registry = \Akibara\Core\Bootstrap::instance()->modules();
+		// Phase 1 modules (Sprint 2).
 		$registry->declare_module( 'search', '1.0.0', 'core' );
 		$registry->declare_module( 'category-urls', '1.0.0', 'core' );
 		$registry->declare_module( 'order', '1.0.0', 'core' );
 		$registry->declare_module( 'email-safety', '1.0.0', 'core' );
 		$registry->declare_module( 'customer-edit-address', '1.0.0', 'core' );
 		$registry->declare_module( 'address-autocomplete', '1.0.0', 'core' );
+		// Phase 2 modules (Polish #1 2026-04-26) — 9 modules migrated from legacy.
+		$registry->declare_module( 'rut', '1.0.0', 'core' );
+		$registry->declare_module( 'phone', '2.0.0', 'core' );
+		$registry->declare_module( 'installments', '2.0.0', 'core' );
+		$registry->declare_module( 'product-badges', '1.1.0', 'core' );
+		$registry->declare_module( 'checkout-validation', '1.0.0', 'core' );
+		$registry->declare_module( 'health-check', '1.0.0', 'core' );
+		$registry->declare_module( 'series-autofill', '1.0.0', 'core' );
+		$registry->declare_module( 'email-template', '2.0.0', 'core' );
 	},
 	4
 );
@@ -104,16 +114,29 @@ add_action(
 	5 // priority 5 — addons can hook akibara_core_init via plugins_loaded:>=10 OR file-include
 );
 
-// ─── 6 Foundation modules (Phase 1 atomic deploy) ────────────────────────────
+// ─── Phase 1 modules (Sprint 2 atomic deploy) ────────────────────────────────
 // Cargan en file-include time (top-level), antes de hooks plugins_loaded.
 // Sus add_action/add_filter calls registran hooks aquí mismo.
-// Cada module tiene per-file load guard (AKB_CORE_MODULE_<NAME>_LOADED) para idempotency.
+// Cada module tiene per-file load guard para idempotency.
 require_once AKIBARA_CORE_DIR . 'includes/akibara-search.php';
 require_once AKIBARA_CORE_DIR . 'includes/akibara-category-urls.php';
 require_once AKIBARA_CORE_DIR . 'includes/akibara-order.php';
 require_once AKIBARA_CORE_DIR . 'includes/akibara-email-safety.php';
 require_once AKIBARA_CORE_DIR . 'modules/customer-edit-address/module.php';
 require_once AKIBARA_CORE_DIR . 'modules/address-autocomplete/module.php';
+
+// ─── Phase 2 modules (Polish #1 2026-04-26) — 9 modules + email-template ────
+// 9 modules NOT migrated in Sprint 2 are now owned by akibara-core.
+// Legacy akibara/ skip guards in akibara.php will detect AKIBARA_CORE_PLUGIN_LOADED
+// and skip registering these modules.
+require_once AKIBARA_CORE_DIR . 'includes/class-akibara-email-template.php';
+require_once AKIBARA_CORE_DIR . 'modules/rut/module.php';
+require_once AKIBARA_CORE_DIR . 'modules/phone/module.php';
+require_once AKIBARA_CORE_DIR . 'modules/installments/module.php';
+require_once AKIBARA_CORE_DIR . 'modules/product-badges/module.php';
+require_once AKIBARA_CORE_DIR . 'modules/checkout-validation/module.php';
+require_once AKIBARA_CORE_DIR . 'modules/health-check/module.php';
+require_once AKIBARA_CORE_DIR . 'modules/series-autofill/module.php';
 
 // ─── Activation / deactivation hooks (mesa-15 P0-4 fix) ──────────────────────
 // Cuando admin activa el plugin (o WP cron primer firing), crear tabla index +
