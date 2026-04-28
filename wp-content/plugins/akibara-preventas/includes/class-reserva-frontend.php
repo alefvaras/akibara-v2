@@ -354,18 +354,18 @@ final class Akibara_Reserva_Frontend {
 
 		wp_enqueue_style(
 			'akb-reservas',
-			AKIBARA_RESERVAS_URL . 'assets/css/reservas.css',
+			AKB_PREVENTAS_URL . 'assets/css/reservas.css',
 			[],
-			AKIBARA_RESERVAS_VERSION
+			AKB_PREVENTAS_VERSION
 		);
 
 		// Countdown JS en single product
 		if ( is_product() || is_singular( 'product' ) ) {
 			wp_enqueue_script(
 				'akb-reservas-countdown',
-				AKIBARA_RESERVAS_URL . 'assets/js/countdown.js',
+				AKB_PREVENTAS_URL . 'assets/js/countdown.js',
 				[],
-				AKIBARA_RESERVAS_VERSION,
+				AKB_PREVENTAS_VERSION,
 				true
 			);
 		}

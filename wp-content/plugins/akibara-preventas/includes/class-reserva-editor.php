@@ -49,7 +49,7 @@ final class Akibara_Reserva_Editor {
 		// Convertir timestamp a Y-m-d para input type=date
 		$fecha_str = $fecha > 0 ? gmdate( 'Y-m-d', $fecha ) : '';
 
-		include AKIBARA_RESERVAS_DIR . 'templates/admin/product-tab.php';
+		include AKB_PREVENTAS_DIR . 'templates/admin/product-tab.php';
 	}
 
 	// ─── Variaciones ─────────────────────────────────────────────
@@ -210,9 +210,9 @@ final class Akibara_Reserva_Editor {
 
 		wp_enqueue_script(
 			'akb-reserva-editor',
-			AKIBARA_RESERVAS_URL . 'assets/js/editor.js',
+			AKB_PREVENTAS_URL . 'assets/js/editor.js',
 			[ 'jquery' ],
-			AKIBARA_RESERVAS_VERSION,
+			AKB_PREVENTAS_VERSION,
 			true
 		);
 	}

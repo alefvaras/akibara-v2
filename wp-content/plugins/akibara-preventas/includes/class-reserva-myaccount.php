@@ -44,7 +44,7 @@ final class Akibara_Reserva_MyAccount {
 			'myaccount/mis-reservas.php',
 			[ 'reservas' => $reservas ],
 			'',
-			AKIBARA_RESERVAS_DIR . 'templates/'
+			AKB_PREVENTAS_DIR . 'templates/'
 		);
 	}
 
