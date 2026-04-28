@@ -45,6 +45,7 @@ if (class_exists('WooCommerce')) {
     require_once AKIBARA_THEME_DIR . '/inc/google-auth.php';
     require_once AKIBARA_THEME_DIR . '/inc/magic-link.php';
     require_once AKIBARA_THEME_DIR . '/inc/gallery-dedupe.php';
+    require_once AKIBARA_THEME_DIR . '/inc/gallery-cleanup.php';
     require_once AKIBARA_THEME_DIR . '/inc/image-auto-trim.php';
 }
 
