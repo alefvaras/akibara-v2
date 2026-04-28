@@ -512,7 +512,25 @@ if ( ! function_exists( 'akb_editorial_notify_dispatch' ) ) {
             usleep( 300000 ); // 300ms Brevo rate limit.
 
             if ( $sent >= 50 ) {
-                break; // Max 50 per cron run — requeue remainder if needed.
+                // P1 FIX (mesa-22 + mesa-11): cap 50 sin requeue dejaba >50 suscriptores
+                // sin notificación. Ahora encolamos el remainder en otro cron tick.
+                $remainder = array_slice( $subscribers, $sent );
+                if ( ! empty( $remainder ) ) {
+                    wp_schedule_single_event(
+                        time() + 60, // +60s para respetar rate limits Brevo
+                        'akb_editorial_notify_dispatch',
+                        array( $product_id, $editorial_slug, $remainder )
+                    );
+                    if ( function_exists( 'akb_log' ) ) {
+                        akb_log(
+                            'editorial-notify',
+                            'info',
+                            sprintf( 'Batch capped at 50 — requeued %d remaining', count( $remainder ) ),
+                            array( 'product_id' => $product_id, 'editorial' => $editorial_slug )
+                        );
+                    }
+                }
+                break;
             }
         }
     }
@@ -535,39 +553,120 @@ if ( ! function_exists( 'akb_editorial_notify_admin_page' ) ) {
         global $wpdb;
         $table = $wpdb->prefix . 'akb_editorial_subs';
 
+        // Stats por editorial (existente).
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $stats = $wpdb->get_results(
-            "SELECT editorial_slug, editorial_name, COUNT(*) as total,
-             SUM(CASE WHEN status='active' THEN 1 ELSE 0 END) as activos
-             FROM {$table} GROUP BY editorial_slug ORDER BY total DESC"
+            "SELECT editorial_slug, editorial_name, COUNT(*) AS total,
+             SUM(CASE WHEN status='active' THEN 1 ELSE 0 END) AS activos,
+             SUM(CASE WHEN status='unsubscribed' THEN 1 ELSE 0 END) AS bajas,
+             MAX(last_notified_at) AS ultimo_envio
+             FROM {$table} GROUP BY editorial_slug ORDER BY activos DESC, total DESC"
         );
+
+        // KPIs globales.
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $kpi_total_subs    = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $kpi_active_subs   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status='active'" );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $kpi_editoriales   = (int) $wpdb->get_var( "SELECT COUNT(DISTINCT editorial_slug) FROM {$table} WHERE status='active'" );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $kpi_recent_notif  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE last_notified_at > DATE_SUB(NOW(), INTERVAL 7 DAY)" );
+        $kpi_churn_pct     = $kpi_total_subs > 0 ? round( ( ( $kpi_total_subs - $kpi_active_subs ) / $kpi_total_subs ) * 100, 1 ) : 0;
         ?>
-        <div class="akb-page-header">
-            <h2 class="akb-page-header__title">Notificaciones de Editorial</h2>
-            <p class="akb-page-header__desc">Clientes suscritos por editorial para novedades automáticas.</p>
+        <div class="wrap akb-admin-page">
+            <div class="akb-page-header">
+                <h1 class="akb-page-header__title">📨 Notificaciones de Editorial</h1>
+                <p class="akb-page-header__desc">
+                    Suscriptores que reciben aviso cuando publicamos un producto nuevo de su editorial favorita.
+                    Despachado vía Brevo + WP Cron.
+                </p>
+            </div>
+
+            <!-- KPIs -->
+            <div class="akb-stats">
+                <div class="akb-stat">
+                    <div class="akb-stat__value akb-stat__value--info"><?php echo number_format( $kpi_active_subs ); ?></div>
+                    <div class="akb-stat__label">Suscriptores Activos</div>
+                </div>
+                <div class="akb-stat">
+                    <div class="akb-stat__value"><?php echo number_format( $kpi_total_subs ); ?></div>
+                    <div class="akb-stat__label">Total Histórico</div>
+                </div>
+                <div class="akb-stat">
+                    <div class="akb-stat__value akb-stat__value--success"><?php echo number_format( $kpi_editoriales ); ?></div>
+                    <div class="akb-stat__label">Editoriales Activas</div>
+                </div>
+                <div class="akb-stat">
+                    <div class="akb-stat__value akb-stat__value--info"><?php echo number_format( $kpi_recent_notif ); ?></div>
+                    <div class="akb-stat__label">Notif. (últ. 7d)</div>
+                </div>
+                <div class="akb-stat">
+                    <div class="akb-stat__value <?php echo $kpi_churn_pct > 30 ? 'akb-stat__value--warning' : ( $kpi_churn_pct > 50 ? 'akb-stat__value--error' : 'akb-stat__value--success' ); ?>"><?php echo number_format( $kpi_churn_pct, 1 ); ?>%</div>
+                    <div class="akb-stat__label">Tasa de Bajas</div>
+                </div>
+            </div>
+
+            <!-- Tabla por editorial -->
+            <div class="akb-card akb-card--section">
+                <h2 class="akb-section-title">📊 Suscriptores por Editorial</h2>
+
+                <?php if ( empty( $stats ) ) : ?>
+                    <div class="akb-notice akb-notice--info">
+                        <p>📭 <strong>Sin suscriptores aún.</strong> El módulo está activo y listo para recibir suscripciones desde el frontend (componente "Avísame cuando llegue de [editorial]").</p>
+                    </div>
+                <?php else : ?>
+                    <table class="akb-table">
+                        <thead>
+                            <tr>
+                                <th>Editorial</th>
+                                <th style="text-align:right">Activos</th>
+                                <th style="text-align:right">Bajas</th>
+                                <th style="text-align:right">Total</th>
+                                <th style="text-align:right">% Activos</th>
+                                <th>Último envío</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ( $stats as $row ) :
+                                $activos    = (int) $row->activos;
+                                $bajas      = (int) $row->bajas;
+                                $total      = (int) $row->total;
+                                $pct_active = $total > 0 ? round( ( $activos / $total ) * 100, 0 ) : 0;
+                                $ultimo     = $row->ultimo_envio ? human_time_diff( strtotime( $row->ultimo_envio ), current_time( 'timestamp', true ) ) . ' atrás' : '—';
+                                $health     = $activos === 0 ? 'akb-badge--inactive' : ( $pct_active >= 80 ? 'akb-badge--active' : 'akb-badge--warning' );
+                                ?>
+                                <tr>
+                                    <td>
+                                        <strong><?php echo esc_html( $row->editorial_name ?: $row->editorial_slug ); ?></strong>
+                                        <br><small style="color:var(--aki-text-muted, #8A8A8A);"><code><?php echo esc_html( $row->editorial_slug ); ?></code></small>
+                                    </td>
+                                    <td style="text-align:right"><span class="akb-badge <?php echo esc_attr( $health ); ?>"><?php echo $activos; ?></span></td>
+                                    <td style="text-align:right"><?php echo $bajas; ?></td>
+                                    <td style="text-align:right"><?php echo $total; ?></td>
+                                    <td style="text-align:right"><strong><?php echo $pct_active; ?>%</strong></td>
+                                    <td><?php echo esc_html( $ultimo ); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+
+            <!-- Cómo funciona -->
+            <div class="akb-card akb-card--section">
+                <h2 class="akb-section-title">⚙️ Cómo funciona</h2>
+                <ol style="margin:0;padding-left:24px;line-height:1.9">
+                    <li>Cliente se suscribe en frontend (input email + selección editorial).</li>
+                    <li>Cuando publicás un producto nuevo de esa editorial, se programa cron <code>akb_editorial_notify_dispatch</code> +30s.</li>
+                    <li>El cron envía emails vía Brevo (max 50 por tick — si hay más, <strong>se requeue automático</strong>).</li>
+                    <li>Cliente puede darse de baja con link único en el email (token de 32 chars).</li>
+                </ol>
+                <p style="margin-top:14px;color:var(--aki-text-muted, #8A8A8A);font-size:12px">
+                    Tabla DB: <code>wp_akb_editorial_subs</code> — Brevo guard activo (testing mode redirige a alejandro.fvaras@gmail.com).
+                </p>
+            </div>
         </div>
-        <table class="wp-list-table widefat striped">
-            <thead>
-                <tr>
-                    <th>Editorial</th>
-                    <th>Activos</th>
-                    <th>Total (incl. bajas)</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php if ( empty( $stats ) ) : ?>
-                <tr><td colspan="3">Sin suscriptores aún.</td></tr>
-            <?php else : ?>
-                <?php foreach ( $stats as $row ) : ?>
-                    <tr>
-                        <td><?php echo esc_html( $row->editorial_name ?: $row->editorial_slug ); ?></td>
-                        <td><?php echo (int) $row->activos; ?></td>
-                        <td><?php echo (int) $row->total; ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-            </tbody>
-        </table>
         <?php
     }
 
