@@ -120,6 +120,7 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
 </button>
 
+<!-- akibara-orchestrator-validation: 2026-04-28T17:30Z -->
 <?php wp_footer(); ?>
 </body>
 </html>
