@@ -121,6 +121,7 @@
 </button>
 
 <!-- akibara-orchestrator-validation: 2026-04-28T17:30Z -->
+<!-- akb-v7-20260428T181340Z -->
 <?php wp_footer(); ?>
 </body>
 </html>
