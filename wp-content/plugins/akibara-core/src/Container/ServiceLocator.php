@@ -45,6 +45,15 @@ final class ServiceLocator {
 	}
 
 	/**
+	 * Alias for set() — addons (preventas/marketing/inventario/whatsapp/mercadolibre)
+	 * usan services()->register() desde Sprint 3-5. Agregado post-INCIDENT-05 2026-04-27
+	 * para evitar AddonContract auto-disable cascade.
+	 */
+	public function register( string $id, mixed $service ): void {
+		$this->services[ $id ] = $service;
+	}
+
+	/**
 	 * Retrieve a service by id.
 	 *
 	 * @throws \RuntimeException If service not found.
