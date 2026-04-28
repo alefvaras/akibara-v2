@@ -113,6 +113,62 @@ add_filter("rank_math/sitemap/exclude_taxonomy", function ($exclude, $taxonomy) 
 }, 10, 2);
 
 // ═══════════════════════════════════════════════════════════════
+// B-S4-SEO-03 (2026-04-28): EXCLUDE PAGES FROM SITEMAPS
+// Removes legal, transactional, and user-dashboard pages from page-sitemap.xml.
+// Resolves the 22 warnings GSC reports on page-sitemap.xml caused by:
+//   - noindex pages still emitted in sitemap (mismatch signal)
+//   - low-SEO-value pages (legal/policy) consuming crawl budget
+//   - transactional pages (cart, checkout, account) that must NOT be indexed
+//
+// IDs excluded:
+//   3      — Términos y Condiciones (legal)
+//   23640  — Política de Privacidad (legal)
+//   23641  — Cambios y Devoluciones (policy)
+//   9082   — Carrito (transactional)
+//   9083   — Checkout (transactional)
+//   9      — Mi Cuenta (user account)
+//   6666   — Dashboard (user)
+//   6668   — My Orders (user)
+//   15     — Wishlist (user)
+//   12344  — Cancelar Suscripción (opt-out flow)
+//   6667   — Store Listing (internal)
+//   22645  — Bienvenida (internal welcome)
+//   22637  — Encargos (already noindex via business decision)
+//   22636  — Rastrear Pedido (transactional, dynamic)
+// ═══════════════════════════════════════════════════════════════
+add_filter('rank_math/sitemap/exclude_post', function ($exclude, $post) {
+    $excluded_ids = [
+        3, 23640, 23641, 9082, 9083, 9, 6666, 6668, 15,
+        12344, 6667, 22645, 22637, 22636,
+    ];
+
+    $post_id = is_object($post) ? (int) ($post->ID ?? 0) : (int) $post;
+
+    if (in_array($post_id, $excluded_ids, true)) {
+        return true;
+    }
+
+    return $exclude;
+}, 10, 2);
+
+// Defense-in-depth: also force noindex on excluded pages.
+// Mirror of DB-level rank_math_robots updates already applied via MCP.
+add_filter('rank_math/frontend/robots', function ($robots) {
+    $excluded_ids = [
+        3, 23640, 23641, 9082, 9083, 9, 6666, 6668, 15,
+        12344, 6667, 22645, 22637, 22636,
+    ];
+
+    if (is_singular() && in_array((int) get_the_ID(), $excluded_ids, true)) {
+        if (!is_array($robots)) $robots = [];
+        $robots['index']  = 'noindex';
+        $robots['follow'] = 'follow';
+    }
+
+    return $robots;
+}, 25);
+
+// ═══════════════════════════════════════════════════════════════
 // DEEP PAGINATION NOINDEX — Prevent thin content pages from indexing
 // Pages beyond page 5 of any archive are thin content with minimal SEO value.
 // This complements robots.txt Disallow rules as a belt-and-suspenders approach.
